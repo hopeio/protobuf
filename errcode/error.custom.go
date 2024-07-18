@@ -1,11 +1,13 @@
 package errcode
 
 import (
-	errorsi "github.com/hopeio/utils/errors"
+	"github.com/hopeio/utils/errors/errcode"
 	"github.com/hopeio/utils/log"
 	stringsi "github.com/hopeio/utils/strings"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/status"
+	"net/http"
 	"strconv"
 )
 
@@ -48,10 +50,10 @@ func ErrHandle(err interface{}) error {
 	if e, ok := err.(*status.Status); ok {
 		return e.Err()
 	}
-	if e, ok := err.(*errorsi.ErrRep); ok {
+	if e, ok := err.(*errcode.ErrRep); ok {
 		return e
 	}
-	if e, ok := err.(errorsi.ErrCode); ok {
+	if e, ok := err.(errcode.ErrCode); ok {
 		return e.ErrRep()
 	}
 	if e, ok := err.(error); ok {
@@ -66,33 +68,33 @@ func Code(err error) int {
 		return int(v.Code)
 	case ErrCode:
 		return int(v)
-	case *errorsi.ErrRep:
+	case *errcode.ErrRep:
 		return int(v.Code)
-	case errorsi.ErrCode:
+	case errcode.ErrCode:
 		return int(v)
 	}
 	return 0
 }
 
-func (x ErrCode) Origin() errorsi.ErrCode {
-	return errorsi.ErrCode(x)
+func (x ErrCode) Origin() errcode.ErrCode {
+	return errcode.ErrCode(x)
 }
 
-func (x ErrCode) OriErrRep() *errorsi.ErrRep {
-	return &errorsi.ErrRep{Code: errorsi.ErrCode(x), Message: x.String()}
+func (x ErrCode) OriErrRep() *errcode.ErrRep {
+	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}
 }
 
-func (x ErrCode) OriMessage(msg string) *errorsi.ErrRep {
-	return &errorsi.ErrRep{Code: errorsi.ErrCode(x), Message: msg}
+func (x ErrCode) OriMessage(msg string) *errcode.ErrRep {
+	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: msg}
 }
 
-func (x ErrCode) OriWarp(err error) *errorsi.ErrRep {
-	return &errorsi.ErrRep{Code: errorsi.ErrCode(x), Message: err.Error()}
+func (x ErrCode) OriWarp(err error) *errcode.ErrRep {
+	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: err.Error()}
 }
 
-func (x ErrCode) OriLog(err error) *errorsi.ErrRep {
+func (x ErrCode) OriLog(err error) *errcode.ErrRep {
 	log.Error(err)
-	return &errorsi.ErrRep{Code: errorsi.ErrCode(x), Message: x.String()}
+	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}
 }
 
 func (x *ErrRep) Error() string {
@@ -140,4 +142,47 @@ type ErrCodeInterface interface {
 
 type ErrCodeGeneric interface {
 	~int | ~int32 | ~int64 | ~uint | ~uint32 | ~uint64
+}
+
+func HttpStatusFromCode(code ErrCode) int {
+	switch code {
+	case Success:
+		return http.StatusOK
+	case Canceled:
+		return http.StatusRequestTimeout
+	case Unknown:
+		return http.StatusInternalServerError
+	case InvalidArgument:
+		return http.StatusBadRequest
+	case DeadlineExceeded:
+		return http.StatusGatewayTimeout
+	case NotFound:
+		return http.StatusNotFound
+	case AlreadyExists:
+		return http.StatusConflict
+	case PermissionDenied:
+		return http.StatusForbidden
+	case Unauthenticated:
+		return http.StatusUnauthorized
+	case ResourceExhausted:
+		return http.StatusTooManyRequests
+	case FailedPrecondition:
+		// Note, this deliberately doesn't translate to the similarly named '412 Precondition Failed' HTTP response status.
+		return http.StatusBadRequest
+	case Aborted:
+		return http.StatusConflict
+	case OutOfRange:
+		return http.StatusBadRequest
+	case Unimplemented:
+		return http.StatusNotImplemented
+	case Internal:
+		return http.StatusInternalServerError
+	case Unavailable:
+		return http.StatusServiceUnavailable
+	case DataLoss:
+		return http.StatusInternalServerError
+	}
+
+	grpclog.Infof("Unknown gRPC error code: %v", code)
+	return http.StatusInternalServerError
 }
