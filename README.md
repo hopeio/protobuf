@@ -1,6 +1,6 @@
 # protobuf
 库中用到的protobuf定义及生成文件
-![protobuf](_readme/assets/protobuf.webp)
+![protobuf](_assets/protobuf.webp)
 
 ## quick start
 - `go get github.com/hopeio/protobuf@main`
@@ -100,3 +100,10 @@ service UserService {
 - protoc-gen-validator 用于生成请求的校验的代码
 - 集成github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 用于生成swagger文档
 - 集成github.com/danielvladco/go-proto-gql 用于生成graphql schema 及 grahpql服务
+
+### build docker image
+```base
+`$protobuf_dir/tools/docker/docker_build_local.sh $GOPATH $PROTOC $Image`
+```
+### upgrade go
+`docker build -t jybl/protogen -f $protobuf_dir/tools/docker/Dockerfile_upgrade .`
