@@ -14,28 +14,6 @@ import (
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go"
 )
 
-// Deprecated
-//go:generate go install google.golang.org/protobuf/cmd/protoc-gen-go
-////go:generate protoc -I../../protobuf/_proto --go_out=paths=source_relative:../../.. ../../protobuf/_proto/hopeio/utils/patch/*.proto
-//go:generate protoc -I../_proto --go_out=paths=source_relative:../ ../_proto/hopeio/utils/apiconfig/*.proto
-//go:generate protoc -I../_proto --go_out=paths=source_relative:../ ../_proto/hopeio/utils/openapiconfig/*.proto
-//go:generate protoc -I../_proto --go_out=paths=source_relative:../ ../_proto/hopeio/utils/enum/*.proto
-//go:generate mv ../hopeio/ ../
-//go:generate rm -rf ../hopeio
-//go:generate go install ./protoc-gen-enum
-//go:generate go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
-//go:generate go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
-////go:generate go install github.com/alta/protopatch/cmd/protoc-gen-go-patch
-//go:generate go install ./protoc-gen-grpc-gin
-//go:generate go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-////go:generate go install github.com/envoyproxy/protoc-gen-validate
-//go:generate go install ./protoc-gen-validator
-//go:generate go install ./protoc-gen-go-patch
-////go:generate go install github.com/danielvladco/go-proto-gql/cmd/proto2graphql
-////go:generate go install github.com/danielvladco/go-proto-gql/protoc-gen-gql
-////go:generate go install github.com/danielvladco/go-proto-gql/protoc-gen-gogql
-//go:generate go install ./protoc-gen-gql
-//go:generate go install ./protoc-gen-gogql
-//go:generate go install github.com/99designs/gqlgen
-//go:generate go install ./protogen
-//go:generate echo "Installation Finished"
+
+//go:generate go run ./install_tools.go
+

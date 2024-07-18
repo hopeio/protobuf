@@ -2,8 +2,8 @@ ARG IMAGE=golang:latest
 
 FROM ${IMAGE}
 
-ENV PATH /protoc/bin:$PATH
-ENV GOFLAGS -buildvcs=false
+ENV PATH=/protoc/bin:$PATH
+ENV GOFLAGS="-buildvcs=false"
 
 
 RUN cd / && git clone https://github.com/hopeio/protobuf

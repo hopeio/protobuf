@@ -14,8 +14,8 @@ else
   protoc=$2
   echo "protoc: $protoc"
 fi
-cd $(dirname $0) && pwd
-prorobuf_dir=$(cd ../../..;pwd)
+prorobuf_dir=$(cd $(dirname $0)/../..;pwd)
+echo "prorobuf_dir: $prorobuf_dir"
 
 goproxy=https://goproxy.io,https://goproxy.cn,direct
 goimage=golang:latest
@@ -28,7 +28,7 @@ fi
 docker run --rm -e GOPROXY=$goproxy -e GOFLAGS=-buildvcs=false -v $gopath:/go -v $protoc:/protoc -v $prorobuf_dir:/work -w /work/tools --name install $goimage bash ./install_tools.sh /protoc
 # docker rm -f install
 echo "docker build"
-dockerTmpDir=$prorobuf_dir/tools/docker
+dockerTmpDir=$prorobuf_dir/tools/docker_tmp
 mkdir $dockerTmpDir
 cp $gopath/bin/protoc-gen-enum $dockerTmpDir/
 cp $gopath/bin/protoc-gen-go $dockerTmpDir/

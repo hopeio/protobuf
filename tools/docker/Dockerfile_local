@@ -2,7 +2,7 @@ ARG IMAGE=golang:latest
 
 FROM ${IMAGE}
 
-ENV PATH /protoc/bin:$PATH
+ENV PATH=/protoc/bin:$PATH
 
 ADD ./protoc-gen-enum /bin/
 ADD ./protoc-gen-go /bin/

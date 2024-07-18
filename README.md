@@ -82,7 +82,7 @@ service UserService {
 `go run protobuf/generate.go`
 
 ## tools
-本项目需要用到的protobuf插件，`go run tools/install_tools.go` 或 `tools/install-tools.sh` 或 `go generate tools/install_tools.go`，会自动安装
+本项目需要用到的protobuf插件，`go run tools/install_tools.go` 或 `tools/install-tools.sh`，会自动安装
 
 - protogen为go语言写的protobuf生成程序
     - go/dart 生成go/dart文件，E.g: protogen go -p xxx -g xxx
