@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/hopeio/utils/io/fs"
-	pathi "github.com/hopeio/utils/io/fs/path"
-	osi "github.com/hopeio/utils/os"
 	execi "github.com/hopeio/utils/os/exec"
 	_go "github.com/hopeio/utils/sdk/go"
 	"github.com/spf13/cobra"
@@ -128,7 +126,7 @@ func run(dir string) {
 	for i := range fileInfos {
 		if !exec && strings.HasSuffix(fileInfos[i].Name(), ".proto") {
 			exec = true
-			protocCmd(plugin, dir+"/*.proto", pathi.Base(dir), dir[len(config.proto)+1:])
+			protocCmd(plugin, dir+"/*.proto", filepath.Base(dir), dir[len(config.proto)+1:])
 		}
 		if fileInfos[i].IsDir() {
 			run(dir + "/" + fileInfos[i].Name())
@@ -169,16 +167,16 @@ func getInclude() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		osi.Cmd("go mod init generate")*/
+		execi.Cmd("go mod init generate")*/
 
-	libcherryDir, err := osi.Cmd(_go.GoListDir + DepProtobuf)
+	libcherryDir, err := execi.Cmd(_go.GoListDir + DepProtobuf)
 	if err == nil {
 		config.dproto = libcherryDir + "/_proto"
 	}
 	config.include = "-I" + config.dproto + " -I" + config.proto
 	/*	os.Chdir(libcherryDir)
-		DepGrpcGateway, _ = osi.Cmd(goListDep + DepGrpcGateway)
-		DepProtopatch, _ = osi.Cmd(goListDep + DepProtopatch)
+		DepGrpcGateway, _ = execi.Cmd(goListDep + DepGrpcGateway)
+		DepProtopatch, _ = execi.Cmd(goListDep + DepProtopatch)
 		os.Chdir(generatePath)
 		libGoogleDir := _go.GetDepDir(DepGoogleapis)
 		libGatewayDir := _go.GetDepDir(DepGrpcGateway)*/
@@ -238,14 +236,14 @@ func gengql() {
 	if err != nil {
 		log.Panicln(err)
 	}
-	out, err := osi.Cmd("go list -m")
+	out, err := execi.Cmd("go list -m")
 	if err != nil {
 		log.Panicln(err)
 	}
 	mods := strings.Split(out, "\n")
 	mod := mods[len(mods)-1]
 	// 调用方mod路径
-	out, err = osi.Cmd("go list -m -f {{.Dir}}")
+	out, err = execi.Cmd("go list -m -f {{.Dir}}")
 	// 如果生成路径包含模块名
 	_, after, _ := strings.Cut(compath, out)
 	gomod := strings.ReplaceAll(mod+after, "\\", "/")
