@@ -1,13 +1,21 @@
 syntax = "proto3";
 package area;
 
+import "hopeio/utils/patch/go.proto";
+import "hopeio/time/timestamp/timestamp.proto";
+import "hopeio/time/deletedAt/deletedAt.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
 option java_package = "xyz.hoper.protobuf.model.area";
 option java_multiple_files = true;
 option go_package = "github.com/hopeio/protobuf/model/area";
 
 message Area {
-    uint64 code = 1;
+    uint64 code = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
     string name =2;
     int32 level = 3;
     uint64 pcode = 4;
+    timestamp.Timestamp createdAt = 16 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
+    timestamp.Timestamp updatedAt = 26 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
+    deletedAt.DeletedAt deletedAt = 28 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
