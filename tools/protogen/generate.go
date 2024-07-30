@@ -126,7 +126,11 @@ func run(dir string) {
 	for i := range fileInfos {
 		if !exec && strings.HasSuffix(fileInfos[i].Name(), ".proto") {
 			exec = true
-			protocCmd(plugin, dir+"/*.proto", filepath.Base(dir), dir[len(config.proto)+1:])
+			if dir == config.proto {
+				protocCmd(plugin, dir+"/*.proto", "root", "")
+			} else {
+				protocCmd(plugin, dir+"/*.proto", filepath.Base(dir), dir[len(config.proto)+1:])
+			}
 		}
 		if fileInfos[i].IsDir() {
 			run(dir + "/" + fileInfos[i].Name())
