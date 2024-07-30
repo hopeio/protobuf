@@ -2,7 +2,6 @@ package errcode
 
 import (
 	"github.com/hopeio/utils/errors/errcode"
-	"github.com/hopeio/utils/log"
 	stringsi "github.com/hopeio/utils/strings"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -13,10 +12,6 @@ import (
 
 func (x ErrCode) Code() int {
 	return int(x)
-}
-
-func (x ErrCode) ErrRep() *ErrRep {
-	return &ErrRep{Code: x, Message: x.String()}
 }
 
 func (x ErrCode) Rep() *ErrRep {
@@ -32,7 +27,7 @@ func (x ErrCode) Message(msg string) *ErrRep {
 	return &ErrRep{Code: x, Message: msg}
 }
 
-func (x ErrCode) Warp(err error) *ErrRep {
+func (x ErrCode) Wrap(err error) *ErrRep {
 	return &ErrRep{Code: x, Message: err.Error()}
 }
 
@@ -45,7 +40,7 @@ func ErrHandle(err interface{}) error {
 		return e
 	}
 	if e, ok := err.(ErrCode); ok {
-		return e.ErrRep()
+		return e.Rep()
 	}
 	if e, ok := err.(*status.Status); ok {
 		return e.Err()
@@ -54,12 +49,12 @@ func ErrHandle(err interface{}) error {
 		return e
 	}
 	if e, ok := err.(errcode.ErrCode); ok {
-		return e.ErrRep()
+		return e.Rep()
 	}
 	if e, ok := err.(error); ok {
 		return Unknown.Message(e.Error())
 	}
-	return Unknown.ErrRep()
+	return Unknown.Rep()
 }
 
 func Code(err error) int {
@@ -78,23 +73,6 @@ func Code(err error) int {
 
 func (x ErrCode) Origin() errcode.ErrCode {
 	return errcode.ErrCode(x)
-}
-
-func (x ErrCode) OriErrRep() *errcode.ErrRep {
-	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}
-}
-
-func (x ErrCode) OriMessage(msg string) *errcode.ErrRep {
-	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: msg}
-}
-
-func (x ErrCode) OriWarp(err error) *errcode.ErrRep {
-	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: err.Error()}
-}
-
-func (x ErrCode) OriLog(err error) *errcode.ErrRep {
-	log.Error(err)
-	return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}
 }
 
 func (x *ErrRep) Error() string {
