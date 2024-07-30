@@ -210,7 +210,7 @@ func TestGoType(t *testing.T) {
 		name: 'example.proto'
 		package: 'example'
 		message_type <
-			name: 'Message'
+			name: 'Msg'
 			field <
 				name: 'field'
 				type: TYPE_STRING
@@ -244,14 +244,14 @@ func TestGoType(t *testing.T) {
 	}
 	crossLinkFixture(file)
 
-	if got, want := msg.GoType("example"), "Message"; got != want {
+	if got, want := msg.GoType("example"), "Msg"; got != want {
 		t.Errorf("msg.GoType() = %q; want %q", got, want)
 	}
-	if got, want := msg.GoType("extPackage"), "example.Message"; got != want {
+	if got, want := msg.GoType("extPackage"), "example.Msg"; got != want {
 		t.Errorf("msg.GoType() = %q; want %q", got, want)
 	}
 	msg.ForcePrefixedName = true
-	if got, want := msg.GoType("example"), "example.Message"; got != want {
+	if got, want := msg.GoType("example"), "example.Msg"; got != want {
 		t.Errorf("msg.GoType() = %q; want %q", got, want)
 	}
 

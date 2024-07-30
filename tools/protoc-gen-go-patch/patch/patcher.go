@@ -26,7 +26,7 @@ import (
 // - go_tags (Field option) lets you add additional struct tags to a field.
 // - go_oneof_name (Oneof option) overrides the name of a oneof field, including wrapper types and getters.
 // - go_oneof_tags (Oneof option) lets you specify additional struct tags on a oneof field.
-// - go_message_name (Message option) overrides the name of the synthesized struct.
+// - go_message_name (Msg option) overrides the name of the synthesized struct.
 // - go_enum_name (Enum option) overrides the name of an enum type.
 // - go_value_name (EnumValue option) overrides the name of an enum const.
 type Patcher struct {
@@ -136,7 +136,7 @@ func (p *Patcher) scanMessage(m *protogen.Message, parent *protogen.Message) {
 		newName = replacePrefix(m.GoIdent.GoName, parent.GoIdent.GoName, p.nameFor(parent.GoIdent))
 	}
 	if newName != "" {
-		p.RenameType(m.GoIdent, newName) // Message struct
+		p.RenameType(m.GoIdent, newName) // Msg struct
 	}
 	for _, o := range m.Oneofs {
 		p.scanOneof(o)
@@ -217,7 +217,7 @@ func (p *Patcher) scanExtension(f *protogen.Field) {
 
 // RenameType renames the Go type specified by id to newName.
 // The id argument specifies a GoName from GoImportPath, e.g.: "github.com/org/repo/example".FooMessage
-// To rename a package-level identifier such as a type, var, or const, specify just the name, e.g. "Message" or "Enum_VALUE".
+// To rename a package-level identifier such as a type, var, or const, specify just the name, e.g. "Msg" or "Enum_VALUE".
 // newName should be the unqualified name.
 // The value of id.GoName should be the original generated type name, not a renamed type.
 func (p *Patcher) RenameType(id protogen.GoIdent, newName string) {
@@ -269,7 +269,7 @@ func (p *Patcher) nameFor(id protogen.GoIdent) string {
 }
 
 // Tag adds the specified struct tags to the field specified by selector,
-// in the form of "Message.Field". The tags argument should omit outer backticks (`).
+// in the form of "Msg.Field". The tags argument should omit outer backticks (`).
 // The value of id.GoName should be the original generated identifier name, not a renamed identifier.
 // The struct tags will be applied when Patch is called.
 func (p *Patcher) Tag(id protogen.GoIdent, tags string) {

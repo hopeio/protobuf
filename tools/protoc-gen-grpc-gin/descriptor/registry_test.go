@@ -85,7 +85,7 @@ func TestLoadFile(t *testing.T) {
 	} else if got, want := msg.Fields[0].FieldDescriptorProto, fd.MessageType[0].Field[0]; got != want {
 		t.Errorf("msg.Fields[0].FieldDescriptorProto = %v; want %v", got, want)
 	} else if got, want := msg.Fields[0].Message, msg; got != want {
-		t.Errorf("msg.Fields[0].Message = %v; want %v", got, want)
+		t.Errorf("msg.Fields[0].Msg = %v; want %v", got, want)
 	}
 
 	if got, want := len(file.Messages), 1; got != want {

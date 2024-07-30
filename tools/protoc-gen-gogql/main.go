@@ -168,7 +168,7 @@ func Unmarshal`, enumType, ` (v interface{}) (`, enumType, `, error) {
 }
 
 func generateMapsAndOneofs(g *protogen.GeneratedFile, messages []*protogen.Message) {
-	//var resolvers []*protogen.Message
+	//var resolvers []*protogen.Msg
 	for _, msg := range messages {
 		if msg.Desc.IsMapEntry() {
 			var (

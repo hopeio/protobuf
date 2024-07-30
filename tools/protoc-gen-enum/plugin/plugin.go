@@ -18,7 +18,6 @@ type Builder struct {
 	plugin        *protogen.Plugin
 	importStatus  protogen.GoImportPath
 	importCodes   protogen.GoImportPath
-	importLog     protogen.GoImportPath
 	importStrings protogen.GoImportPath
 	importStrconv protogen.GoImportPath
 	importErrcode protogen.GoImportPath
@@ -31,10 +30,9 @@ func NewBuilder(gen *protogen.Plugin) *Builder {
 		plugin:        gen,
 		importStatus:  "google.golang.org/grpc/status",
 		importCodes:   "google.golang.org/grpc/codes",
-		importLog:     "github.com/hopeio/utils/log",
 		importStrings: "github.com/hopeio/utils/strings",
 		importStrconv: "strconv",
-		importErrcode: "github.com/hopeio/protobuf/errcode",
+		importErrcode: "github.com/hopeio/utils/errors/errcode",
 		importErrors:  "errors",
 		importIo:      "io",
 	}
@@ -221,24 +219,23 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P()
 	g.P("func (x ", ccTypeName, ") ErrRep() *", b.importErrcode.Ident("ErrRep"), " {")
 
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}`)
+	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: x.String()}`)
 
 	g.P("}")
 	g.P()
-	g.P("func (x ", ccTypeName, ") Message(msg string) error {")
+	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importErrcode.Ident("ErrRep"), " {")
 
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: msg}`)
-
-	g.P("}")
-	g.P()
-	g.P("func (x ", ccTypeName, ") ErrorLog(err error) error {")
-
-	g.P(b.importLog.Ident("Error"), `(err)`)
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Message: x.String()}`)
+	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: msg}`)
 
 	g.P("}")
 	g.P()
-	g.P("func (x ", ccTypeName, ") GrpcStatus() *", b.importStatus.Ident("Status"), " {")
+	g.P("func (x ", ccTypeName, ") Wrap(err error) *", b.importErrcode.Ident("ErrRep"), " {")
+
+	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: err.Error()}`)
+	g.P("}")
+	g.P()
+
+	g.P("func (x ", ccTypeName, ") GRPCStatus() *", b.importStatus.Ident("Status"), " {")
 
 	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.String())`)
 

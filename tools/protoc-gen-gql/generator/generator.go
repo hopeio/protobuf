@@ -230,7 +230,7 @@ func (s *SchemaDescriptor) uniqueName(d desc.Descriptor, input bool) (name strin
 		suffix = inputSuffix
 	}
 	if _, ok := d.(*desc.MessageDescriptor); !input && ok && strings.ToUpper(d.GetName()) == "ID" {
-		suffix = "Rep"
+		suffix = "ErrRep"
 	}
 	name = strings.Title(stringsi.CamelCaseSlice(strings.Split(strings.TrimPrefix(d.GetFullyQualifiedName(), d.GetFile().GetPackage()+packageSep), packageSep)) + suffix)
 

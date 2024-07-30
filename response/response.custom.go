@@ -2,6 +2,7 @@ package response
 
 import (
 	"errors"
+	httpi "github.com/hopeio/utils/net/http"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"io"
 	"net/http"
@@ -10,15 +11,15 @@ import (
 )
 
 type Reply struct {
-	Code    uint32
-	Message string
-	Details proto.Message
+	Code uint32
+	Msg  string
+	Data proto.Message
 }
 
 func (x *HttpResponse) GetContentType() string {
 	hlen := len(x.Header)
 	for i := 0; i < hlen && i+1 < hlen; i += 2 {
-		if x.Header[i] == "Content-Type" {
+		if x.Header[i] == httpi.HeaderContentType {
 			return x.Header[i+1]
 		}
 	}
@@ -54,7 +55,7 @@ func (x *HttpResponse) UnmarshalGQL(v interface{}) error {
 	return errors.New("error type")
 }
 
-var ResponseOk = &TinyRep{Message: "OK"}
+var ResponseOk = &TinyRep{}
 
 type StringValue = wrapperspb.StringValue
 
