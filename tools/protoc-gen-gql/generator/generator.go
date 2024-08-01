@@ -3,6 +3,7 @@ package generator
 import (
 	"fmt"
 	stringsi "github.com/hopeio/utils/strings"
+	"github.com/hopeio/utils/strings/unicode"
 	"strconv"
 	"strings"
 
@@ -462,12 +463,12 @@ func (r *RootDefinition) UniqueName(svc *descriptor.ServiceDescriptorProto, rpc 
 		name = *rpcOpts.Name
 	} else if svcOpts != nil && svcOpts.Name != nil {
 		if *svcOpts.Name == "" {
-			name = stringsi.ToLowerFirst(rpc.GetName())
+			name = unicode.ToLowerFirst(rpc.GetName())
 		} else {
 			name = *svcOpts.Name + strings.Title(rpc.GetName())
 		}
 	} else {
-		name = stringsi.ToLowerFirst(svc.GetName()) + strings.Title(rpc.GetName())
+		name = unicode.ToLowerFirst(svc.GetName()) + strings.Title(rpc.GetName())
 	}
 
 	originalName := name
@@ -578,7 +579,7 @@ func (s *SchemaDescriptor) createField(field *desc.FieldDescriptor, obj *ObjectD
 
 	fieldAst := &ast.FieldDefinition{
 		Description: getDescription(field),
-		Name:        stringsi.ToLowerFirst(stringsi.SnakeToCamel(field.GetName())),
+		Name:        unicode.ToLowerFirst(stringsi.SnakeToCamel(field.GetName())),
 		Type:        &ast.Type{Position: &ast.Position{}},
 		Position:    &ast.Position{},
 	}
@@ -741,7 +742,7 @@ func (s *SchemaDescriptor) createUnion(oneof *desc.OneOfDescriptor) (*FieldDescr
 		types:      objTypes,
 	}
 	s.objects = append(s.objects, obj)
-	name := stringsi.ToLowerFirst(stringsi.SnakeToCamel(oneof.GetName()))
+	name := unicode.ToLowerFirst(stringsi.SnakeToCamel(oneof.GetName()))
 	opts := GraphqlOneofOptions(oneof.AsOneofDescriptorProto().GetOptions())
 	if opts.GetName() != "" {
 		name = opts.GetName()
