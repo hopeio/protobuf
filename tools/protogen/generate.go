@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hopeio/utils/io/fs"
+	"github.com/hopeio/utils/fs"
 	execi "github.com/hopeio/utils/os/exec"
 	_go "github.com/hopeio/utils/sdk/go"
 	"github.com/spf13/cobra"

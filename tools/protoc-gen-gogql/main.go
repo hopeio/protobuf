@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/hopeio/utils/io/fs"
+	"github.com/hopeio/utils/fs"
 	"path"
 	"strconv"
 	"strings"

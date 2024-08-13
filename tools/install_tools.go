@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hopeio/utils/io/fs"
+	"github.com/hopeio/utils/fs"
 	"github.com/hopeio/utils/log"
 	execi "github.com/hopeio/utils/os/exec"
 	"os"
