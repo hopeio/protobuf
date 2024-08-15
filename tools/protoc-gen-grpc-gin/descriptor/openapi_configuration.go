@@ -3,14 +3,14 @@ package descriptor
 import (
 	"fmt"
 	"github.com/hopeio/protobuf/utils/openapiconfig"
-	"github.com/hopeio/utils/encoding/yaml"
+	"github.com/hopeio/utils/encoding/common"
 	"io/ioutil"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func loadOpenAPIConfigFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*openapiconfig.OpenAPIConfig, error) {
-	jsonContents, err := yaml.YAMLToJSON(yamlFileContents)
+	jsonContents, err := common.YAMLToJSON(yamlFileContents)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert OpenAPI Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
 	}

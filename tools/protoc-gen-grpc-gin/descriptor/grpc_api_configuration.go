@@ -3,8 +3,8 @@ package descriptor
 import (
 	"fmt"
 	"github.com/hopeio/protobuf/utils/apiconfig"
+	"github.com/hopeio/utils/encoding/common"
 
-	"github.com/hopeio/utils/encoding/yaml"
 	"io/ioutil"
 	"strings"
 
@@ -12,7 +12,7 @@ import (
 )
 
 func loadGrpcAPIServiceFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*apiconfig.GrpcAPIService, error) {
-	jsonContents, err := yaml.YAMLToJSON(yamlFileContents)
+	jsonContents, err := common.YAMLToJSON(yamlFileContents)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
 	}
