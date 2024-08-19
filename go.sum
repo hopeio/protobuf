@@ -74,8 +74,8 @@ github.com/hopeio/utils v0.1.5-0.20240819082259-7b875e245576 h1:o7QF6ogMXMpF6TUO
 github.com/hopeio/utils v0.1.5-0.20240819082259-7b875e245576/go.mod h1:SQnWZjOlribn6dB1SsyOlROWc91Ebz325iF6e7fFmlU=
 github.com/hopeio/utils v0.1.6 h1:vAKz6ADPoAtED6+T6oiL2aLm9Zq1feGm7JBDPUd4FVU=
 github.com/hopeio/utils v0.1.6/go.mod h1:SQnWZjOlribn6dB1SsyOlROWc91Ebz325iF6e7fFmlU=
-github.com/hopeio/utils v0.1.7 h1:kprOKFBZbTTCh2xp2ZNDjYVhh1c0IWM34iyDBLfKet0=
-github.com/hopeio/utils v0.1.7/go.mod h1:SQnWZjOlribn6dB1SsyOlROWc91Ebz325iF6e7fFmlU=
+github.com/hopeio/utils v0.1.8 h1:rsez2Pmcbyvas1iP5kYrL28qkYsbfrRA0HI/ZGvEF/I=
+github.com/hopeio/utils v0.1.8/go.mod h1:SQnWZjOlribn6dB1SsyOlROWc91Ebz325iF6e7fFmlU=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/jhump/protoreflect v1.16.0 h1:54fZg+49widqXYQ0b+usAFHbMkBGR4PpXrsHc8+TBDg=
