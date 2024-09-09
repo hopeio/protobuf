@@ -75,5 +75,5 @@ func protoc(dir string) {
 	for _, plugin := range model {
 		args += " --" + plugin + ":" + libProtobufDir
 	}
-	execi.Run(cmd + args)
+	execi.RunWithLog(cmd + args)
 }

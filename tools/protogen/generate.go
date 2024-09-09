@@ -171,16 +171,16 @@ func getInclude() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		execi.Cmd("go mod init generate")*/
+		execi.RunGetOut("go mod init generate")*/
 
-	libcherryDir, err := execi.Cmd(_go.GoListDir + DepProtobuf)
+	libcherryDir, err := execi.RunGetOut(_go.GoListDir + DepProtobuf)
 	if err == nil {
 		config.dproto = libcherryDir + "/_proto"
 	}
 	config.include = "-I" + config.dproto + " -I" + config.proto
 	/*	os.Chdir(libcherryDir)
-		DepGrpcGateway, _ = execi.Cmd(goListDep + DepGrpcGateway)
-		DepProtopatch, _ = execi.Cmd(goListDep + DepProtopatch)
+		DepGrpcGateway, _ = execi.RunGetOut(goListDep + DepGrpcGateway)
+		DepProtopatch, _ = execi.RunGetOut(goListDep + DepProtopatch)
 		os.Chdir(generatePath)
 		libGoogleDir := _go.GetDepDir(DepGoogleapis)
 		libGatewayDir := _go.GetDepDir(DepGrpcGateway)*/
@@ -240,14 +240,14 @@ func gengql() {
 	if err != nil {
 		log.Panicln(err)
 	}
-	out, err := execi.Cmd("go list -m")
+	out, err := execi.RunGetOut("go list -m")
 	if err != nil {
 		log.Panicln(err)
 	}
 	mods := strings.Split(out, "\n")
 	mod := mods[len(mods)-1]
 	// 调用方mod路径
-	out, err = execi.Cmd("go list -m -f {{.Dir}}")
+	out, err = execi.RunGetOut("go list -m -f {{.Dir}}")
 	// 如果生成路径包含模块名
 	_, after, _ := strings.Cut(compath, out)
 	gomod := strings.ReplaceAll(mod+after, "\\", "/")
@@ -289,7 +289,7 @@ func gengql() {
 						log.Panicln(err)
 					}
 					file.Close()
-					execi.Run(`gqlgen --verbose --config ` + config)
+					execi.RunWithLog(`gqlgen --verbose --config ` + config)
 					break
 				}
 			}

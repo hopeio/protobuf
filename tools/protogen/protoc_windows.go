@@ -5,5 +5,5 @@ import (
 )
 
 func protoc(cmd string) {
-	execi.Run(cmd)
+	execi.RunWithLog(cmd)
 }
