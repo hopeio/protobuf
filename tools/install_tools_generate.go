@@ -1,5 +1,11 @@
 //go:build tools
 
+/*
+ * Copyright 2024 hopeio. All rights reserved.
+ * Licensed under the MIT License that can be found in the LICENSE file.
+ * @Created by jyb
+ */
+
 package main
 
 import (
@@ -14,6 +20,4 @@ import (
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go"
 )
 
-
 //go:generate go run ./install_tools.go
-
