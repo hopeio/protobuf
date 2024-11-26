@@ -7,8 +7,8 @@
 package main
 
 import (
-	"github.com/hopeio/utils/fs"
 	execi "github.com/hopeio/utils/os/exec"
+	"github.com/hopeio/utils/os/fs"
 	_go "github.com/hopeio/utils/sdk/go"
 	"github.com/spf13/cobra"
 	"log"
