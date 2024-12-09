@@ -2,8 +2,6 @@ module github.com/hopeio/protobuf
 
 go 1.23
 
-toolchain go1.23.0
-
 require (
 	github.com/99designs/gqlgen v0.17.47
 	github.com/alta/protopatch v0.5.3
