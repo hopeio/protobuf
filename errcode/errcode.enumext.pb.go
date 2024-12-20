@@ -6,7 +6,7 @@ import (
 	io "io"
 )
 
-func (x ErrCode) String() string {
+func (x ErrCode) NewString() string {
 
 	switch x {
 	case Success:

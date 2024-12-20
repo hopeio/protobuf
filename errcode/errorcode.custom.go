@@ -98,3 +98,9 @@ func HttpStatusFromCode(code ErrCode) int {
 	grpclog.Infof("Unknown gRPC error code: %v", code)
 	return http.StatusInternalServerError
 }
+
+func init() {
+	for code, msg := range ErrCode_name {
+		errcode.RegisterErrCode(errcode.ErrCode(code), msg)
+	}
+}

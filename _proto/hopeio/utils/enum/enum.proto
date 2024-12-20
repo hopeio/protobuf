@@ -38,7 +38,7 @@ extend google.protobuf.EnumOptions {
 }
 
 extend google.protobuf.EnumValueOptions {
-  optional string enumvalue_cn = 66002;
+  optional string enumvalue = 66002;
 }
 
 

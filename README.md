@@ -50,10 +50,10 @@ message User {
 // 用户性别
 enum Gender{
   option (go.enum) = {stringer_name: 'OrigString'};
-  GenderPlaceholder = 0 [(enum.enumvalue_cn)= "占位"];
-  GenderUnfilled = 1 [(enum.enumvalue_cn)= "未填"];
-  GenderMale = 2 [(enum.enumvalue_cn)= "男"];
-  GenderFemale = 3 [(enum.enumvalue_cn)= "女"];
+  GenderPlaceholder = 0 [(enum.enumvalue)= "占位"];
+  GenderUnfilled = 1 [(enum.enumvalue)= "未填"];
+  GenderMale = 2 [(enum.enumvalue)= "男"];
+  GenderFemale = 3 [(enum.enumvalue)= "女"];
 }
 
 service UserService {

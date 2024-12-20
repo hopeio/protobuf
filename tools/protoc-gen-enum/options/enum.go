@@ -34,8 +34,8 @@ func NoExtGen(e *protogen.Enum) bool {
 	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_EnumNoExtgen, false)
 }
 
-func GetEnumValueCN(ev *protogen.EnumValue) string {
-	return protogeni.GetOptionWithDefault[string](ev.Desc, enum.E_EnumvalueCn, "")
+func GetEnumValue(ev *protogen.EnumValue) string {
+	return protogeni.GetOptionWithDefault[string](ev.Desc, enum.E_Enumvalue, "")
 }
 
 func GetEnumType(e *protogen.Enum) string {

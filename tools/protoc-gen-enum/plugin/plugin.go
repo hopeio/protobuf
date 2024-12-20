@@ -146,7 +146,7 @@ func (b *Builder) generateString(f *protogen.File, e *protogen.Enum, g *protogen
 			//PrintComments(e.Comments, g)
 
 			g.P("case ", name, " :")
-			if cn := options.GetEnumValueCN(ev); cn != "" {
+			if cn := options.GetEnumValue(ev); cn != "" {
 				g.P("return ", strconv.Quote(cn))
 			} else {
 				g.P("return ", strconv.Quote(name))
