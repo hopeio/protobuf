@@ -218,34 +218,29 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") Error() string {")
-
 	g.P(`return x.String()`)
-
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") ErrRep() *", b.importErrcode.Ident("ErrRep"), " {")
-
 	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: x.String()}`)
-
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importErrcode.Ident("ErrRep"), " {")
-
 	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: msg}`)
-
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") Wrap(err error) *", b.importErrcode.Ident("ErrRep"), " {")
-
 	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: err.Error()}`)
 	g.P("}")
 	g.P()
 
 	g.P("func (x ", ccTypeName, ") GRPCStatus() *", b.importStatus.Ident("Status"), " {")
-
 	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.String())`)
-
 	g.P("}")
+	g.P()
+
+	g.P("func (x ErrCode) Origin() errcode.ErrCode {")
+	g.P(`return errcode.ErrCode(x)`)
 	g.P()
 }
 
