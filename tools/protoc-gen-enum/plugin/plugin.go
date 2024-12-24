@@ -239,8 +239,9 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P("}")
 	g.P()
 
-	g.P("func (x ErrCode) Origin() errcode.ErrCode {")
+	g.P("func (x ", ccTypeName, ") Origin() errcode.ErrCode {")
 	g.P(`return errcode.ErrCode(x)`)
+	g.P("}")
 	g.P()
 }
 
