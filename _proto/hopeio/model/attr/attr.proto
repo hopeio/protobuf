@@ -28,16 +28,3 @@ message Attribute{
     read_only:true
   }];
 }
-
-
-message AttributeValue{
-  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
-  uint64 attrId = 2 [(go.field) = {tags:'gorm:"comment:attrId"'}];
-  string value = 4 [(go.field) = {tags:'comment:"值'}];
-  timestamp.Timestamp createdAt = 16 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  timestamp.Timestamp updatedAt = 26 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
-  deletedAt.DeletedAt deletedAt = 28 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
-  uint32 status = 18 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    read_only:true
-  }];
-}

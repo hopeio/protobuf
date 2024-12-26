@@ -31,10 +31,9 @@ message TableMeta{
 }
 
 
-message TableField{
+message TableColumn{
   uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
-  uint64 structId = 2 [(go.field) = {tags:'gorm:"comment:structId"'}];
-  uint64 subStructId = 3 [(go.field) = {tags:'gorm:"comment:子结构体Id"'}];
+  uint64 tableId = 2 [(go.field) = {tags:'gorm:"comment:tableId"'}];
   string name = 4 [(go.field) = {tags:'comment:"名称'}];
   uint32 type = 5 [(go.field) = {tags:'comment:"类型'}];
   timestamp.Timestamp createdAt = 16 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
@@ -47,7 +46,7 @@ message TableField{
 
 message TableValue{
   uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
-  string fieldId = 2 [(go.field) = {tags:'comment:"名称'}];
+  string columnId = 2 [(go.field) = {tags:'comment:"名称'}];
   string value = 3[(go.field) = {tags:'comment:"值"'}];
   timestamp.Timestamp createdAt = 16 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
   timestamp.Timestamp updatedAt = 26 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
