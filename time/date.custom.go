@@ -11,6 +11,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"github.com/hopeio/utils/encoding/binary"
+	timei "github.com/hopeio/utils/time"
 	"io"
 	"time"
 )
@@ -18,32 +19,29 @@ import (
 func (ts *Date) Scan(value interface{}) (err error) {
 	nullTime := &sql.NullTime{}
 	err = nullTime.Scan(value)
-	*ts = Date{Seconds: nullTime.Time.UnixMilli()}
+	*ts = Date{Days: int32(nullTime.Time.Unix() / int64(timei.DaySecond))}
 	return
 }
 
-func (ts *Date) Value() (driver.Value, error) {
-	if ts == nil {
-		return nil, nil
-	}
-	return time.Unix(ts.Seconds, 0), nil
+func (ts Date) Value() (driver.Value, error) {
+	return []byte(ts.Time().Format(time.DateOnly)), nil
 }
 
-func (ts *Date) GormDataType() string {
+func (ts Date) GormDataType() string {
 	return "time"
 }
 
-func (ts *Date) Time() time.Time {
-	return time.Unix(ts.Seconds, 0)
+func (ts Date) Time() time.Time {
+	return time.Unix(int64(ts.Days)*int64(timei.DaySecond), 0)
 }
 
 func (ts *Date) MarshalBinary() ([]byte, error) {
-	return binary.ToBinary(ts.Seconds), nil
+	return binary.ToBinary(ts.Days), nil
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
 func (ts *Date) UnmarshalBinary(data []byte) error {
-	ts.Seconds = binary.BinaryTo[int64](data)
+	ts.Days = binary.BinaryTo[int32](data)
 	return nil
 }
 
@@ -59,7 +57,7 @@ func (ts *Date) MarshalJSON() ([]byte, error) {
 	if ts == nil {
 		return []byte("null"), nil
 	}
-	t := time.Unix(ts.Seconds, 0)
+	t := ts.Time()
 	if y := t.Year(); y < 0 || y >= 10000 {
 		// RFC 3339 is clear that years are 4 digits exactly.
 		// See golang.org/issue/4556#c15 for more discussion.
@@ -78,24 +76,24 @@ func (ts *Date) UnmarshalJSON(data []byte) error {
 	if len(str) == 0 || str == "null" {
 		return nil
 	}
-	t, err := time.ParseInLocation(time.DateOnly, str[1:len(str)-1], time.Local)
+	t, err := time.Parse(time.DateOnly, str[1:len(str)-1])
 	if err != nil {
 		return err
 	}
-	ts.Seconds = t.Unix()
+	ts.Days = int32(t.Unix() / int64(timei.DaySecond))
 	return nil
 }
 func (x *Date) MarshalGQL(w io.Writer) {
-	w.Write([]byte(time.Unix(x.Seconds, 0).Format(time.DateOnly)))
+	w.Write([]byte(x.Time().Format(time.DateOnly)))
 }
 
 func (x *Date) UnmarshalGQL(v interface{}) error {
 	if i, ok := v.(string); ok {
-		t, err := time.ParseInLocation(time.DateOnly, i, time.Local)
+		t, err := time.Parse(time.DateOnly, i)
 		if err != nil {
 			return err
 		}
-		x.Seconds = t.Unix()
+		x.Days = int32(t.Unix() / int64(timei.DaySecond))
 		return nil
 	}
 	return errors.New("enum need integer type")

@@ -29,7 +29,7 @@ message SecondTime {
 }
 
 message Date {
-  int64 seconds = 1;
+  int32 days = 1;
 }
 
 message Duration{
