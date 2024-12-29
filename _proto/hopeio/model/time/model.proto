@@ -17,13 +17,13 @@ option java_package = "xyz.hoper.protobuf.time.model";
 
 message ModelTimeStr{
   string createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  string updateAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
+  string updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
   string deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
 message ModelTimeStamp{
   int64 createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  int64 updateAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
+  int64 updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
   int64 deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
