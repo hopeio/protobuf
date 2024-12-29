@@ -11,6 +11,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"github.com/hopeio/utils/encoding/binary"
+	stringsi "github.com/hopeio/utils/strings"
 	timei "github.com/hopeio/utils/time"
 	"io"
 	"time"
@@ -97,4 +98,21 @@ func (x *Date) UnmarshalGQL(v interface{}) error {
 		return nil
 	}
 	return errors.New("enum need integer type")
+}
+
+func (d Date) MarshalText() ([]byte, error) {
+	return stringsi.ToBytes(d.Time().Format(time.DateOnly)), nil
+}
+
+func (d *Date) UnmarshalText(data []byte) error {
+	if len(data) == 0 {
+		return nil
+	}
+	str := stringsi.BytesToString(data)
+	t, err := time.Parse(time.DateOnly, str)
+	if err != nil {
+		return err
+	}
+	d.Days = int32(t.Unix() / int64(timei.DaySecond))
+	return nil
 }
