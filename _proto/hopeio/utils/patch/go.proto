@@ -53,7 +53,7 @@ extend google.protobuf.EnumValueOptions {
 }
 
 message FileOptions{
-	optional bool non_omitempty = 1;
+	optional bool no_omitempty = 1;
 	optional bool	no_enum_prefix = 10;
 }
 

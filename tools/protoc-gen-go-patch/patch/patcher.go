@@ -540,7 +540,7 @@ func (p *Patcher) patchIdent(id *ast.Ident, obj types.Object) {
 				v.Tag = &ast.BasicLit{}
 			}
 
-			v.Tag.Value = mergeTags(v.Tag.Value, tags, p.fileOptions.GetNonOmitempty())
+			v.Tag.Value = mergeTags(v.Tag.Value, tags, p.fileOptions.GetNoOmitempty())
 			log.Printf("Add tags:\t%q.%s %s", obj.Pkg().Path(), id.Name, v.Tag.Value)
 		}
 	}

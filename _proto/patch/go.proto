@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package go;
+package patch;
 
 import "google/protobuf/descriptor.proto";
 
