@@ -23,13 +23,7 @@ type Reply struct {
 }
 
 func (x *HttpResponse) GetContentType() string {
-	hlen := len(x.Header)
-	for i := 0; i < hlen && i+1 < hlen; i += 2 {
-		if x.Header[i] == httpi.HeaderContentType {
-			return x.Header[i+1]
-		}
-	}
-	return ""
+	return x.Headers[httpi.HeaderContentType]
 }
 
 func (x *HttpResponse) Response(w http.ResponseWriter) {
@@ -37,11 +31,10 @@ func (x *HttpResponse) Response(w http.ResponseWriter) {
 	//先设置请求头，再设置状态码，再写body
 	//原因是http里每次操作都要判断wroteHeader(表示已经写过header了，不可以再写了)
 
-	hlen := len(x.Header)
-	for i := 0; i < hlen && i+1 < hlen; i += 2 {
-		w.Header().Set(x.Header[i], x.Header[i+1])
+	for k, v := range x.Headers {
+		w.Header().Set(k, v)
 	}
-	w.WriteHeader(int(x.StatusCode))
+	w.WriteHeader(int(x.Status))
 	w.Write(x.Body)
 }
 
@@ -86,3 +79,20 @@ func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpRespo
 	return header, nil
 }
 */
+
+func (x *HttpResponse) StatusCode() int {
+	return int(x.Status)
+}
+
+func (x *HttpResponse) RespHeader() map[string]string {
+	return x.Headers
+}
+
+func (x *HttpResponse) WriteTo(writer io.Writer) (int64, error) {
+	i, err := writer.Write(x.Body)
+	return int64(i), err
+}
+
+func (x *HttpResponse) Close() error {
+	return nil
+}

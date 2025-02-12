@@ -74,10 +74,6 @@ models:
     model: github.com/99designs/gqlgen/graphql.Float
   Bytes:
     model: github.com/hopeio/utils/net/http/graphql.Bytes
-  Header:
-    model: github.com/hopeio/utils/net/http/graphql.Header
-  HttpResponse_HeaderEntry:
-    model: github.com/hopeio/protobuf/response.HeaderEntry
 `
 
 //经过一番查找，发现yaml语法对格式是非常严格的，不可以有制表符！不可以有制表符！不可以有制表符！
