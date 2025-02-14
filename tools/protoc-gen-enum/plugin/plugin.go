@@ -121,16 +121,31 @@ func (b *Builder) generate(f *protogen.File, e *protogen.Enum, g *protogen.Gener
 func (b *Builder) generateString(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
 	noEnumPrefix := options.FileOptions(f).GetNoEnumPrefix()
 	ccTypeName := e.GoIdent
-	stringerName := options.ValueOptions(e).GetStringerName()
-	if stringerName == "" || stringerName == "String" {
-		stringerName = "NewString"
-	} else {
-		stringerName = "String"
+	if len(e.Values) >= 64 {
+		g.P("var (")
+		g.P(ccTypeName, "_text = map[", ccTypeName, "]string{")
+		for _, ev := range e.Values {
+			opts := options.EnumValueOptions(ev)
+			name := opts.GetName()
+			if name == "" {
+				name = ev.GoIdent.GoName
+				if noEnumPrefix {
+					name = replacePrefix(ev.GoIdent.GoName, e.GoIdent.GoName+"_", "")
+				}
+			}
+			if text := options.GetEnumText(ev); text != "" {
+				g.P(name, " :", strconv.Quote(text), ",")
+			} else {
+				g.P(name, " :", strconv.Quote(name), ",")
+			}
+		}
+		g.P("}")
+		g.P(")")
+		g.P()
 	}
-	g.P("func (x ", ccTypeName, ") "+stringerName+"() string {")
-	g.P()
-	if len(e.Values) > 64 {
-		g.P("return ", ccTypeName, "_name[x]")
+	g.P("func (x ", ccTypeName, ") Text() string {")
+	if len(e.Values) >= 64 {
+		g.P("return ", ccTypeName, "_text[x]")
 	} else {
 		g.P("switch x {")
 		for _, ev := range e.Values {
@@ -146,16 +161,16 @@ func (b *Builder) generateString(f *protogen.File, e *protogen.Enum, g *protogen
 			//PrintComments(e.Comments, g)
 
 			g.P("case ", name, " :")
-			if cn := options.GetEnumValue(ev); cn != "" {
-				g.P("return ", strconv.Quote(cn))
+			if text := options.GetEnumText(ev); text != "" {
+				g.P("return ", strconv.Quote(text))
 			} else {
 				g.P("return ", strconv.Quote(name))
 			}
 
 		}
+		g.P("}")
+		g.P("return ", strconv.Quote(""))
 	}
-	g.P("}")
-	g.P("return ", strconv.Quote(""))
 	g.P("}")
 	g.P()
 }
@@ -241,6 +256,13 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 
 	g.P("func (x ", ccTypeName, ") Origin() errcode.ErrCode {")
 	g.P(`return errcode.ErrCode(x)`)
+	g.P("}")
+	g.P()
+
+	g.P("func init() {")
+	g.P("for code := range ", ccTypeName, "_name {")
+	g.P("errcode.Register(errcode.ErrCode(code), ", ccTypeName, "(code).Text())")
+	g.P(`}`)
 	g.P("}")
 	g.P()
 }

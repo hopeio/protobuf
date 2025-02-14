@@ -15,37 +15,37 @@ option go_package = "github.com/hopeio/protobuf/utils/enum";
 
 extend google.protobuf.EnumOptions {
   //自定义类型
-  optional string enum_customtype = 62025;
+  optional string customtype = 62025;
 
-  optional bool enum_no_genvaluemap = 62026;
+  optional bool no_genvaluemap = 62026;
   //不用手动标序号，= iota
-  optional bool enum_numorder = 62027;
+  optional bool numorder = 62027;
   //生成JsonMarshal
-  optional bool enum_jsonmarshal = 62028;
+  optional bool jsonmarshal = 62028;
 
   //是errcode
-  optional bool enum_errcode = 62029;
+  optional bool errcode = 62029;
 
-  optional bool enum_gqlgen = 62030;
+  optional bool gqlgen = 62030;
 
-  optional bool enum_no_prefix = 62031;
+  optional bool no_prefix = 62031;
 
-  optional bool enum_stringer = 62033;
+  optional bool stringer = 62033;
 
-  optional bool  enum_no_extgen = 62032;
+  optional bool  no_extgen = 62032;
 
-  optional bool enum_textmarshal = 62034;
+  optional bool textmarshal = 62034;
 }
 
 extend google.protobuf.EnumValueOptions {
-  optional string enumvalue = 66002;
+  optional string text = 66002;
 }
 
 
 extend google.protobuf.FileOptions {
-  optional bool enum_gqlgen_all = 1001;
-  optional bool enum_jsonmarshal_all = 1003;
-  optional bool enum_textmarshal_all = 1004;
-  optional bool enum_no_prefix_all = 1002;
-  optional bool enum_no_extgen_all = 1005;
+  optional bool gqlgen_all = 1001;
+  optional bool jsonmarshal_all = 1003;
+  optional bool textmarshal_all = 1004;
+  optional bool no_prefix_all = 1002;
+  optional bool no_extgen_all = 1005;
 }
