@@ -7,7 +7,8 @@
 package main
 
 type Config struct {
-	proto, genpath, dproto                                                         string
+	proto, genpath, currentDir                                                     string
+	thirdIncludes                                                                  []string
 	include                                                                        string
 	useEnumPlugin, useGateWayPlugin, useValidatorOutPlugin, useGqlPlugin, stdPatch bool
 	apidocDir                                                                      string

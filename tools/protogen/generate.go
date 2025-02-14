@@ -79,12 +79,13 @@ func init() {
 	pwd, _ := os.Getwd()
 	pflag := rootCmd.PersistentFlags()
 	pflag.StringVarP(&config.proto, "proto", "p", protodef, "proto dir")
-	pflag.StringVarP(&config.genpath, "genpath", "g", pwd+"/protobuf", "generate dir")
-	pflag.StringVarP(&config.dproto, "cherry", "d", "/proto", "cherry proto dir")
+	pflag.StringVarP(&config.genpath, "genpath", "o", pwd+"/protobuf", "generate dir")
+	pflag.StringVarP(&config.currentDir, "current", "c", "/proto", "手动指定protobuf项目目录")
+	pflag.StringArrayVarP(&config.thirdIncludes, "include", "I", nil, "外部proto依赖")
 	pflag.BoolVarP(&config.useEnumPlugin, "enum", "e", false, "是否使用enum扩展插件")
-	pflag.BoolVarP(&config.useGateWayPlugin, "gw", "w", false, "是否使用grpc-gateway插件")
+	pflag.BoolVarP(&config.useGateWayPlugin, "gateway", "w", false, "是否使用grpc-gateway插件")
 	pflag.BoolVarP(&config.useValidatorOutPlugin, "validator", "v", false, "是否使用validators插件")
-	pflag.BoolVarP(&config.useGqlPlugin, "graphql", "q", false, "是否使用graphql插件")
+	pflag.BoolVarP(&config.useGqlPlugin, "graphql", "g", false, "是否使用graphql插件")
 	pflag.BoolVar(&config.stdPatch, "patch", false, "是否使用原生protopatch")
 	pflag.StringVar(&config.apidocDir, "apiDocDir", "", "api doc目录")
 	rootCmd.AddCommand(&cobra.Command{
@@ -179,12 +180,15 @@ func getInclude() {
 		}
 		execi.RunGetOut("go mod init generate")*/
 
-	libcherryDir, err := execi.RunGetOut(_go.GoListDir + DepProtobuf)
+	libDir, err := execi.RunGetOut(_go.GoListDir + DepProtobuf)
 	if err == nil {
-		config.dproto = libcherryDir + "/_proto"
+		config.currentDir = libDir + "/_proto"
 	}
-	config.include = "-I" + config.dproto + " -I" + config.proto
-	/*	os.Chdir(libcherryDir)
+	config.include = "-I" + config.currentDir + " -I" + config.proto
+	for _, include := range config.thirdIncludes {
+		config.include += " -I" + include
+	}
+	/*	os.Chdir(libDir)
 		DepGrpcGateway, _ = execi.RunGetOut(goListDep + DepGrpcGateway)
 		DepProtopatch, _ = execi.RunGetOut(goListDep + DepProtopatch)
 		os.Chdir(generatePath)
