@@ -5,12 +5,12 @@
  */
 
 syntax = "proto3";
-package errcode;
+package test;
 import "hopeio/utils/enum/enum.proto";
 import "hopeio/utils/patch/go.proto";
 
-option java_package = "xyz.hoper.protobuf.errcode";
-option go_package = "github.com/hopeio/protobuf/errcode";
+option java_package = "xyz.hoper.protobuf.test";
+option go_package = "github.com/hopeio/protobuf/test";
 option (go.file) = {no_enum_prefix:true};
 
 enum ErrCode {
