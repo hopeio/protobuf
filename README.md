@@ -1,5 +1,6 @@
 # protobuf
-库中用到的protobuf定义及生成文件
+protobuf插件集合, 常用proto类型
+一个proto文件生产grpc,http,graphql三种接口
 ![protobuf](_assets/protobuf.webp)
 
 ## quick start
@@ -21,10 +22,10 @@ import "hopeio/utils/patch/go.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "hopeio/utils/validator/validator.proto";
 import "google/api/annotations.proto";
-import "hopeio/utils/response/response.proto";
-import "hopeio/utils/request/param.proto";
+import "hopeio/response/response.proto";
+import "hopeio/request/param.proto";
 import "danielvladco/protobuf/graphql.proto";
-import "hopeio/utils/oauth/oauth.proto";
+import "hopeio/oauth/oauth.proto";
 import "google/protobuf/wrappers.proto";
 
 option java_package = "protobuf.user";
@@ -49,11 +50,9 @@ message User {
 
 // 用户性别
 enum Gender{
-  option (go.enum) = {stringer_name: 'OrigString'};
-  GenderPlaceholder = 0 [(enum.enumvalue)= "占位"];
-  GenderUnfilled = 1 [(enum.enumvalue)= "未填"];
-  GenderMale = 2 [(enum.enumvalue)= "男"];
-  GenderFemale = 3 [(enum.enumvalue)= "女"];
+  GenderPlaceholder = 0 [(enum.value)= "占位"];
+  GenderMale = 1 [(enum.value)= "男"];
+  GenderFemale = 2 [(enum.value)= "女"];
 }
 
 service UserService {
@@ -88,7 +87,6 @@ service UserService {
     - go/dart 生成go/dart文件，E.g: protogen go -p xxx -o xxx
     - -p proto dir
     - -o generate dir
-    - (-d) 指定cherry proto dir,如项目引用本项目或使用jybl/protogen image 可省略
     - -e 是否使用enum扩展插件
     - -w 是否使用grpc-gateway插件
     - -v 是否使用validators插件
