@@ -104,9 +104,7 @@ func (b *Builder) Generate() error {
 
 func (b *Builder) generate(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
 
-	if options.EnabledEnumStringer(e) {
-		b.generateString(f, e, g)
-	}
+	b.generateText(f, e, g)
 	if options.EnabledEnumJsonMarshal(f, e) {
 		b.generateJsonMarshal(e, g)
 	}
@@ -118,7 +116,7 @@ func (b *Builder) generate(f *protogen.File, e *protogen.Enum, g *protogen.Gener
 	}
 }
 
-func (b *Builder) generateString(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
+func (b *Builder) generateText(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
 	noEnumPrefix := options.FileOptions(f).GetNoEnumPrefix()
 	ccTypeName := e.GoIdent
 	if len(e.Values) >= 64 {
@@ -233,11 +231,11 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") Error() string {")
-	g.P(`return x.String()`)
+	g.P(`return x.Text()`)
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") ErrRep() *", b.importErrcode.Ident("ErrRep"), " {")
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: x.String()}`)
+	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: x.Text()}`)
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importErrcode.Ident("ErrRep"), " {")
@@ -250,11 +248,11 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P()
 
 	g.P("func (x ", ccTypeName, ") GRPCStatus() *", b.importStatus.Ident("Status"), " {")
-	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.String())`)
+	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.Text())`)
 	g.P("}")
 	g.P()
 
-	g.P("func (x ", ccTypeName, ") Origin() errcode.ErrCode {")
+	g.P("func (x ", ccTypeName, ") ErrCode() errcode.ErrCode {")
 	g.P(`return errcode.ErrCode(x)`)
 	g.P("}")
 	g.P()

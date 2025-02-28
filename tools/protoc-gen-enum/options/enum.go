@@ -76,7 +76,3 @@ func NoEnumPrefix(f *protogen.File, e *protogen.Enum) bool {
 
 	return protogeni.GetOptionWithDefault[bool](f.Desc, enum.E_NoPrefixAll, false)
 }
-
-func EnabledEnumStringer(e *protogen.Enum) bool {
-	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_Stringer, true)
-}

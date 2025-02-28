@@ -30,8 +30,6 @@ extend google.protobuf.EnumOptions {
 
   optional bool no_prefix = 62031;
 
-  optional bool stringer = 62033;
-
   optional bool  no_extgen = 62032;
 
   optional bool textmarshal = 62034;
