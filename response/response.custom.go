@@ -84,8 +84,8 @@ func (x *HttpResponse) StatusCode() int {
 	return int(x.Status)
 }
 
-func (x *HttpResponse) RespHeader() map[string]string {
-	return x.Headers
+func (x *HttpResponse) Header() httpi.Header {
+	return httpi.MapHeader(x.Headers)
 }
 
 func (x *HttpResponse) WriteTo(writer io.Writer) (int64, error) {
