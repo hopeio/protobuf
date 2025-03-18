@@ -9,6 +9,7 @@ package response
 import (
 	"errors"
 	httpi "github.com/hopeio/utils/net/http"
+	"github.com/hopeio/utils/net/http/consts"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"io"
 	"net/http"
@@ -23,7 +24,7 @@ type Reply struct {
 }
 
 func (x *HttpResponse) GetContentType() string {
-	return x.Headers[httpi.HeaderContentType]
+	return x.Headers[consts.HeaderContentType]
 }
 
 func (x *HttpResponse) Response(w http.ResponseWriter) {
