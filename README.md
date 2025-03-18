@@ -31,7 +31,7 @@ import "google/protobuf/wrappers.proto";
 option java_package = "protobuf.user";
 option go_package = "protobuf/user";
 option (enum.gqlgen_all) = true;
-option (enum.prefix_all) = false;
+option (enum.no_prefix_all) = false;
 option (go.file) = {no_enum_prefix:true};
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -50,9 +50,9 @@ message User {
 
 // 用户性别
 enum Gender{
-  GenderPlaceholder = 0 [(enum.value)= "占位"];
-  GenderMale = 1 [(enum.value)= "男"];
-  GenderFemale = 2 [(enum.value)= "女"];
+  GenderPlaceholder = 0 [(enum.text)= "占位"];
+  GenderMale = 1 [(enum.text)= "男"];
+  GenderFemale = 2 [(enum.text)= "女"];
 }
 
 service UserService {
