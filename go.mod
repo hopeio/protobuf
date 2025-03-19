@@ -23,7 +23,7 @@ require (
 
 require (
 	github.com/danielvladco/go-proto-gql v0.10.1-0.20221227181908-22fca0a9469c
-	github.com/hopeio/utils v0.12.0
+	github.com/hopeio/utils v0.12.1
 	github.com/jhump/protoreflect v1.16.0
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.9.1
