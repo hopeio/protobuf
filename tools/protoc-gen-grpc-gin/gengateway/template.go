@@ -236,7 +236,7 @@ var _ io.Reader
 var _ status.Status
 var _ = grpc_0.String
 var _ = metadata.Join
-var _ = binding.BindBody
+var _ = binding.Bind
 `))
 
 	handlerTemplate = template.Must(template.New("handler").Parse(`
