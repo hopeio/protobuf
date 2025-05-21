@@ -27,18 +27,6 @@ func (x *HttpResponse) GetContentType() string {
 	return x.Headers[consts.HeaderContentType]
 }
 
-func (x *HttpResponse) Response(w http.ResponseWriter) {
-	//我也是头一次知道要按顺序来的 response.wroteHeader
-	//先设置请求头，再设置状态码，再写body
-	//原因是http里每次操作都要判断wroteHeader(表示已经写过header了，不可以再写了)
-
-	for k, v := range x.Headers {
-		w.Header().Set(k, v)
-	}
-	w.WriteHeader(int(x.Status))
-	w.Write(x.Body)
-}
-
 func (x HttpResponse) MarshalProto(w io.Writer) {
 	w.Write(x.Body)
 }
@@ -81,19 +69,14 @@ func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpRespo
 }
 */
 
-func (x *HttpResponse) StatusCode() int {
-	return int(x.Status)
+func (res *HttpResponse) Response(w http.ResponseWriter) (int, error) {
+	return res.CommonResponse(httpi.CommonResponseWriter{w})
 }
 
-func (x *HttpResponse) Header() httpi.Header {
-	return httpi.MapHeader(x.Headers)
-}
-
-func (x *HttpResponse) WriteTo(writer io.Writer) (int64, error) {
-	i, err := writer.Write(x.Body)
-	return int64(i), err
-}
-
-func (x *HttpResponse) Close() error {
-	return nil
+func (x *HttpResponse) CommonResponse(w httpi.ICommonResponseWriter) (int, error) {
+	header := w.Header()
+	for k, v := range x.Headers {
+		header.Set(k, v)
+	}
+	return w.Write(x.Body)
 }
