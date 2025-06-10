@@ -6,7 +6,7 @@ protobuf插件集合, 常用proto类型
 ## quick start
 - `go get github.com/hopeio/protobuf@main`
 - `go run $(go list -m -f {{.Dir}}  github.com/hopeio/protobuf)/tools/install_tools.go`
-- `protogen go -p $proto_path -g $proto_output_path`
+- `protogen go -p $proto_path -o $proto_output_path`
 
 #### use docker
 `docker run --rm -v $project_path:/work jybl/protogen protogen go --proto=$proto_path --genpath=$proto_output_path`
