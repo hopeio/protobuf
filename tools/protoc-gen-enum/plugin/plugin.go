@@ -36,9 +36,9 @@ func NewBuilder(gen *protogen.Plugin) *Builder {
 		plugin:        gen,
 		importStatus:  "google.golang.org/grpc/status",
 		importCodes:   "google.golang.org/grpc/codes",
-		importStrings: "github.com/hopeio/utils/strings",
+		importStrings: "github.com/hopeio/gox/strings",
 		importStrconv: "strconv",
-		importErrcode: "github.com/hopeio/utils/errors/errcode",
+		importErrcode: "github.com/hopeio/gox/errors/errcode",
 		importErrors:  "errors",
 		importIo:      "io",
 	}

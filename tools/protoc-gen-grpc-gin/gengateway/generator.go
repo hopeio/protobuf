@@ -3,8 +3,8 @@ package gengateway
 import (
 	"errors"
 	"fmt"
+	"github.com/hopeio/gox/log"
 	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
-	"github.com/hopeio/utils/log"
 	"go/format"
 	"path"
 
@@ -45,9 +45,9 @@ func New(reg *descriptor2.Registry, useRequestContext bool, registerFuncSuffix s
 		"google.golang.org/grpc/metadata",
 		"google.golang.org/grpc/status",
 		"github.com/gin-gonic/gin",
-		"github.com/hopeio/utils/net/http/gin/binding",
-		"github.com/hopeio/utils/net/http/grpc",
-		"github.com/hopeio/utils/net/http/grpc/gateway/gin",
+		"github.com/hopeio/gox/net/http/gin/binding",
+		"github.com/hopeio/gox/net/http/grpc",
+		"github.com/hopeio/gox/net/http/grpc/gateway/gin",
 	} {
 		pkg := descriptor2.GoPackage{
 			Path: pkgpath,

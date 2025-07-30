@@ -3,7 +3,7 @@ package descriptor
 import (
 	"fmt"
 	"github.com/hopeio/protobuf/utils/openapiconfig"
-	"github.com/hopeio/utils/encoding/common"
+	"github.com/hopeio/gox/encoding/common"
 	"io/ioutil"
 
 	"google.golang.org/protobuf/encoding/protojson"

@@ -8,8 +8,8 @@ package response
 
 import (
 	"errors"
-	httpi "github.com/hopeio/utils/net/http"
-	"github.com/hopeio/utils/net/http/consts"
+	httpi "github.com/hopeio/gox/net/http"
+	"github.com/hopeio/gox/net/http/consts"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"io"
 	"net/http"

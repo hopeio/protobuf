@@ -3,7 +3,7 @@ package descriptor
 import (
 	"fmt"
 	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
-	"github.com/hopeio/utils/log"
+	"github.com/hopeio/gox/log"
 	"strings"
 
 	options "google.golang.org/genproto/googleapis/api/annotations"

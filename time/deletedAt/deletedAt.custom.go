@@ -10,7 +10,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"errors"
-	timei "github.com/hopeio/utils/time"
+	timei "github.com/hopeio/gox/time"
 	"github.com/jinzhu/now"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

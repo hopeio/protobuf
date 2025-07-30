@@ -8,9 +8,9 @@ package main
 
 import (
 	"fmt"
-	execi "github.com/hopeio/utils/os/exec"
-	"github.com/hopeio/utils/os/fs"
-	_go "github.com/hopeio/utils/sdk/go"
+	execi "github.com/hopeio/gox/os/exec"
+	"github.com/hopeio/gox/os/fs"
+	_go "github.com/hopeio/gox/sdk/go"
 	"log"
 	"os"
 	"strings"

@@ -7,9 +7,9 @@
 package main
 
 import (
-	"github.com/hopeio/utils/log"
-	execi "github.com/hopeio/utils/os/exec"
-	"github.com/hopeio/utils/os/fs"
+	"github.com/hopeio/gox/log"
+	execi "github.com/hopeio/gox/os/exec"
+	"github.com/hopeio/gox/os/fs"
 	"os"
 )
 

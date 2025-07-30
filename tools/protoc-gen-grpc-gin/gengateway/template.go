@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
-	"github.com/hopeio/utils/log"
+	"github.com/hopeio/gox/log"
 	"strings"
 	"text/template"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	stringsi "github.com/hopeio/utils/strings"
+	stringsi "github.com/hopeio/gox/strings"
 )
 
 type param struct {

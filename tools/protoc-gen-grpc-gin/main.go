@@ -14,7 +14,7 @@ import (
 	"fmt"
 	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/gengateway"
-	"github.com/hopeio/utils/log"
+	"github.com/hopeio/gox/log"
 	"go.uber.org/zap/zapcore"
 	"os"
 	"strings"

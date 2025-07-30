@@ -7,7 +7,7 @@
 package main
 
 import (
-	execi "github.com/hopeio/utils/os/exec"
+	execi "github.com/hopeio/gox/os/exec"
 )
 
 func protoc(cmd string) {

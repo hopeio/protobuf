@@ -3,7 +3,7 @@ package httprule
 import (
 	"flag"
 	"fmt"
-	"github.com/hopeio/utils/log"
+	"github.com/hopeio/gox/log"
 	"reflect"
 	"testing"
 )

@@ -8,7 +8,7 @@ package time
 
 import (
 	"database/sql/driver"
-	timei "github.com/hopeio/utils/time"
+	timei "github.com/hopeio/gox/time"
 	"io"
 	"time"
 )

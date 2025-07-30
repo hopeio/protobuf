@@ -10,7 +10,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"errors"
-	timei "github.com/hopeio/utils/time"
+	timei "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"io"
 	"time"

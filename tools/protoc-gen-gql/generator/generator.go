@@ -2,8 +2,8 @@ package generator
 
 import (
 	"fmt"
-	stringsi "github.com/hopeio/utils/strings"
-	"github.com/hopeio/utils/strings/unicode"
+	stringsi "github.com/hopeio/gox/strings"
+	"github.com/hopeio/gox/strings/unicode"
 	"strconv"
 	"strings"
 

@@ -5,7 +5,7 @@ import (
 	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 	"strings"
 
-	stringsi "github.com/hopeio/utils/strings"
+	stringsi "github.com/hopeio/gox/strings"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
 )

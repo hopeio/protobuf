@@ -9,7 +9,7 @@ package options
 import (
 	"github.com/hopeio/protobuf/utils/enum"
 	gopb "github.com/hopeio/protobuf/utils/patch"
-	protogeni "github.com/hopeio/utils/encoding/protobuf/protogen"
+	protogeni "github.com/hopeio/gox/encoding/protobuf/protogen"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 )

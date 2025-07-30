@@ -9,8 +9,8 @@ package time
 import (
 	"database/sql"
 	"database/sql/driver"
-	"github.com/hopeio/utils/encoding/binary"
-	timei "github.com/hopeio/utils/time"
+	"github.com/hopeio/gox/encoding/binary"
+	timei "github.com/hopeio/gox/time"
 	"time"
 )
 
