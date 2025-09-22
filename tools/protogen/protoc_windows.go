@@ -7,9 +7,9 @@
 package main
 
 import (
-	execi "github.com/hopeio/gox/os/exec"
+	execx "github.com/hopeio/gox/os/exec"
 )
 
 func protoc(cmd string) {
-	execi.RunWithLog(cmd)
+	execx.RunWithLog(cmd)
 }

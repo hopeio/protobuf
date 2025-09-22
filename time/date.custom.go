@@ -8,17 +8,17 @@ package time
 
 import (
 	"database/sql/driver"
-	timei "github.com/hopeio/gox/time"
+	timex "github.com/hopeio/gox/time"
 	"io"
 	"time"
 )
 
 func (ts *Date) Scan(value interface{}) error {
-	return (*timei.Date)(&ts.Days).Scan(value)
+	return (*timex.Date)(&ts.Days).Scan(value)
 }
 
 func (ts Date) Value() (driver.Value, error) {
-	return timei.Date(ts.Days).Value()
+	return timex.Date(ts.Days).Value()
 }
 
 func (ts Date) GormDataType() string {
@@ -26,16 +26,16 @@ func (ts Date) GormDataType() string {
 }
 
 func (ts Date) Time() time.Time {
-	return timei.Date(ts.Days).Time()
+	return timex.Date(ts.Days).Time()
 }
 
 func (ts Date) MarshalBinary() ([]byte, error) {
-	return timei.Date(ts.Days).MarshalBinary()
+	return timex.Date(ts.Days).MarshalBinary()
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
 func (ts *Date) UnmarshalBinary(data []byte) error {
-	return (*timei.Date)(&ts.Days).UnmarshalBinary(data)
+	return (*timex.Date)(&ts.Days).UnmarshalBinary(data)
 }
 
 func (ts Date) GobEncode() ([]byte, error) {
@@ -47,24 +47,24 @@ func (ts *Date) GobDecode(data []byte) error {
 }
 
 func (ts Date) MarshalJSON() ([]byte, error) {
-	return timei.Date(ts.Days).MarshalJSON()
+	return timex.Date(ts.Days).MarshalJSON()
 }
 
 func (ts *Date) UnmarshalJSON(data []byte) error {
-	return (*timei.Date)(&ts.Days).UnmarshalJSON(data)
+	return (*timex.Date)(&ts.Days).UnmarshalJSON(data)
 }
 func (x Date) MarshalGQL(w io.Writer) {
-	timei.Date(x.Days).MarshalGQL(w)
+	timex.Date(x.Days).MarshalGQL(w)
 }
 
 func (x *Date) UnmarshalGQL(v interface{}) error {
-	return (*timei.Date)(&x.Days).UnmarshalGQL(v)
+	return (*timex.Date)(&x.Days).UnmarshalGQL(v)
 }
 
 func (d Date) MarshalText() ([]byte, error) {
-	return timei.Date(d.Days).MarshalText()
+	return timex.Date(d.Days).MarshalText()
 }
 
 func (d *Date) UnmarshalText(data []byte) error {
-	return (*timei.Date)(&d.Days).UnmarshalText(data)
+	return (*timex.Date)(&d.Days).UnmarshalText(data)
 }

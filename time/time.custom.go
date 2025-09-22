@@ -11,7 +11,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"github.com/hopeio/gox/encoding/binary"
-	timei "github.com/hopeio/gox/time"
+	timex "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
 	"io"
 	"time"
@@ -34,7 +34,7 @@ func (x *Time) AsTime() time.Time {
 // IsValid reports whether the timestamp is valid.
 // It is equivalent to CheckValid == nil.
 func (x *Time) IsValid() bool {
-	return x != nil && timei.Check(x) == 0
+	return x != nil && timex.Check(x) == 0
 }
 
 // CheckValid returns an error if the timestamp is invalid.
@@ -42,14 +42,14 @@ func (x *Time) IsValid() bool {
 // in the range of 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
 // An error is reported for a nil Timestamp.
 func (x *Time) CheckValid() error {
-	switch timei.Check(x) {
-	case timei.InvalidNil:
+	switch timex.Check(x) {
+	case timex.InvalidNil:
 		return protoimpl.X.NewError("invalid nil time")
-	case timei.InvalidUnderflow:
+	case timex.InvalidUnderflow:
 		return protoimpl.X.NewError("time (%v) before 0001-01-01", x)
-	case timei.InvalidOverflow:
+	case timex.InvalidOverflow:
 		return protoimpl.X.NewError("time (%v) after 9999-12-31", x)
-	case timei.InvalidNanos:
+	case timex.InvalidNanos:
 		return protoimpl.X.NewError("time (%v) has out-of-range nanos", x)
 	default:
 		return nil
@@ -97,12 +97,12 @@ func (ts *Time) MarshalJSON() ([]byte, error) {
 	if ts == nil {
 		return []byte("null"), nil
 	}
-	return timei.MarshalJSON(ts.Time())
+	return timex.MarshalJSON(ts.Time())
 }
 
 func (ts *Time) UnmarshalJSON(data []byte) error {
 	var t time.Time
-	err := timei.UnmarshalJSON(&t, data)
+	err := timex.UnmarshalJSON(&t, data)
 	if err != nil {
 		return err
 	}
@@ -111,14 +111,14 @@ func (ts *Time) UnmarshalJSON(data []byte) error {
 }
 
 func (x *Time) MarshalGQL(w io.Writer) {
-	text, _ := timei.MarshalText(x.Time())
+	text, _ := timex.MarshalText(x.Time())
 	w.Write(text)
 }
 
 func (x *Time) UnmarshalGQL(v interface{}) error {
 	if i, ok := v.(string); ok {
 		var t time.Time
-		err := timei.UnmarshalText(&t, []byte(i))
+		err := timex.UnmarshalText(&t, []byte(i))
 		if err != nil {
 			return err
 		}

@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 	"github.com/hopeio/gox/log"
+	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 	"strings"
 	"text/template"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	stringsi "github.com/hopeio/gox/strings"
+	stringsx "github.com/hopeio/gox/strings"
 )
 
 type param struct {
@@ -39,7 +39,7 @@ func (b binding) GetBodyFieldPath() string {
 // GetBodyFieldStructName returns the binding body's struct field name.
 func (b binding) GetBodyFieldStructName() (string, error) {
 	if b.Body != nil && len(b.Body.FieldPath) != 0 {
-		return stringsi.SnakeToCamel(b.Body.FieldPath.String()), nil
+		return stringsx.SnakeToCamel(b.Body.FieldPath.String()), nil
 	}
 	return "", errors.New("no body field found")
 }
@@ -123,7 +123,7 @@ func (b binding) FieldMaskField() string {
 		}
 	}
 	if fieldMaskField != nil {
-		return stringsi.SnakeToCamel(fieldMaskField.GetName())
+		return stringsx.SnakeToCamel(fieldMaskField.GetName())
 	}
 	return ""
 }
@@ -156,18 +156,18 @@ func applyTemplate(p param, reg *descriptor2.Registry) (string, error) {
 	var targetServices []*descriptor2.Service
 
 	for _, msg := range p.Messages {
-		msgName := stringsi.SnakeToCamel(*msg.Name)
+		msgName := stringsx.SnakeToCamel(*msg.Name)
 		msg.Name = &msgName
 	}
 
 	for _, svc := range p.Services {
 		var methodWithBindingsSeen bool
-		svcName := stringsi.SnakeToCamel(*svc.Name)
+		svcName := stringsx.SnakeToCamel(*svc.Name)
 		svc.Name = &svcName
 
 		for _, meth := range svc.Methods {
 			log.Infof("Processing %s.%s", svc.GetName(), meth.GetName())
-			methName := stringsi.SnakeToCamel(*meth.Name)
+			methName := stringsx.SnakeToCamel(*meth.Name)
 			meth.Name = &methName
 			for _, b := range meth.Bindings {
 				methodWithBindingsSeen = true

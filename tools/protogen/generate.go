@@ -7,15 +7,16 @@
 package main
 
 import (
-	execi "github.com/hopeio/gox/os/exec"
-	"github.com/hopeio/gox/os/fs"
-	_go "github.com/hopeio/gox/sdk/go"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	execx "github.com/hopeio/gox/os/exec"
+	"github.com/hopeio/gox/os/fs"
+	gox "github.com/hopeio/gox/sdk/go"
+	"github.com/spf13/cobra"
 )
 
 /*
@@ -178,9 +179,9 @@ func getInclude() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		execi.RunGetOut("go mod init generate")*/
+		execx.RunGetOut("go mod init generate")*/
 
-	libDir, err := execi.RunGetOut(_go.GoListDir + DepProtobuf)
+	libDir, err := execx.RunGetOut(gox.GoListDir + DepProtobuf)
 	if err == nil {
 		config.currentDir = libDir + "/_proto"
 	}
@@ -189,11 +190,11 @@ func getInclude() {
 		config.include += " -I" + include
 	}
 	/*	os.Chdir(libDir)
-		DepGrpcGateway, _ = execi.RunGetOut(goListDep + DepGrpcGateway)
-		DepProtopatch, _ = execi.RunGetOut(goListDep + DepProtopatch)
+		DepGrpcGateway, _ = execx.RunGetOut(goListDep + DepGrpcGateway)
+		DepProtopatch, _ = execx.RunGetOut(goListDep + DepProtopatch)
 		os.Chdir(generatePath)
-		libGoogleDir := _go.GetDepDir(DepGoogleapis)
-		libGatewayDir := _go.GetDepDir(DepGrpcGateway)*/
+		libGoogleDir := gox.GetDepDir(DepGoogleapis)
+		libGatewayDir := gox.GetDepDir(DepGrpcGateway)*/
 
 	os.Chdir(pwd)
 
@@ -250,14 +251,14 @@ func gengql() {
 	if err != nil {
 		log.Panicln(err)
 	}
-	out, err := execi.RunGetOut("go list -m")
+	out, err := execx.RunGetOut("go list -m")
 	if err != nil {
 		log.Panicln(err)
 	}
 	mods := strings.Split(out, "\n")
 	mod := mods[len(mods)-1]
 	// 调用方mod路径
-	out, err = execi.RunGetOut("go list -m -f {{.Dir}}")
+	out, err = execx.RunGetOut("go list -m -f {{.Dir}}")
 	// 如果生成路径包含模块名
 	_, after, _ := strings.Cut(compath, out)
 	gomod := strings.ReplaceAll(mod+after, "\\", "/")
@@ -280,7 +281,7 @@ func gengql() {
 								if err != nil {
 									return
 								}
-								dataStr := stringsi.ToString(data)
+								dataStr := stringsx.ToString(data)
 								dataStr = strings.ReplaceAll(dataStr, ": Int", ": Int!")
 								dataStr = strings.ReplaceAll(dataStr, ": String", ": String!")
 								dataStr = strings.ReplaceAll(dataStr, ": Boolean", ": Boolean!")
@@ -299,7 +300,7 @@ func gengql() {
 						log.Panicln(err)
 					}
 					file.Close()
-					execi.RunWithLog(`gqlgen --verbose --config ` + config)
+					execx.RunWithLog(`gqlgen --verbose --config ` + config)
 					break
 				}
 			}

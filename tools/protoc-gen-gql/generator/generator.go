@@ -2,7 +2,7 @@ package generator
 
 import (
 	"fmt"
-	stringsi "github.com/hopeio/gox/strings"
+	stringsx "github.com/hopeio/gox/strings"
 	"github.com/hopeio/gox/strings/unicode"
 	"strconv"
 	"strings"
@@ -233,13 +233,13 @@ func (s *SchemaDescriptor) uniqueName(d desc.Descriptor, input bool) (name strin
 	if _, ok := d.(*desc.MessageDescriptor); !input && ok && strings.ToUpper(d.GetName()) == "ID" {
 		suffix = "ErrRep"
 	}
-	name = strings.Title(stringsi.CamelCaseSlice(strings.Split(strings.TrimPrefix(d.GetFullyQualifiedName(), d.GetFile().GetPackage()+packageSep), packageSep)) + suffix)
+	name = strings.Title(stringsx.CamelCaseSlice(strings.Split(strings.TrimPrefix(d.GetFullyQualifiedName(), d.GetFile().GetPackage()+packageSep), packageSep)) + suffix)
 
 	if _, ok := d.(*desc.FieldDescriptor); ok {
 		collisionPrefix = fieldPrefix
-		name = stringsi.CamelCaseSlice(strings.Split(strings.Trim(d.GetParent().GetName()+packageSep+strings.Title(d.GetName()), packageSep), packageSep))
+		name = stringsx.CamelCaseSlice(strings.Split(strings.Trim(d.GetParent().GetName()+packageSep+strings.Title(d.GetName()), packageSep), packageSep))
 	} else {
-		collisionPrefix = stringsi.CamelCaseSlice(strings.Split(d.GetFile().GetPackage(), packageSep))
+		collisionPrefix = stringsx.CamelCaseSlice(strings.Split(d.GetFile().GetPackage(), packageSep))
 	}
 
 	originalName := name
@@ -579,7 +579,7 @@ func (s *SchemaDescriptor) createField(field *desc.FieldDescriptor, obj *ObjectD
 
 	fieldAst := &ast.FieldDefinition{
 		Description: getDescription(field),
-		Name:        unicode.ToLowerFirst(stringsi.SnakeToCamel(field.GetName())),
+		Name:        unicode.ToLowerFirst(stringsx.SnakeToCamel(field.GetName())),
 		Type:        &ast.Type{Position: &ast.Position{}},
 		Position:    &ast.Position{},
 	}
@@ -742,7 +742,7 @@ func (s *SchemaDescriptor) createUnion(oneof *desc.OneOfDescriptor) (*FieldDescr
 		types:      objTypes,
 	}
 	s.objects = append(s.objects, obj)
-	name := unicode.ToLowerFirst(stringsi.SnakeToCamel(oneof.GetName()))
+	name := unicode.ToLowerFirst(stringsx.SnakeToCamel(oneof.GetName()))
 	opts := GraphqlOneofOptions(oneof.AsOneofDescriptorProto().GetOptions())
 	if opts.GetName() != "" {
 		name = opts.GetName()

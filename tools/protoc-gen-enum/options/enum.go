@@ -7,9 +7,9 @@
 package options
 
 import (
+	protogenx "github.com/hopeio/gox/encoding/protobuf/protogen"
 	"github.com/hopeio/protobuf/utils/enum"
 	gopb "github.com/hopeio/protobuf/utils/patch"
-	protogeni "github.com/hopeio/gox/encoding/protobuf/protogen"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 )
@@ -27,52 +27,52 @@ func EnumValueOptions(v *protogen.EnumValue) *gopb.Options {
 }
 
 func NoExtGenAll(f *protogen.File) bool {
-	return protogeni.GetOptionWithDefault[bool](f.Desc, enum.E_NoExtgenAll, false)
+	return protogenx.GetOptionWithDefault[bool](f.Desc, enum.E_NoExtgenAll, false)
 }
 
 func NoExtGen(e *protogen.Enum) bool {
-	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_NoExtgen, false)
+	return protogenx.GetOptionWithDefault[bool](e.Desc, enum.E_NoExtgen, false)
 }
 
 func GetEnumText(ev *protogen.EnumValue) string {
-	return protogeni.GetOptionWithDefault[string](ev.Desc, enum.E_Text, "")
+	return protogenx.GetOptionWithDefault[string](ev.Desc, enum.E_Text, "")
 }
 
 func GetEnumType(e *protogen.Enum) string {
-	return protogeni.GetOptionWithDefault[string](e.Desc, enum.E_Customtype, "int32")
+	return protogenx.GetOptionWithDefault[string](e.Desc, enum.E_Customtype, "int32")
 }
 
 func NoEnumValueMap(e *protogen.Enum) bool {
-	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_NoGenvaluemap, false)
+	return protogenx.GetOptionWithDefault[bool](e.Desc, enum.E_NoGenvaluemap, false)
 }
 
 func EnabledEnumNumOrder(e *protogen.Enum) bool {
-	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_Numorder, false)
+	return protogenx.GetOptionWithDefault[bool](e.Desc, enum.E_Numorder, false)
 }
 
 func EnabledEnumJsonMarshal(f *protogen.File, e *protogen.Enum) bool {
-	if v, ok := protogeni.GetOption[bool](e.Desc, enum.E_Jsonmarshal); ok {
+	if v, ok := protogenx.GetOption[bool](e.Desc, enum.E_Jsonmarshal); ok {
 		return v
 	}
-	return protogeni.GetOptionWithDefault[bool](f.Desc, enum.E_JsonmarshalAll, false)
+	return protogenx.GetOptionWithDefault[bool](f.Desc, enum.E_JsonmarshalAll, false)
 }
 
 func EnabledEnumErrCode(e *protogen.Enum) bool {
-	return protogeni.GetOptionWithDefault[bool](e.Desc, enum.E_Errcode, false)
+	return protogenx.GetOptionWithDefault[bool](e.Desc, enum.E_Errcode, false)
 }
 
 func EnabledEnumGqlGen(f *protogen.File, e *protogen.Enum) bool {
-	if v, ok := protogeni.GetOption[bool](e.Desc, enum.E_Gqlgen); ok {
+	if v, ok := protogenx.GetOption[bool](e.Desc, enum.E_Gqlgen); ok {
 		return v
 	}
 
-	return protogeni.GetOptionWithDefault[bool](f.Desc, enum.E_GqlgenAll, true)
+	return protogenx.GetOptionWithDefault[bool](f.Desc, enum.E_GqlgenAll, true)
 }
 
 func NoEnumPrefix(f *protogen.File, e *protogen.Enum) bool {
-	if v, ok := protogeni.GetOption[bool](e.Desc, enum.E_NoPrefix); ok {
+	if v, ok := protogenx.GetOption[bool](e.Desc, enum.E_NoPrefix); ok {
 		return v
 	}
 
-	return protogeni.GetOptionWithDefault[bool](f.Desc, enum.E_NoPrefixAll, false)
+	return protogenx.GetOptionWithDefault[bool](f.Desc, enum.E_NoPrefixAll, false)
 }

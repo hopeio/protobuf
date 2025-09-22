@@ -10,7 +10,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"errors"
-	timei "github.com/hopeio/gox/time"
+	timex "github.com/hopeio/gox/time"
 	"github.com/jinzhu/now"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -26,7 +26,7 @@ func (t *DeletedAt) Time() time.Time {
 }
 
 func (x *DeletedAt) IsValid() bool {
-	return x != nil && timei.Check(x) == 0
+	return x != nil && timex.Check(x) == 0
 }
 
 // Scan implements the Scanner interface.
@@ -44,7 +44,7 @@ func (x *DeletedAt) Scan(value interface{}) error {
 
 // Value implements the driver Valuer interface.
 func (t *DeletedAt) Value() (driver.Value, error) {
-	if t == nil || timei.Check(t) != 0 {
+	if t == nil || timex.Check(t) != 0 {
 		return nil, nil
 	}
 	return time.Unix(t.Seconds, int64(t.Nanos)), nil
@@ -246,14 +246,14 @@ func getTimeType(settings map[string]string) schema.TimeType {
 }
 
 func (x *DeletedAt) MarshalGQL(w io.Writer) {
-	data, _ := timei.MarshalText(x.Time())
+	data, _ := timex.MarshalText(x.Time())
 	w.Write(data)
 }
 
 func (x *DeletedAt) UnmarshalGQL(v interface{}) error {
 	var t time.Time
 	if i, ok := v.(string); ok {
-		err := timei.UnmarshalText(&t, []byte(i))
+		err := timex.UnmarshalText(&t, []byte(i))
 		if err != nil {
 			return err
 		}
@@ -267,12 +267,12 @@ func (t *DeletedAt) MarshalJSON() ([]byte, error) {
 	if t == nil {
 		return []byte("null"), nil
 	}
-	return timei.MarshalJSON(t.Time())
+	return timex.MarshalJSON(t.Time())
 }
 
 func (t *DeletedAt) UnmarshalJSON(data []byte) error {
 	var st time.Time
-	if err := timei.UnmarshalJSON(&st, data); err != nil {
+	if err := timex.UnmarshalJSON(&st, data); err != nil {
 		return err
 	}
 	*t = DeletedAt{Seconds: st.Unix(), Nanos: int32(st.Nanosecond())}

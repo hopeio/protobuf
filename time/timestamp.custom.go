@@ -10,7 +10,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"github.com/hopeio/gox/encoding/binary"
-	timei "github.com/hopeio/gox/time"
+	timex "github.com/hopeio/gox/time"
 	"time"
 )
 
@@ -56,12 +56,12 @@ func (ts *Timestamp) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 	t := time.UnixMilli(ts.Millis)
-	return timei.MarshalJSON(t)
+	return timex.MarshalJSON(t)
 }
 
 func (ts *Timestamp) UnmarshalJSON(data []byte) error {
 	var t time.Time
-	err := timei.UnmarshalJSON(&t, data)
+	err := timex.UnmarshalJSON(&t, data)
 	if err != nil {
 		return err
 	}

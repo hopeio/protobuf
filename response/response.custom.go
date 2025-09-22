@@ -8,7 +8,7 @@ package response
 
 import (
 	"errors"
-	httpi "github.com/hopeio/gox/net/http"
+	httpx "github.com/hopeio/gox/net/http"
 	"github.com/hopeio/gox/net/http/consts"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"io"
@@ -70,10 +70,10 @@ func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpRespo
 */
 
 func (res *HttpResponse) Response(w http.ResponseWriter) (int, error) {
-	return res.CommonResponse(httpi.CommonResponseWriter{w})
+	return res.CommonResponse(httpx.CommonResponseWriter{w})
 }
 
-func (x *HttpResponse) CommonResponse(w httpi.ICommonResponseWriter) (int, error) {
+func (x *HttpResponse) CommonResponse(w httpx.ICommonResponseWriter) (int, error) {
 	header := w.Header()
 	for k, v := range x.Headers {
 		header.Set(k, v)

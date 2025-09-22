@@ -8,9 +8,9 @@ package main
 
 import (
 	"fmt"
-	execi "github.com/hopeio/gox/os/exec"
+	execx "github.com/hopeio/gox/os/exec"
 	"github.com/hopeio/gox/os/fs"
-	_go "github.com/hopeio/gox/sdk/go"
+	gox "github.com/hopeio/gox/sdk/go"
 	"log"
 	"os"
 	"strings"
@@ -30,10 +30,10 @@ func init() {
 	}
 
 	pwd, _ = os.Getwd()
-	libProtobufDir = _go.GetDepDir(DepProtobuf)
+	libProtobufDir = gox.GetDepDir(DepProtobuf)
 	proto = libProtobufDir + "/_proto"
-	//libGatewayDir := _go.GetDepDir(DepGrpcGateway)
-	//libGoogleDir := _go.GetDepDir(DepGoogleapis)
+	//libGatewayDir := gox.GetDepDir(DepGrpcGateway)
+	//libGoogleDir := gox.GetDepDir(DepGoogleapis)
 
 	include = "-I" + proto
 }
@@ -81,5 +81,5 @@ func protoc(dir string) {
 	for _, plugin := range model {
 		args += " --" + plugin + ":" + libProtobufDir
 	}
-	execi.RunWithLog(cmd + args)
+	execx.RunWithLog(cmd + args)
 }

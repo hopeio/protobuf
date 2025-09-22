@@ -5,7 +5,7 @@ import (
 	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 	"strings"
 
-	stringsi "github.com/hopeio/gox/strings"
+	stringsx "github.com/hopeio/gox/strings"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
 )
@@ -360,7 +360,7 @@ func (p FieldPath) AssignableExpr(msgExpr string) string {
 		if c.Target.OneofIndex != nil {
 			index := c.Target.OneofIndex
 			msg := c.Target.Message
-			oneOfName := stringsi.SnakeToCamel(msg.GetOneofDecl()[*index].GetName())
+			oneOfName := stringsx.SnakeToCamel(msg.GetOneofDecl()[*index].GetName())
 			oneofFieldName := msg.GetName() + "_" + c.AssignableExpr()
 
 			if c.Target.ForcePrefixedName {
@@ -400,15 +400,15 @@ type FieldPathComponent struct {
 
 // AssignableExpr returns an assignable expression in go for this field.
 func (c FieldPathComponent) AssignableExpr() string {
-	return stringsi.SnakeToCamel(c.Name)
+	return stringsx.SnakeToCamel(c.Name)
 }
 
 // ValueExpr returns an expression in go for this field.
 func (c FieldPathComponent) ValueExpr() string {
 	if c.Target.Message.File.proto2() {
-		return fmt.Sprintf("Get%s()", stringsi.SnakeToCamel(c.Name))
+		return fmt.Sprintf("Get%s()", stringsx.SnakeToCamel(c.Name))
 	}
-	return stringsi.SnakeToCamel(c.Name)
+	return stringsx.SnakeToCamel(c.Name)
 }
 
 var (
