@@ -8,12 +8,14 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"runtime"
+	"strings"
+
 	execx "github.com/hopeio/gox/os/exec"
 	"github.com/hopeio/gox/os/fs"
 	gox "github.com/hopeio/gox/sdk/go"
-	"log"
-	"os"
-	"strings"
 )
 
 //go:generate mockgen -destination ../protobuf/user/user.mock.go -package user -source ../protobuf/user/user.service_grpc.pb.go UserServiceServer
@@ -81,5 +83,9 @@ func protoc(dir string) {
 	for _, plugin := range model {
 		args += " --" + plugin + ":" + libProtobufDir
 	}
-	execx.RunWithLog(cmd + args)
+	cmd += args
+	if runtime.GOOS != "windows" {
+		cmd = "bash -c \"" + cmd + "\""
+	}
+	execx.RunWithLog(cmd)
 }

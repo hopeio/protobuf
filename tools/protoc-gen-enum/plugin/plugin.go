@@ -7,10 +7,11 @@
 package plugin
 
 import (
-	"github.com/hopeio/protobuf/tools/protoc-gen-enum/options"
-	"google.golang.org/protobuf/compiler/protogen"
 	"strconv"
 	"strings"
+
+	"github.com/hopeio/protobuf/tools/protoc-gen-enum/options"
+	"google.golang.org/protobuf/compiler/protogen"
 )
 
 type pathType int
@@ -21,26 +22,28 @@ const (
 )
 
 type Builder struct {
-	plugin        *protogen.Plugin
-	importStatus  protogen.GoImportPath
-	importCodes   protogen.GoImportPath
-	importStrings protogen.GoImportPath
-	importStrconv protogen.GoImportPath
-	importErrcode protogen.GoImportPath
-	importErrors  protogen.GoImportPath
-	importIo      protogen.GoImportPath
+	plugin          *protogen.Plugin
+	importStatus    protogen.GoImportPath
+	importCodes     protogen.GoImportPath
+	importStrings   protogen.GoImportPath
+	importStrconv   protogen.GoImportPath
+	importGoxGrpc   protogen.GoImportPath
+	importGoxErrors protogen.GoImportPath
+	importErrors    protogen.GoImportPath
+	importIo        protogen.GoImportPath
 }
 
 func NewBuilder(gen *protogen.Plugin) *Builder {
 	return &Builder{
-		plugin:        gen,
-		importStatus:  "google.golang.org/grpc/status",
-		importCodes:   "google.golang.org/grpc/codes",
-		importStrings: "github.com/hopeio/gox/strings",
-		importStrconv: "strconv",
-		importErrcode: "github.com/hopeio/gox/errors/errcode",
-		importErrors:  "errors",
-		importIo:      "io",
+		plugin:          gen,
+		importStatus:    "google.golang.org/grpc/status",
+		importCodes:     "google.golang.org/grpc/codes",
+		importStrings:   "github.com/hopeio/gox/strings",
+		importStrconv:   "strconv",
+		importGoxGrpc:   "github.com/hopeio/gox/net/http/grpc",
+		importGoxErrors: "github.com/hopeio/gox/errors",
+		importErrors:    "errors",
+		importIo:        "io",
 	}
 }
 
@@ -234,16 +237,16 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P(`return x.Text()`)
 	g.P("}")
 	g.P()
-	g.P("func (x ", ccTypeName, ") ErrRep() *", b.importErrcode.Ident("ErrRep"), " {")
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: x.Text()}`)
+	g.P("func (x ", ccTypeName, ") ErrRep() *", b.importGoxGrpc.Ident("ErrRep"), " {")
+	g.P(`return &`, b.importGoxGrpc.Ident("ErrRep"), `{Code: `, b.importGoxErrors.Ident("ErrCode"), `(x), Msg: x.Text()}`)
 	g.P("}")
 	g.P()
-	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importErrcode.Ident("ErrRep"), " {")
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: msg}`)
+	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importGoxGrpc.Ident("ErrRep"), " {")
+	g.P(`return &`, b.importGoxGrpc.Ident("ErrRep"), `{Code: `, b.importGoxErrors.Ident("ErrCode"), `(x), Msg: msg}`)
 	g.P("}")
 	g.P()
-	g.P("func (x ", ccTypeName, ") Wrap(err error) *", b.importErrcode.Ident("ErrRep"), " {")
-	g.P(`return &errcode.ErrRep{Code: errcode.ErrCode(x), Msg: err.Error()}`)
+	g.P("func (x ", ccTypeName, ") Wrap(err error) *", b.importGoxGrpc.Ident("ErrRep"), " {")
+	g.P(`return &`, b.importGoxGrpc.Ident("ErrRep"), `{Code: `, b.importGoxErrors.Ident("ErrCode"), `(x), Msg: err.Error()}`)
 	g.P("}")
 	g.P()
 
@@ -252,14 +255,9 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P("}")
 	g.P()
 
-	g.P("func (x ", ccTypeName, ") ErrCode() errcode.ErrCode {")
-	g.P(`return errcode.ErrCode(x)`)
-	g.P("}")
-	g.P()
-
 	g.P("func init() {")
 	g.P("for code := range ", ccTypeName, "_name {")
-	g.P("errcode.Register(errcode.ErrCode(code), ", ccTypeName, "(code).Text())")
+	g.P(b.importGoxErrors.Ident("Register"), "(", b.importGoxErrors.Ident("ErrCode"), "(code), ", ccTypeName, "(code).Text())")
 	g.P(`}`)
 	g.P("}")
 	g.P()

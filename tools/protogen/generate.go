@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"text/template"
 
@@ -329,5 +330,9 @@ func protocCmd(plugins []string, file, mod, modDir string) {
 		args += " --" + plugin + ":" + genpath
 
 	}
-	protoc(cmd + args)
+	cmd += args
+	if runtime.GOOS != "windows" {
+		cmd = "bash -c \"" + cmd + "\""
+	}
+	execx.RunWithLog(cmd)
 }

@@ -35,12 +35,6 @@ message RawReply {
 message CommonRep {
     uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg = 2;
-    string data = 3;
-}
-
-message TinyRep {
-    uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
-    string msg = 2;
 }
 
 message HttpResponse{
