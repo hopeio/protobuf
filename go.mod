@@ -22,7 +22,7 @@ require (
 
 require (
 	github.com/danielvladco/go-proto-gql v0.10.1-0.20221227181908-22fca0a9469c
-	github.com/hopeio/gox v1.3.1
+	github.com/hopeio/gox v1.3.3
 	github.com/jhump/protoreflect v1.16.0
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.9.1
@@ -33,6 +33,7 @@ require (
 require (
 	github.com/agnivade/levenshtein v1.2.0 // indirect
 	github.com/bufbuild/protocompile v0.13.0 // indirect
+	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.14.1 // indirect
 	github.com/bytedance/sonic/loader v0.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
