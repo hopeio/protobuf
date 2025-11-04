@@ -7,10 +7,11 @@
 package main
 
 import (
+	"os"
+
 	"github.com/hopeio/gox/log"
 	execx "github.com/hopeio/gox/os/exec"
 	"github.com/hopeio/gox/os/fs"
-	"os"
 )
 
 // 提供给使用框架的人安装所需环境
