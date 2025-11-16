@@ -6,7 +6,8 @@ import (
 	io "io"
 )
 
-func (x Encoding) Text() string {
+func (x Encoding) NewString() string {
+
 	switch x {
 	case Encoding_JSON:
 		return "Encoding_JSON"

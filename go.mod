@@ -1,6 +1,6 @@
 module github.com/hopeio/protobuf
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/99designs/gqlgen v0.17.60
@@ -13,7 +13,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/tools v0.36.0
-	google.golang.org/grpc v1.72.0 // indirect
+	google.golang.org/grpc v1.76.0 // indirect
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0
 	google.golang.org/protobuf v1.36.8
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -22,12 +22,12 @@ require (
 
 require (
 	github.com/danielvladco/go-proto-gql v0.10.1-0.20221227181908-22fca0a9469c
-	github.com/hopeio/gox v1.3.4
+	github.com/hopeio/gox v1.3.9
 	github.com/jhump/protoreflect v1.16.0
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.9.1
 	github.com/vektah/gqlparser/v2 v2.5.20
-	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb
+	google.golang.org/genproto/googleapis/api v0.0.0-20250804133106-a7a43d27e69b
 )
 
 require (
@@ -60,5 +60,5 @@ require (
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b // indirect
 )

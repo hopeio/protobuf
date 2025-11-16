@@ -44,7 +44,6 @@ func main() {
 	//single("/content/moment.model.proto")
 	generate(proto + "/hopeio")
 	fmt.Println(fs.MoveDirByMode(libProtobufDir+"/hopeio", libProtobufDir, 0))
-
 }
 
 const goOut = "go-patch_out=plugin=go,paths=source_relative"

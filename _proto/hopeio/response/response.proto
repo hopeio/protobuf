@@ -18,13 +18,13 @@ option go_package = "github.com/hopeio/protobuf/response";
 option java_package = "xyz.hoper.protobuf.response";
 option java_multiple_files = true;
 
-message AnyReply {
+message AnyResp {
     uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg = 2;
     google.protobuf.Any data = 3;
 }
 
-message RawReply {
+message RawResp {
     uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg =2;
     //字节数组json
@@ -32,7 +32,7 @@ message RawReply {
 }
 
 //返回数据为字符串，用于新建修改删除类的成功失败提示
-message CommonRep {
+message CommonResp {
     uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg = 2;
 }

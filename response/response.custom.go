@@ -17,7 +17,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-type Reply struct {
+type RespData struct {
 	Code uint32        `json:"code"`
 	Msg  string        `json:"msg"`
 	Data proto.Message `json:"data"`
@@ -27,7 +27,7 @@ func (x *HttpResponse) GetContentType() string {
 	return x.Headers[httpx.HeaderContentType]
 }
 
-func (x HttpResponse) MarshalProto(w io.Writer) {
+func (x *HttpResponse) MarshalProto(w io.Writer) {
 	w.Write(x.Body)
 }
 
@@ -43,7 +43,7 @@ func (x *HttpResponse) UnmarshalGQL(v interface{}) error {
 	return errors.New("error type")
 }
 
-var ResponseOk = &CommonRep{}
+var RespOk = &CommonResp{}
 
 type StringValue = wrapperspb.StringValue
 
@@ -69,11 +69,11 @@ func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpRespo
 }
 */
 
-func (res *HttpResponse) Response(w http.ResponseWriter) (int, error) {
-	return res.CommonResponse(httpx.CommonResponseWriter{w})
+func (x *HttpResponse) Respond(w http.ResponseWriter) (int, error) {
+	return x.CommonRespond(httpx.CommonResponseWriter{ResponseWriter: w})
 }
 
-func (x *HttpResponse) CommonResponse(w httpx.ICommonResponseWriter) (int, error) {
+func (x *HttpResponse) CommonRespond(w httpx.ICommonResponseWriter) (int, error) {
 	header := w.Header()
 	for k, v := range x.Headers {
 		header.Set(k, v)
