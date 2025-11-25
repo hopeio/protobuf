@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/hopeio/gox/log"
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 	"strings"
 	"text/template"
+
+	"github.com/hopeio/gox/log"
+	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	stringsx "github.com/hopeio/gox/strings"
