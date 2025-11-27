@@ -204,7 +204,7 @@ func (p *plugin) generateProto2Message(message *protogen.Message, g *protogen.Ge
 			if repeated && nullable {
 				variableName = "*(item)"
 			}
-			g.P(`if err := `, p.validatorPkg.Ident("CallValidatorIfExists"), `(&(`, variableName, `)); err != nil {`)
+			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(&(`, variableName, `)); err != nil {`)
 			g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `", err)`)
 			g.P(`}`)
 		}
@@ -300,7 +300,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 			} else {
 				variableName = "&(" + variableName + ")"
 			}
-			g.P(`if err := `, p.validatorPkg.Ident("CallValidatorIfExists"), `(`, variableName, `); err != nil {`)
+			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(`, variableName, `); err != nil {`)
 			g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `", err)`)
 			g.P(`}`)
 			if nullable {
