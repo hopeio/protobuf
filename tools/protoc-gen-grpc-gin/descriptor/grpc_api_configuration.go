@@ -2,8 +2,9 @@ package descriptor
 
 import (
 	"fmt"
+
+	"github.com/go-openapi/swag/yamlutils"
 	"github.com/hopeio/protobuf/utils/apiconfig"
-	"github.com/hopeio/gox/encoding/common"
 
 	"io/ioutil"
 	"strings"
@@ -12,7 +13,7 @@ import (
 )
 
 func loadGrpcAPIServiceFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*apiconfig.GrpcAPIService, error) {
-	jsonContents, err := common.YAMLToJSON(yamlFileContents)
+	jsonContents, err := yamlutils.YAMLToJSON(yamlFileContents)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
 	}
