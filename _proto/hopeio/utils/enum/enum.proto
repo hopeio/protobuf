@@ -32,11 +32,11 @@ extend google.protobuf.EnumOptions {
 
   optional bool  no_extgen = 62032;
 
-  optional bool textmarshal = 62034;
+  optional bool textmarshal = 62033;
 }
 
 extend google.protobuf.EnumValueOptions {
-  optional string text = 66002;
+  optional string comment = 66002;
 }
 
 

@@ -84,7 +84,7 @@ func protoc(dir string) {
 	}
 	cmd += args
 	if runtime.GOOS != "windows" {
-		cmd = "bash -c \"" + cmd + "\""
+		cmd = fmt.Sprintf(`bash -c "%s"`, cmd)
 	}
 	execx.RunWithLog(cmd)
 }

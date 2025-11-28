@@ -7,6 +7,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/hopeio/gox/log"
@@ -22,9 +23,9 @@ func main() {
 	execx.RunGetOutWithLog("go install google.golang.org/protobuf/cmd/protoc-gen-go")
 	protoccmd := "protoc -I" + libDir + "/_proto --go_out=paths=source_relative:" + libDir + " " + libDir + "/_proto/hopeio/utils/"
 	//execx.RunGetOutWithLog(protoccmd + "patch/*.proto")
-	execx.RunGetOutWithLog(protoccmd + "apiconfig/*.proto")
-	execx.RunGetOutWithLog(protoccmd + "openapiconfig/*.proto")
-	execx.RunGetOutWithLog(protoccmd + "enum/*.proto")
+	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"))
+	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"))
+	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"enum/*.proto"))
 	fs.MoveDirByMode(libDir+"/hopeio", libDir, 0)
 	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-grpc-gin")
 	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-enum")

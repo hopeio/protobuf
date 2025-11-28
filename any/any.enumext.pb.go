@@ -16,7 +16,7 @@ func (x Encoding) NewString() string {
 }
 
 func (x Encoding) MarshalGQL(w io.Writer) {
-	w.Write(strings.QuoteToBytes(x.String()))
+	w.Write(strings.SimpleQuoteToBytes(x.String()))
 }
 
 func (x *Encoding) UnmarshalGQL(v interface{}) error {

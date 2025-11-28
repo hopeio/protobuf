@@ -7,9 +7,9 @@
 package plugin
 
 import (
-	"strconv"
 	"strings"
 
+	stringsx "github.com/hopeio/gox/strings"
 	"github.com/hopeio/protobuf/tools/protoc-gen-enum/options"
 	"google.golang.org/protobuf/compiler/protogen"
 )
@@ -107,7 +107,7 @@ func (b *Builder) Generate() error {
 
 func (b *Builder) generate(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
 
-	b.generateText(f, e, g)
+	b.generateComment(f, e, g)
 	if options.EnabledEnumJsonMarshal(f, e) {
 		b.generateJsonMarshal(e, g)
 	}
@@ -119,12 +119,12 @@ func (b *Builder) generate(f *protogen.File, e *protogen.Enum, g *protogen.Gener
 	}
 }
 
-func (b *Builder) generateText(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
+func (b *Builder) generateComment(f *protogen.File, e *protogen.Enum, g *protogen.GeneratedFile) {
 	noEnumPrefix := options.FileOptions(f).GetNoEnumPrefix()
 	ccTypeName := e.GoIdent
 	if len(e.Values) >= 64 {
 		g.P("var (")
-		g.P(ccTypeName, "_text = map[", ccTypeName, "]string{")
+		g.P(ccTypeName, "_comment = map[", ccTypeName, "]string{")
 		for _, ev := range e.Values {
 			opts := options.EnumValueOptions(ev)
 			name := opts.GetName()
@@ -134,19 +134,19 @@ func (b *Builder) generateText(f *protogen.File, e *protogen.Enum, g *protogen.G
 					name = replacePrefix(ev.GoIdent.GoName, e.GoIdent.GoName+"_", "")
 				}
 			}
-			if text := options.GetEnumText(ev); text != "" {
-				g.P(name, " :", strconv.Quote(text), ",")
+			if text := options.GetEnumComment(ev); text != "" {
+				g.P(name, " :", stringsx.SimpleQuote(text), ",")
 			} else {
-				g.P(name, " :", strconv.Quote(name), ",")
+				g.P(name, " :", stringsx.SimpleQuote(name), ",")
 			}
 		}
 		g.P("}")
 		g.P(")")
 		g.P()
 	}
-	g.P("func (x ", ccTypeName, ") Text() string {")
+	g.P("func (x ", ccTypeName, ") Comment() string {")
 	if len(e.Values) >= 64 {
-		g.P("return ", ccTypeName, "_text[x]")
+		g.P("return ", ccTypeName, "_comment[x]")
 	} else {
 		g.P("switch x {")
 		for _, ev := range e.Values {
@@ -162,15 +162,15 @@ func (b *Builder) generateText(f *protogen.File, e *protogen.Enum, g *protogen.G
 			//PrintComments(e.Comments, g)
 
 			g.P("case ", name, " :")
-			if text := options.GetEnumText(ev); text != "" {
-				g.P("return ", strconv.Quote(text))
+			if text := options.GetEnumComment(ev); text != "" {
+				g.P("return ", stringsx.SimpleQuote(text))
 			} else {
-				g.P("return ", strconv.Quote(name))
+				g.P("return ", stringsx.SimpleQuote(name))
 			}
 
 		}
 		g.P("}")
-		g.P("return ", strconv.Quote(""))
+		g.P("return ", stringsx.SimpleQuote(""))
 	}
 	g.P("}")
 	g.P()
@@ -184,7 +184,7 @@ func (b *Builder) generateGQLMarshal(e *protogen.Enum, g *protogen.GeneratedFile
 		typ = typ1
 	}
 	g.P("func (x ", ccTypeName, ") MarshalGQL(w ", b.importIo.Ident("Writer"), ") {")
-	g.P(`w.Write(`, b.importStrings.Ident("QuoteToBytes"), `(x.String()))`)
+	g.P(`w.Write(`, b.importStrings.Ident("SimpleQuoteToBytes"), `(x.String()))`)
 	g.P("}")
 	g.P()
 	g.P("func (x *", ccTypeName, ") UnmarshalGQL(v interface{}) error {")
@@ -201,7 +201,7 @@ func (b *Builder) generateJsonMarshal(e *protogen.Enum, g *protogen.GeneratedFil
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") MarshalJSON() ([]byte, error) {")
-	g.P("return ", b.importStrings.Ident("QuoteToBytes"), "(x.String())", ", nil")
+	g.P("return ", b.importStrings.Ident("SimpleQuoteToBytes"), "(x.String())", ", nil")
 	g.P("}")
 	g.P()
 	g.P("func (x *", ccTypeName, ") UnmarshalJSON(data []byte) error {")
@@ -234,11 +234,11 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") Error() string {")
-	g.P(`return x.Text()`)
+	g.P(`return x.String()`)
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") ErrResp() *", b.importGoxGrpc.Ident("ErrResp"), " {")
-	g.P(`return &`, b.importGoxGrpc.Ident("ErrResp"), `{Code: `, b.importGoxErrors.Ident("ErrCode"), `(x), Msg: x.Text()}`)
+	g.P(`return &`, b.importGoxGrpc.Ident("ErrResp"), `{Code: `, b.importGoxErrors.Ident("ErrCode"), `(x), Msg: x.String()}`)
 	g.P("}")
 	g.P()
 	g.P("func (x ", ccTypeName, ") Msg(msg string) *", b.importGoxGrpc.Ident("ErrResp"), " {")
@@ -251,13 +251,13 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P()
 
 	g.P("func (x ", ccTypeName, ") GRPCStatus() *", b.importStatus.Ident("Status"), " {")
-	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.Text())`)
+	g.P(`return `, `status.New(`, b.importCodes.Ident("Code"), `(x), x.String())`)
 	g.P("}")
 	g.P()
 
 	g.P("func init() {")
-	g.P("for code := range ", ccTypeName, "_name {")
-	g.P(b.importGoxErrors.Ident("Register"), "(", b.importGoxErrors.Ident("ErrCode"), "(code), ", ccTypeName, "(code).Text())")
+	g.P("for code, msg := range ", ccTypeName, "_name {")
+	g.P(b.importGoxErrors.Ident("Register"), "(", b.importGoxErrors.Ident("ErrCode"), "(code), ", "msg)")
 	g.P(`}`)
 	g.P("}")
 	g.P()

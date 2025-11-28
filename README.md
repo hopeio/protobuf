@@ -50,9 +50,9 @@ message User {
 
 // 用户性别
 enum Gender{
-  GenderPlaceholder = 0 [(enum.text)= "占位"];
-  GenderMale = 1 [(enum.text)= "男"];
-  GenderFemale = 2 [(enum.text)= "女"];
+  GenderPlaceholder = 0 [(enum.comment)= "占位"];
+  GenderMale = 1 [(enum.comment)= "男"];
+  GenderFemale = 2 [(enum.comment)= "女"];
 }
 
 service UserService {

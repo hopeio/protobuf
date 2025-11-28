@@ -7,6 +7,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -153,7 +154,11 @@ func getInclude() {
 	log.Println("proto:", config.proto)
 	log.Println("genpath:", config.genpath)
 	if config.apidocDir == "" {
-		config.apidocDir = config.genpath + "/apidoc/"
+		var err error
+		config.apidocDir, err = filepath.Abs(config.genpath + "/../apidoc")
+		if err != nil {
+			config.apidocDir = config.genpath + "/apidoc"
+		}
 	} else {
 		if config.apidocDir[len(config.apidocDir)-1] != '/' {
 			config.apidocDir += "/"
@@ -317,7 +322,7 @@ func protocCmd(plugins []string, file, mod, modDir string) {
 		genpath := config.genpath
 		if strings.HasPrefix(plugin, "openapiv2_out") {
 			plugin += mod
-			genpath = config.apidocDir + modDir
+			genpath = config.apidocDir
 			err := fs.MkdirAll(genpath)
 			if err != nil {
 				log.Panicln(err)
@@ -332,7 +337,7 @@ func protocCmd(plugins []string, file, mod, modDir string) {
 	}
 	cmd += args
 	if runtime.GOOS != "windows" {
-		cmd = "bash -c \"" + cmd + "\""
+		cmd = fmt.Sprintf(`bash -c "%s"`, cmd)
 	}
 	execx.RunWithLog(cmd)
 }

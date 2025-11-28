@@ -34,8 +34,8 @@ func NoExtGen(e *protogen.Enum) bool {
 	return protogenx.GetOptionWithDefault[bool](e.Desc, enum.E_NoExtgen, false)
 }
 
-func GetEnumText(ev *protogen.EnumValue) string {
-	return protogenx.GetOptionWithDefault[string](ev.Desc, enum.E_Text, "")
+func GetEnumComment(ev *protogen.EnumValue) string {
+	return protogenx.GetOptionWithDefault[string](ev.Desc, enum.E_Comment, "")
 }
 
 func GetEnumType(e *protogen.Enum) string {
