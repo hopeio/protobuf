@@ -10,11 +10,12 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"errors"
+	"io"
+	"time"
+
 	"github.com/hopeio/gox/encoding/binary"
 	timex "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
-	"io"
-	"time"
 )
 
 func Now() *Time {
@@ -56,58 +57,75 @@ func (x *Time) CheckValid() error {
 	}
 }
 
-func (ts *Time) Scan(value interface{}) (err error) {
+func (x *Time) Scan(value interface{}) (err error) {
 	nullTime := &sql.NullTime{}
 	err = nullTime.Scan(value)
-	*ts = Time{Seconds: nullTime.Time.Unix(), Nanos: int32(nullTime.Time.Nanosecond())}
+	*x = Time{Seconds: nullTime.Time.Unix(), Nanos: int32(nullTime.Time.Nanosecond())}
 	return
 }
 
-func (ts *Time) Value() (driver.Value, error) {
-	return time.Unix(ts.Seconds, 0), nil
+func (x *Time) Value() (driver.Value, error) {
+	return time.Unix(x.Seconds, 0), nil
 }
 
-func (ts *Time) GormDataType() string {
+func (x *Time) GormDataType() string {
 	return "time"
 }
 
-func (ts *Time) Time() time.Time {
-	return time.Unix(ts.Seconds, int64(ts.Nanos))
+func (x *Time) Time() time.Time {
+	return time.Unix(x.Seconds, int64(x.Nanos))
 }
 
-func (ts *Time) MarshalBinary() ([]byte, error) {
-	return binary.ToBinary(ts.Seconds), nil
+func (x *Time) MarshalBinary() ([]byte, error) {
+	return binary.ToBinary(x.Seconds), nil
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
-func (ts *Time) UnmarshalBinary(data []byte) error {
-	ts.Seconds = binary.BinaryTo[int64](data)
+func (x *Time) UnmarshalBinary(data []byte) error {
+	x.Seconds = binary.BinaryTo[int64](data)
 	return nil
 }
 
-func (ts *Time) GobEncode() ([]byte, error) {
-	return ts.MarshalBinary()
+func (x *Time) GobEncode() ([]byte, error) {
+	return x.MarshalBinary()
 }
 
-func (ts *Time) GobDecode(data []byte) error {
-	return ts.UnmarshalBinary(data)
+func (x *Time) GobDecode(data []byte) error {
+	return x.UnmarshalBinary(data)
 }
 
-func (ts *Time) MarshalJSON() ([]byte, error) {
-	if ts == nil {
+func (x *Time) MarshalJSON() ([]byte, error) {
+	if x == nil {
 		return []byte("null"), nil
 	}
-	return timex.MarshalJSON(ts.Time())
+	return timex.MarshalJSON(x.Time())
 }
 
-func (ts *Time) UnmarshalJSON(data []byte) error {
+func (x *Time) UnmarshalJSON(data []byte) error {
 	var t time.Time
 	err := timex.UnmarshalJSON(&t, data)
 	if err != nil {
 		return err
 	}
-	ts.Seconds, ts.Nanos = t.Unix(), int32(t.Nanosecond())
+	x.Seconds, x.Nanos = t.Unix(), int32(t.Nanosecond())
 	return nil
+}
+
+func (x *Time) MarshalText(w io.Writer) {
+	text, _ := timex.MarshalText(x.Time())
+	w.Write(text)
+}
+
+func (x *Time) UnmarshalText(v interface{}) error {
+	if i, ok := v.(string); ok {
+		var t time.Time
+		err := timex.UnmarshalText(&t, []byte(i))
+		if err != nil {
+			return err
+		}
+		x.Seconds, x.Nanos = t.Unix(), int32(t.Nanosecond())
+	}
+	return errors.New("enum need integer type")
 }
 
 func (x *Time) MarshalGQL(w io.Writer) {

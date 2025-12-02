@@ -3,10 +3,11 @@ package gengateway
 import (
 	"errors"
 	"fmt"
-	"github.com/hopeio/gox/log"
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 	"go/format"
 	"path"
+
+	"github.com/hopeio/gox/log"
+	descriptorx "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -18,12 +19,12 @@ var (
 
 type Generator interface {
 	// Generate generates output files from input .proto files.
-	Generate(targets []*descriptor2.File) ([]*descriptor2.ResponseFile, error)
+	Generate(targets []*descriptorx.File) ([]*descriptorx.ResponseFile, error)
 }
 
 type generator struct {
-	reg                *descriptor2.Registry
-	baseImports        []descriptor2.GoPackage
+	reg                *descriptorx.Registry
+	baseImports        []descriptorx.GoPackage
 	useRequestContext  bool
 	registerFuncSuffix string
 	allowPatchFeature  bool
@@ -31,9 +32,9 @@ type generator struct {
 }
 
 // New returns a new generator which generates grpc gateway files.
-func New(reg *descriptor2.Registry, useRequestContext bool, registerFuncSuffix string,
+func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix string,
 	allowPatchFeature, standalone bool) Generator {
-	var imports []descriptor2.GoPackage
+	var imports []descriptorx.GoPackage
 	for _, pkgpath := range []string{
 		"context",
 		"io",
@@ -47,9 +48,9 @@ func New(reg *descriptor2.Registry, useRequestContext bool, registerFuncSuffix s
 		"github.com/gin-gonic/gin",
 		"github.com/hopeio/gox/net/http/gin/binding",
 		"github.com/hopeio/gox/net/http/grpc",
-		"github.com/hopeio/gox/net/http/grpc/gateway/gin",
+		"github.com/hopeio/protobuf/grpc/gateway",
 	} {
-		pkg := descriptor2.GoPackage{
+		pkg := descriptorx.GoPackage{
 			Path: pkgpath,
 			Name: path.Base(pkgpath),
 		}
@@ -76,8 +77,8 @@ func New(reg *descriptor2.Registry, useRequestContext bool, registerFuncSuffix s
 	}
 }
 
-func (g *generator) Generate(targets []*descriptor2.File) ([]*descriptor2.ResponseFile, error) {
-	var files []*descriptor2.ResponseFile
+func (g *generator) Generate(targets []*descriptorx.File) ([]*descriptorx.ResponseFile, error) {
+	var files []*descriptorx.ResponseFile
 	for _, file := range targets {
 		log.Infof("Processing %s", file.GetName())
 
@@ -94,7 +95,7 @@ func (g *generator) Generate(targets []*descriptor2.File) ([]*descriptor2.Respon
 			log.Errorf("%v: %s", err, code)
 			return nil, err
 		}
-		files = append(files, &descriptor2.ResponseFile{
+		files = append(files, &descriptorx.ResponseFile{
 			GoPkg: file.GoPkg,
 			CodeGeneratorResponse_File: &pluginpb.CodeGeneratorResponse_File{
 				Name:    proto.String(file.GeneratedFilenamePrefix + ".pb.gw.go"),
@@ -105,9 +106,9 @@ func (g *generator) Generate(targets []*descriptor2.File) ([]*descriptor2.Respon
 	return files, nil
 }
 
-func (g *generator) generate(file *descriptor2.File) (string, error) {
+func (g *generator) generate(file *descriptorx.File) (string, error) {
 	pkgSeen := make(map[string]bool)
-	var imports []descriptor2.GoPackage
+	var imports []descriptorx.GoPackage
 	for _, pkg := range g.baseImports {
 		pkgSeen[pkg.Path] = true
 		imports = append(imports, pkg)
@@ -143,8 +144,8 @@ func (g *generator) generate(file *descriptor2.File) (string, error) {
 }
 
 // addEnumPathParamImports handles adding import of enum path parameter go packages
-func (g *generator) addEnumPathParamImports(file *descriptor2.File, m *descriptor2.Method, pkgSeen map[string]bool) []descriptor2.GoPackage {
-	var imports []descriptor2.GoPackage
+func (g *generator) addEnumPathParamImports(file *descriptorx.File, m *descriptorx.Method, pkgSeen map[string]bool) []descriptorx.GoPackage {
+	var imports []descriptorx.GoPackage
 	for _, b := range m.Bindings {
 		for _, p := range b.PathParams {
 			e, err := g.reg.LookupEnum("", p.Target.GetTypeName())

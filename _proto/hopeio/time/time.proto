@@ -11,22 +11,6 @@ option go_package = "github.com/hopeio/protobuf/time";
 option java_multiple_files = true;
 option java_package = "xyz.hoper.protobuf.time";
 
-// js不选择支持纳秒级时间戳,都是浮点数,最大53位
-message NanoTime {
-  int64 nanos = 1;
-}
-
-message MacroTime {
-  int64 macros = 1;
-}
-
-message MilliTime {
-  int64 millis = 1;
-}
-
-message SecondTime {
-  int64 seconds = 1;
-}
 
 message Date {
   int32 days = 1;
@@ -37,7 +21,7 @@ message Duration{
 }
 
 message Timestamp {
-  int64 millis = 1;
+  int64 timestamp = 1;
 }
 
 message Time {

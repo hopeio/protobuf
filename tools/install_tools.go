@@ -41,5 +41,5 @@ func main() {
 	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gogql")
 	execx.RunGetOutWithLog("go install github.com/99designs/gqlgen")
 	execx.RunGetOutWithLog("go install " + libDir + "/tools/protogen")
-	log.Info("安装成功")
+	log.Info("install success")
 }

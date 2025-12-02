@@ -9,24 +9,25 @@ package time
 import (
 	"database/sql"
 	"database/sql/driver"
+	"time"
+
 	"github.com/hopeio/gox/encoding/binary"
 	timex "github.com/hopeio/gox/time"
-	"time"
 )
 
 func (ts *Timestamp) Scan(value interface{}) (err error) {
 	nullTime := &sql.NullTime{}
 	err = nullTime.Scan(value)
-	*ts = Timestamp{Millis: nullTime.Time.UnixMilli()}
+	*ts = Timestamp{Timestamp: nullTime.Time.UnixMilli()}
 	return
 }
 
 func (ts *Timestamp) Value() (driver.Value, error) {
-	return time.UnixMilli(ts.Millis), nil
+	return time.UnixMilli(ts.Timestamp), nil
 }
 
 func (ts *Timestamp) Time() time.Time {
-	return time.UnixMilli(ts.Millis)
+	return time.UnixMilli(ts.Timestamp)
 }
 
 func (ts *Timestamp) GormDataType() string {
@@ -34,12 +35,12 @@ func (ts *Timestamp) GormDataType() string {
 }
 
 func (ts *Timestamp) MarshalBinary() ([]byte, error) {
-	return binary.ToBinary(ts.Millis), nil
+	return binary.ToBinary(ts.Timestamp), nil
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
 func (ts *Timestamp) UnmarshalBinary(data []byte) error {
-	ts.Millis = binary.BinaryTo[int64](data)
+	ts.Timestamp = binary.BinaryTo[int64](data)
 	return nil
 }
 
@@ -55,7 +56,7 @@ func (ts *Timestamp) MarshalJSON() ([]byte, error) {
 	if ts == nil {
 		return []byte("null"), nil
 	}
-	t := time.UnixMilli(ts.Millis)
+	t := time.UnixMilli(ts.Timestamp)
 	return timex.MarshalJSON(t)
 }
 
@@ -65,6 +66,6 @@ func (ts *Timestamp) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	ts.Millis = t.UnixMilli()
+	ts.Timestamp = t.UnixMilli()
 	return err
 }

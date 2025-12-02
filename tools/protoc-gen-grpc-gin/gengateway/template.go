@@ -235,7 +235,6 @@ import (
 var _ codes.Code
 var _ io.Reader
 var _ status.Status
-var _ = grpc_0.String
 var _ = metadata.Join
 var _ = binding.Bind
 `))
@@ -529,7 +528,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{if or $m.GetClientStreaming $m.GetServerStreaming}}
 	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
-		gin_0.HttpError(ctx, err)
+		gateway.HttpError(ctx, err)
 		return
 	})
 	{{else}}
@@ -537,13 +536,13 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 		var md grpc_0.ServerMetadata
 		resp, err := local_request_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(server, ctx)
 		if err !=nil {
-			gin_0.HttpError(ctx, err)
+			gateway.HttpError(ctx, err)
 			return
 		}
 		{{ if $b.ResponseBody }}
-		gin_0.ForwardResponseMessage(ctx, md, response_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}{resp})
+		gateway.ForwardResponseMessage(ctx, md, response_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}{resp})
 		{{ else }}
-		gin_0.ForwardResponseMessage(ctx, md, resp)
+		gateway.ForwardResponseMessage(ctx, md, resp)
 		{{end}}
 	})
 	{{end}}
@@ -597,23 +596,23 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Client(ctx context.Context,
 	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
 		resp, md, err := request_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(ctx, client)
 		if err !=nil {
-			gin_0.HttpError(ctx, err)
+			gateway.HttpError(ctx, err)
 			return
 		}
 		{{if $m.GetServerStreaming}}
 		{{ if $b.ResponseBody }}
-		gin_0.ForwardResponseMessage(ctx, md, func() (proto.Message, error) {
+		gateway.ForwardResponseMessage(ctx, md, func() (proto.Message, error) {
 			res, err := resp.Recv()
 			return response_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}{res}, err
 		})
 		{{ else }}
-		gin_0.ForwardResponseMessage(ctx, md, func() (proto.Message, error) { return resp.Recv() })
+		gateway.ForwardResponseMessage(ctx, md, func() (proto.Message, error) { return resp.Recv() })
 		{{end}}
 		{{else}}
 		{{ if $b.ResponseBody }}
-		gin_0.ForwardResponseMessage(ctx, md, response_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}{resp})
+		gateway.ForwardResponseMessage(ctx, md, response_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}{resp})
 		{{ else }}
-		gin_0.ForwardResponseMessage(ctx, md, resp)
+		gateway.ForwardResponseMessage(ctx, md, resp)
 		{{end}}
 		{{end}}
 	})

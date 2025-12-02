@@ -10,19 +10,20 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"errors"
+	"io"
+	"reflect"
+	"strings"
+	"time"
+
 	timex "github.com/hopeio/gox/time"
 	"github.com/jinzhu/now"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-	"io"
-	"reflect"
-	"strings"
-	"time"
 )
 
-func (t *DeletedAt) Time() time.Time {
-	return time.Unix(t.Seconds, int64(t.Nanos))
+func (x *DeletedAt) Time() time.Time {
+	return time.Unix(x.Seconds, int64(x.Nanos))
 }
 
 func (x *DeletedAt) IsValid() bool {
@@ -43,14 +44,14 @@ func (x *DeletedAt) Scan(value interface{}) error {
 }
 
 // Value implements the driver Valuer interface.
-func (t *DeletedAt) Value() (driver.Value, error) {
-	if t == nil || timex.Check(t) != 0 {
+func (x *DeletedAt) Value() (driver.Value, error) {
+	if x == nil || timex.Check(x) != 0 {
 		return nil, nil
 	}
-	return time.Unix(t.Seconds, int64(t.Nanos)), nil
+	return time.Unix(x.Seconds, int64(x.Nanos)), nil
 }
 
-func (ts *DeletedAt) GormDataType() string {
+func (x *DeletedAt) GormDataType() string {
 	return "time"
 }
 
@@ -263,19 +264,19 @@ func (x *DeletedAt) UnmarshalGQL(v interface{}) error {
 	return errors.New("enum need integer type")
 }
 
-func (t *DeletedAt) MarshalJSON() ([]byte, error) {
-	if t == nil {
+func (x *DeletedAt) MarshalJSON() ([]byte, error) {
+	if x == nil {
 		return []byte("null"), nil
 	}
-	return timex.MarshalJSON(t.Time())
+	return timex.MarshalJSON(x.Time())
 }
 
-func (t *DeletedAt) UnmarshalJSON(data []byte) error {
+func (x *DeletedAt) UnmarshalJSON(data []byte) error {
 	var st time.Time
 	if err := timex.UnmarshalJSON(&st, data); err != nil {
 		return err
 	}
-	*t = DeletedAt{Seconds: st.Unix(), Nanos: int32(st.Nanosecond())}
+	*x = DeletedAt{Seconds: st.Unix(), Nanos: int32(st.Nanosecond())}
 	return nil
 }
 

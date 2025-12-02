@@ -10,7 +10,6 @@ package response;
 import "google/protobuf/any.proto";
 import "hopeio/any/any.proto";
 import "hopeio/utils/patch/go.proto";
-import "danielvladco/protobuf/graphql.proto";
 
 //因protoc生成会自动创建包目录，此文件仅供proto文件引用
 //生成使用gen.proto文件

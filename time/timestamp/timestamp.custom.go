@@ -58,45 +58,45 @@ func (x *Timestamp) CheckValid() error {
 }
 
 // Scan scan time.
-func (t *Timestamp) Scan(value interface{}) error {
+func (x *Timestamp) Scan(value interface{}) error {
 	nullTime := &sql.NullTime{}
 	err := nullTime.Scan(value)
 	if err != nil {
 		return err
 	}
 	if nullTime.Valid {
-		*t = Timestamp{Seconds: nullTime.Time.Unix(), Nanos: int32(nullTime.Time.Nanosecond())}
+		*x = Timestamp{Seconds: nullTime.Time.Unix(), Nanos: int32(nullTime.Time.Nanosecond())}
 	}
 	return nil
 }
 
 // Value get time value.
-func (t *Timestamp) Value() (driver.Value, error) {
-	if t == nil {
+func (x *Timestamp) Value() (driver.Value, error) {
+	if x == nil {
 		return nil, nil
 	}
-	return t.Time(), nil
+	return x.Time(), nil
 }
 
-func (ts *Timestamp) GormDataType() string {
+func (x *Timestamp) GormDataType() string {
 	return "time"
 }
 
 // Time get time.
-func (t *Timestamp) Time() time.Time {
-	return time.Unix(t.Seconds, int64(t.Nanos))
+func (x *Timestamp) Time() time.Time {
+	return time.Unix(x.Seconds, int64(x.Nanos))
 }
 
-func (t *Timestamp) MarshalJSON() ([]byte, error) {
-	return timex.MarshalJSON(t.Time())
+func (x *Timestamp) MarshalJSON() ([]byte, error) {
+	return timex.MarshalJSON(x.Time())
 }
 
-func (t *Timestamp) UnmarshalJSON(data []byte) error {
+func (x *Timestamp) UnmarshalJSON(data []byte) error {
 	var st time.Time
 	if err := timex.UnmarshalJSON(&st, data); err != nil {
 		return err
 	}
-	t.Seconds, t.Nanos = st.Unix(), int32(st.Nanosecond())
+	x.Seconds, x.Nanos = st.Unix(), int32(st.Nanosecond())
 	return nil
 }
 
