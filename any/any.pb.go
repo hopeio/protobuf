@@ -69,61 +69,16 @@ func (Encoding) EnumDescriptor() ([]byte, []int) {
 	return file_hopeio_any_any_proto_rawDescGZIP(), []int{0}
 }
 
-type RawJson struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RawJson) Reset() {
-	*x = RawJson{}
-	mi := &file_hopeio_any_any_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RawJson) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RawJson) ProtoMessage() {}
-
-func (x *RawJson) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_any_any_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RawJson.ProtoReflect.Descriptor instead.
-func (*RawJson) Descriptor() ([]byte, []int) {
-	return file_hopeio_any_any_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *RawJson) GetData() []byte {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
 type RawData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	Encoding      Encoding               `protobuf:"varint,2,opt,name=encoding,proto3,enum=any.Encoding" json:"encoding,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RawData) Reset() {
 	*x = RawData{}
-	mi := &file_hopeio_any_any_proto_msgTypes[1]
+	mi := &file_hopeio_any_any_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -135,7 +90,7 @@ func (x *RawData) String() string {
 func (*RawData) ProtoMessage() {}
 
 func (x *RawData) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_any_any_proto_msgTypes[1]
+	mi := &file_hopeio_any_any_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -148,7 +103,7 @@ func (x *RawData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RawData.ProtoReflect.Descriptor instead.
 func (*RawData) Descriptor() ([]byte, []int) {
-	return file_hopeio_any_any_proto_rawDescGZIP(), []int{1}
+	return file_hopeio_any_any_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RawData) GetData() []byte {
@@ -158,7 +113,52 @@ func (x *RawData) GetData() []byte {
 	return nil
 }
 
-func (x *RawData) GetEncoding() Encoding {
+type RawEncodingData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	Encoding      Encoding               `protobuf:"varint,2,opt,name=encoding,proto3,enum=any.Encoding" json:"encoding,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RawEncodingData) Reset() {
+	*x = RawEncodingData{}
+	mi := &file_hopeio_any_any_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RawEncodingData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RawEncodingData) ProtoMessage() {}
+
+func (x *RawEncodingData) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_any_any_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RawEncodingData.ProtoReflect.Descriptor instead.
+func (*RawEncodingData) Descriptor() ([]byte, []int) {
+	return file_hopeio_any_any_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *RawEncodingData) GetData() []byte {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *RawEncodingData) GetEncoding() Encoding {
 	if x != nil {
 		return x.Encoding
 	}
@@ -170,9 +170,9 @@ var File_hopeio_any_any_proto protoreflect.FileDescriptor
 const file_hopeio_any_any_proto_rawDesc = "" +
 	"\n" +
 	"\x14hopeio/any/any.proto\x12\x03any\"\x1d\n" +
-	"\aRawJson\x12\x12\n" +
-	"\x04data\x18\x01 \x01(\fR\x04data\"H\n" +
 	"\aRawData\x12\x12\n" +
+	"\x04data\x18\x01 \x01(\fR\x04data\"P\n" +
+	"\x0fRawEncodingData\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12)\n" +
 	"\bencoding\x18\x02 \x01(\x0e2\r.any.EncodingR\bencoding*\x14\n" +
 	"\bEncoding\x12\b\n" +
@@ -194,12 +194,12 @@ func file_hopeio_any_any_proto_rawDescGZIP() []byte {
 var file_hopeio_any_any_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hopeio_any_any_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hopeio_any_any_proto_goTypes = []any{
-	(Encoding)(0),   // 0: any.Encoding
-	(*RawJson)(nil), // 1: any.RawJson
-	(*RawData)(nil), // 2: any.RawData
+	(Encoding)(0),           // 0: any.Encoding
+	(*RawData)(nil),         // 1: any.RawData
+	(*RawEncodingData)(nil), // 2: any.RawEncodingData
 }
 var file_hopeio_any_any_proto_depIdxs = []int32{
-	0, // 0: any.RawData.encoding:type_name -> any.Encoding
+	0, // 0: any.RawEncodingData.encoding:type_name -> any.Encoding
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

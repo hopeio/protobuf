@@ -94,7 +94,7 @@ type RawResp struct {
 	Code  uint32                 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg   string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	// 字节数组json
-	Data          *any1.RawJson `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Data          *any1.RawData `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -143,7 +143,7 @@ func (x *RawResp) GetMsg() string {
 	return ""
 }
 
-func (x *RawResp) GetData() *any1.RawJson {
+func (x *RawResp) GetData() *any1.RawData {
 	if x != nil {
 		return x.Data
 	}
@@ -275,7 +275,7 @@ const file_hopeio_response_response_proto_rawDesc = "" +
 	"\aRawResp\x12&\n" +
 	"\x04code\x18\x01 \x01(\rB\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12 \n" +
-	"\x04data\x18\x03 \x01(\v2\f.any.RawJsonR\x04data\"F\n" +
+	"\x04data\x18\x03 \x01(\v2\f.any.RawDataR\x04data\"F\n" +
 	"\n" +
 	"CommonResp\x12&\n" +
 	"\x04code\x18\x01 \x01(\rB\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
@@ -309,11 +309,11 @@ var file_hopeio_response_response_proto_goTypes = []any{
 	(*HttpResponse)(nil), // 3: response.HttpResponse
 	nil,                  // 4: response.HttpResponse.HeadersEntry
 	(*anypb.Any)(nil),    // 5: google.protobuf.Any
-	(*any1.RawJson)(nil), // 6: any.RawJson
+	(*any1.RawData)(nil), // 6: any.RawData
 }
 var file_hopeio_response_response_proto_depIdxs = []int32{
 	5, // 0: response.AnyResp.data:type_name -> google.protobuf.Any
-	6, // 1: response.RawResp.data:type_name -> any.RawJson
+	6, // 1: response.RawResp.data:type_name -> any.RawData
 	4, // 2: response.HttpResponse.headers:type_name -> response.HttpResponse.HeadersEntry
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type

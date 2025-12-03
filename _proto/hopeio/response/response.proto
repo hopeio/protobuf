@@ -27,7 +27,7 @@ message RawResp {
     uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg =2;
     //字节数组json
-    any.RawJson data =3 ;
+    any.RawData data =3 ;
 }
 
 //返回数据为字符串，用于新建修改删除类的成功失败提示
