@@ -28,3 +28,8 @@ message DeletedAt {
   // inclusive.
   int32 nanos = 2;
 }
+
+
+message DeletedAtTimestamp {
+  int64 mills = 1;
+}

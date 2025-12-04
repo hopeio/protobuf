@@ -11,18 +11,36 @@ option go_package = "github.com/hopeio/protobuf/request";
 option java_package = "xyz.hoper.protobuf.request";
 option java_multiple_files = true;
 
-message Page{
-  uint32 pageNo = 1;
-  uint32 pageSize = 2;
+message Pagination{
+  uint32 no = 1;
+  uint32 size = 2;
+  repeated Sort sort = 3;
 }
 
+enum SortType{
+  ASC = 0;
+  DESC = 1;
+}
+
+message Sort{
+  string field = 1;
+  SortType type = 2;
+}
 
 message Id {
   uint64 id = 1;
 }
 
+message Ids {
+  repeated uint64 id = 1;
+}
+
 message IdStr{
   string idStr = 1;
+}
+
+message IdStrs{
+  repeated string idStr = 1;
 }
 
 message Cursor{

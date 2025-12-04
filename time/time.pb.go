@@ -116,7 +116,7 @@ func (x *Duration) GetDuration() int64 {
 
 type Timestamp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Timestamp     int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Millis        int64                  `protobuf:"varint,1,opt,name=millis,proto3" json:"millis,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -151,68 +151,9 @@ func (*Timestamp) Descriptor() ([]byte, []int) {
 	return file_hopeio_time_time_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Timestamp) GetTimestamp() int64 {
+func (x *Timestamp) GetMillis() int64 {
 	if x != nil {
-		return x.Timestamp
-	}
-	return 0
-}
-
-type Time struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Represents seconds of UTC time since Unix epoch
-	// 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-	// 9999-12-31T23:59:59Z inclusive.
-	Seconds int64 `protobuf:"varint,1,opt,name=seconds,proto3" json:"seconds,omitempty"`
-	// Non-negative fractions of a second at nanosecond resolution. Negative
-	// second values with fractions must still have non-negative nanos values
-	// that count forward in time. Must be from 0 to 999,999,999
-	// inclusive.
-	Nanos         int32 `protobuf:"varint,2,opt,name=nanos,proto3" json:"nanos,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Time) Reset() {
-	*x = Time{}
-	mi := &file_hopeio_time_time_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Time) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Time) ProtoMessage() {}
-
-func (x *Time) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_time_time_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Time.ProtoReflect.Descriptor instead.
-func (*Time) Descriptor() ([]byte, []int) {
-	return file_hopeio_time_time_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *Time) GetSeconds() int64 {
-	if x != nil {
-		return x.Seconds
-	}
-	return 0
-}
-
-func (x *Time) GetNanos() int32 {
-	if x != nil {
-		return x.Nanos
+		return x.Millis
 	}
 	return 0
 }
@@ -225,12 +166,9 @@ const file_hopeio_time_time_proto_rawDesc = "" +
 	"\x04Date\x12\x12\n" +
 	"\x04days\x18\x01 \x01(\x05R\x04days\"&\n" +
 	"\bDuration\x12\x1a\n" +
-	"\bduration\x18\x01 \x01(\x03R\bduration\")\n" +
-	"\tTimestamp\x12\x1c\n" +
-	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\"6\n" +
-	"\x04Time\x12\x18\n" +
-	"\aseconds\x18\x01 \x01(\x03R\aseconds\x12\x14\n" +
-	"\x05nanos\x18\x02 \x01(\x05R\x05nanosB<\n" +
+	"\bduration\x18\x01 \x01(\x03R\bduration\"#\n" +
+	"\tTimestamp\x12\x16\n" +
+	"\x06millis\x18\x01 \x01(\x03R\x06millisB<\n" +
 	"\x17xyz.hoper.protobuf.timeP\x01Z\x1fgithub.com/hopeio/protobuf/timeb\x06proto3"
 
 var (
@@ -245,12 +183,11 @@ func file_hopeio_time_time_proto_rawDescGZIP() []byte {
 	return file_hopeio_time_time_proto_rawDescData
 }
 
-var file_hopeio_time_time_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hopeio_time_time_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hopeio_time_time_proto_goTypes = []any{
 	(*Date)(nil),      // 0: time.Date
 	(*Duration)(nil),  // 1: time.Duration
 	(*Timestamp)(nil), // 2: time.Timestamp
-	(*Time)(nil),      // 3: time.Time
 }
 var file_hopeio_time_time_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -271,7 +208,7 @@ func file_hopeio_time_time_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_time_time_proto_rawDesc), len(file_hopeio_time_time_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

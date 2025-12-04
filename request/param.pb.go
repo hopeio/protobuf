@@ -26,28 +26,75 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Page struct {
+type SortType int32
+
+const (
+	SortType_ASC  SortType = 0
+	SortType_DESC SortType = 1
+)
+
+// Enum value maps for SortType.
+var (
+	SortType_name = map[int32]string{
+		0: "ASC",
+		1: "DESC",
+	}
+	SortType_value = map[string]int32{
+		"ASC":  0,
+		"DESC": 1,
+	}
+)
+
+func (x SortType) Enum() *SortType {
+	p := new(SortType)
+	*p = x
+	return p
+}
+
+func (x SortType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SortType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hopeio_request_param_proto_enumTypes[0].Descriptor()
+}
+
+func (SortType) Type() protoreflect.EnumType {
+	return &file_hopeio_request_param_proto_enumTypes[0]
+}
+
+func (x SortType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SortType.Descriptor instead.
+func (SortType) EnumDescriptor() ([]byte, []int) {
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{0}
+}
+
+type Pagination struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PageNo        uint32                 `protobuf:"varint,1,opt,name=pageNo,proto3" json:"pageNo,omitempty"`
-	PageSize      uint32                 `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	No            uint32                 `protobuf:"varint,1,opt,name=no,proto3" json:"no,omitempty"`
+	Size          uint32                 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	Sort          []*Sort                `protobuf:"bytes,3,rep,name=sort,proto3" json:"sort,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Page) Reset() {
-	*x = Page{}
+func (x *Pagination) Reset() {
+	*x = Pagination{}
 	mi := &file_hopeio_request_param_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Page) String() string {
+func (x *Pagination) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Page) ProtoMessage() {}
+func (*Pagination) ProtoMessage() {}
 
-func (x *Page) ProtoReflect() protoreflect.Message {
+func (x *Pagination) ProtoReflect() protoreflect.Message {
 	mi := &file_hopeio_request_param_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,23 +106,82 @@ func (x *Page) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Page.ProtoReflect.Descriptor instead.
-func (*Page) Descriptor() ([]byte, []int) {
+// Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
+func (*Pagination) Descriptor() ([]byte, []int) {
 	return file_hopeio_request_param_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Page) GetPageNo() uint32 {
+func (x *Pagination) GetNo() uint32 {
 	if x != nil {
-		return x.PageNo
+		return x.No
 	}
 	return 0
 }
 
-func (x *Page) GetPageSize() uint32 {
+func (x *Pagination) GetSize() uint32 {
 	if x != nil {
-		return x.PageSize
+		return x.Size
 	}
 	return 0
+}
+
+func (x *Pagination) GetSort() []*Sort {
+	if x != nil {
+		return x.Sort
+	}
+	return nil
+}
+
+type Sort struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Type          SortType               `protobuf:"varint,2,opt,name=type,proto3,enum=request.SortType" json:"type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Sort) Reset() {
+	*x = Sort{}
+	mi := &file_hopeio_request_param_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Sort) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Sort) ProtoMessage() {}
+
+func (x *Sort) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_request_param_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Sort.ProtoReflect.Descriptor instead.
+func (*Sort) Descriptor() ([]byte, []int) {
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Sort) GetField() string {
+	if x != nil {
+		return x.Field
+	}
+	return ""
+}
+
+func (x *Sort) GetType() SortType {
+	if x != nil {
+		return x.Type
+	}
+	return SortType_ASC
 }
 
 type Id struct {
@@ -87,7 +193,7 @@ type Id struct {
 
 func (x *Id) Reset() {
 	*x = Id{}
-	mi := &file_hopeio_request_param_proto_msgTypes[1]
+	mi := &file_hopeio_request_param_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -99,7 +205,7 @@ func (x *Id) String() string {
 func (*Id) ProtoMessage() {}
 
 func (x *Id) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_request_param_proto_msgTypes[1]
+	mi := &file_hopeio_request_param_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -112,7 +218,7 @@ func (x *Id) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Id.ProtoReflect.Descriptor instead.
 func (*Id) Descriptor() ([]byte, []int) {
-	return file_hopeio_request_param_proto_rawDescGZIP(), []int{1}
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Id) GetId() uint64 {
@@ -120,6 +226,50 @@ func (x *Id) GetId() uint64 {
 		return x.Id
 	}
 	return 0
+}
+
+type Ids struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            []uint64               `protobuf:"varint,1,rep,packed,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Ids) Reset() {
+	*x = Ids{}
+	mi := &file_hopeio_request_param_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Ids) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Ids) ProtoMessage() {}
+
+func (x *Ids) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_request_param_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Ids.ProtoReflect.Descriptor instead.
+func (*Ids) Descriptor() ([]byte, []int) {
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Ids) GetId() []uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return nil
 }
 
 type IdStr struct {
@@ -131,7 +281,7 @@ type IdStr struct {
 
 func (x *IdStr) Reset() {
 	*x = IdStr{}
-	mi := &file_hopeio_request_param_proto_msgTypes[2]
+	mi := &file_hopeio_request_param_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -143,7 +293,7 @@ func (x *IdStr) String() string {
 func (*IdStr) ProtoMessage() {}
 
 func (x *IdStr) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_request_param_proto_msgTypes[2]
+	mi := &file_hopeio_request_param_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -156,7 +306,7 @@ func (x *IdStr) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdStr.ProtoReflect.Descriptor instead.
 func (*IdStr) Descriptor() ([]byte, []int) {
-	return file_hopeio_request_param_proto_rawDescGZIP(), []int{2}
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *IdStr) GetIdStr() string {
@@ -164,6 +314,50 @@ func (x *IdStr) GetIdStr() string {
 		return x.IdStr
 	}
 	return ""
+}
+
+type IdStrs struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IdStr         []string               `protobuf:"bytes,1,rep,name=idStr,proto3" json:"idStr,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IdStrs) Reset() {
+	*x = IdStrs{}
+	mi := &file_hopeio_request_param_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IdStrs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IdStrs) ProtoMessage() {}
+
+func (x *IdStrs) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_request_param_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IdStrs.ProtoReflect.Descriptor instead.
+func (*IdStrs) Descriptor() ([]byte, []int) {
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *IdStrs) GetIdStr() []string {
+	if x != nil {
+		return x.IdStr
+	}
+	return nil
 }
 
 type Cursor struct {
@@ -175,7 +369,7 @@ type Cursor struct {
 
 func (x *Cursor) Reset() {
 	*x = Cursor{}
-	mi := &file_hopeio_request_param_proto_msgTypes[3]
+	mi := &file_hopeio_request_param_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -187,7 +381,7 @@ func (x *Cursor) String() string {
 func (*Cursor) ProtoMessage() {}
 
 func (x *Cursor) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_request_param_proto_msgTypes[3]
+	mi := &file_hopeio_request_param_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -200,7 +394,7 @@ func (x *Cursor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cursor.ProtoReflect.Descriptor instead.
 func (*Cursor) Descriptor() ([]byte, []int) {
-	return file_hopeio_request_param_proto_rawDescGZIP(), []int{3}
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Cursor) GetCursor() uint64 {
@@ -219,7 +413,7 @@ type CursorStr struct {
 
 func (x *CursorStr) Reset() {
 	*x = CursorStr{}
-	mi := &file_hopeio_request_param_proto_msgTypes[4]
+	mi := &file_hopeio_request_param_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -231,7 +425,7 @@ func (x *CursorStr) String() string {
 func (*CursorStr) ProtoMessage() {}
 
 func (x *CursorStr) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_request_param_proto_msgTypes[4]
+	mi := &file_hopeio_request_param_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -244,7 +438,7 @@ func (x *CursorStr) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CursorStr.ProtoReflect.Descriptor instead.
 func (*CursorStr) Descriptor() ([]byte, []int) {
-	return file_hopeio_request_param_proto_rawDescGZIP(), []int{4}
+	return file_hopeio_request_param_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CursorStr) GetCursor() string {
@@ -258,18 +452,30 @@ var File_hopeio_request_param_proto protoreflect.FileDescriptor
 
 const file_hopeio_request_param_proto_rawDesc = "" +
 	"\n" +
-	"\x1ahopeio/request/param.proto\x12\arequest\":\n" +
-	"\x04Page\x12\x16\n" +
-	"\x06pageNo\x18\x01 \x01(\rR\x06pageNo\x12\x1a\n" +
-	"\bpageSize\x18\x02 \x01(\rR\bpageSize\"\x14\n" +
+	"\x1ahopeio/request/param.proto\x12\arequest\"S\n" +
+	"\n" +
+	"Pagination\x12\x0e\n" +
+	"\x02no\x18\x01 \x01(\rR\x02no\x12\x12\n" +
+	"\x04size\x18\x02 \x01(\rR\x04size\x12!\n" +
+	"\x04sort\x18\x03 \x03(\v2\r.request.SortR\x04sort\"C\n" +
+	"\x04Sort\x12\x14\n" +
+	"\x05field\x18\x01 \x01(\tR\x05field\x12%\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x11.request.SortTypeR\x04type\"\x14\n" +
 	"\x02Id\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\"\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\"\x15\n" +
+	"\x03Ids\x12\x0e\n" +
+	"\x02id\x18\x01 \x03(\x04R\x02id\"\x1d\n" +
 	"\x05IdStr\x12\x14\n" +
-	"\x05idStr\x18\x01 \x01(\tR\x05idStr\" \n" +
+	"\x05idStr\x18\x01 \x01(\tR\x05idStr\"\x1e\n" +
+	"\x06IdStrs\x12\x14\n" +
+	"\x05idStr\x18\x01 \x03(\tR\x05idStr\" \n" +
 	"\x06Cursor\x12\x16\n" +
 	"\x06cursor\x18\x01 \x01(\x04R\x06cursor\"#\n" +
 	"\tCursorStr\x12\x16\n" +
-	"\x06cursor\x18\x01 \x01(\tR\x06cursorBB\n" +
+	"\x06cursor\x18\x01 \x01(\tR\x06cursor*\x1d\n" +
+	"\bSortType\x12\a\n" +
+	"\x03ASC\x10\x00\x12\b\n" +
+	"\x04DESC\x10\x01BB\n" +
 	"\x1axyz.hoper.protobuf.requestP\x01Z\"github.com/hopeio/protobuf/requestb\x06proto3"
 
 var (
@@ -284,20 +490,27 @@ func file_hopeio_request_param_proto_rawDescGZIP() []byte {
 	return file_hopeio_request_param_proto_rawDescData
 }
 
-var file_hopeio_request_param_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hopeio_request_param_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hopeio_request_param_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hopeio_request_param_proto_goTypes = []any{
-	(*Page)(nil),      // 0: request.Page
-	(*Id)(nil),        // 1: request.Id
-	(*IdStr)(nil),     // 2: request.IdStr
-	(*Cursor)(nil),    // 3: request.Cursor
-	(*CursorStr)(nil), // 4: request.CursorStr
+	(SortType)(0),      // 0: request.SortType
+	(*Pagination)(nil), // 1: request.Pagination
+	(*Sort)(nil),       // 2: request.Sort
+	(*Id)(nil),         // 3: request.Id
+	(*Ids)(nil),        // 4: request.Ids
+	(*IdStr)(nil),      // 5: request.IdStr
+	(*IdStrs)(nil),     // 6: request.IdStrs
+	(*Cursor)(nil),     // 7: request.Cursor
+	(*CursorStr)(nil),  // 8: request.CursorStr
 }
 var file_hopeio_request_param_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	2, // 0: request.Pagination.sort:type_name -> request.Sort
+	0, // 1: request.Sort.type:type_name -> request.SortType
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hopeio_request_param_proto_init() }
@@ -310,13 +523,14 @@ func file_hopeio_request_param_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_request_param_proto_rawDesc), len(file_hopeio_request_param_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   5,
+			NumEnums:      1,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_hopeio_request_param_proto_goTypes,
 		DependencyIndexes: file_hopeio_request_param_proto_depIdxs,
+		EnumInfos:         file_hopeio_request_param_proto_enumTypes,
 		MessageInfos:      file_hopeio_request_param_proto_msgTypes,
 	}.Build()
 	File_hopeio_request_param_proto = out.File

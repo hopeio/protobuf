@@ -18,16 +18,16 @@ import (
 func (ts *Timestamp) Scan(value interface{}) (err error) {
 	nullTime := &sql.NullTime{}
 	err = nullTime.Scan(value)
-	*ts = Timestamp{Timestamp: nullTime.Time.UnixMilli()}
+	*ts = Timestamp{Millis: nullTime.Time.UnixMilli()}
 	return
 }
 
 func (ts *Timestamp) Value() (driver.Value, error) {
-	return time.UnixMilli(ts.Timestamp), nil
+	return time.UnixMilli(ts.Millis), nil
 }
 
 func (ts *Timestamp) Time() time.Time {
-	return time.UnixMilli(ts.Timestamp)
+	return time.UnixMilli(ts.Millis)
 }
 
 func (ts *Timestamp) GormDataType() string {
@@ -35,12 +35,12 @@ func (ts *Timestamp) GormDataType() string {
 }
 
 func (ts *Timestamp) MarshalBinary() ([]byte, error) {
-	return binary.ToBinary(ts.Timestamp), nil
+	return binary.ToBinary(ts.Millis), nil
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
 func (ts *Timestamp) UnmarshalBinary(data []byte) error {
-	ts.Timestamp = binary.BinaryTo[int64](data)
+	ts.Millis = binary.BinaryTo[int64](data)
 	return nil
 }
 
@@ -56,7 +56,7 @@ func (ts *Timestamp) MarshalJSON() ([]byte, error) {
 	if ts == nil {
 		return []byte("null"), nil
 	}
-	t := time.UnixMilli(ts.Timestamp)
+	t := time.UnixMilli(ts.Millis)
 	return timex.MarshalJSON(t)
 }
 
@@ -66,6 +66,6 @@ func (ts *Timestamp) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	ts.Timestamp = t.UnixMilli()
+	ts.Millis = t.UnixMilli()
 	return err
 }
