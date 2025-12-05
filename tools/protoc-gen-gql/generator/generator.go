@@ -2,10 +2,11 @@ package generator
 
 import (
 	"fmt"
-	stringsx "github.com/hopeio/gox/strings"
-	"github.com/hopeio/gox/strings/unicode"
 	"strconv"
 	"strings"
+
+	stringsx "github.com/hopeio/gox/strings"
+	"github.com/hopeio/gox/unicode"
 
 	"github.com/jhump/protoreflect/desc"
 	"github.com/vektah/gqlparser/v2/ast"

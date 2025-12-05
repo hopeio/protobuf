@@ -15,24 +15,28 @@ option go_package = "github.com/hopeio/protobuf/model";
 option java_multiple_files = true;
 option java_package = "xyz.hoper.protobuf.model";
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 message ModelTimeStr{
   string createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
   string updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
   string deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 message ModelTime{
   timestamp.Timestamp createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
   timestamp.Timestamp updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
   deletedAt.DeletedAt deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 message ModelTimeInt{
   int64 createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
   int64 updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
   int64 deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 message Model{
   uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   timestamp.Timestamp createdAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now()"'}];

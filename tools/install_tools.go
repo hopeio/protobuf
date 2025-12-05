@@ -11,35 +11,35 @@ import (
 	"os"
 
 	"github.com/hopeio/gox/log"
-	execx "github.com/hopeio/gox/os/exec"
+	"github.com/hopeio/gox/os/exec"
 	"github.com/hopeio/gox/os/fs"
 )
 
 // 提供给使用框架的人安装所需环境
 func main() {
-	execx.Run("go version")
-	libDir, _ := execx.RunGetOutWithLog("go list -m -f {{.Dir}}  github.com/hopeio/protobuf")
+	exec.Run("go version")
+	libDir, _ := exec.RunGetOutWithLog("go list -m -f {{.Dir}}  github.com/hopeio/protobuf")
 	os.Chdir(libDir)
-	execx.RunGetOutWithLog("go install google.golang.org/protobuf/cmd/protoc-gen-go")
+	exec.RunGetOutWithLog("go install google.golang.org/protobuf/cmd/protoc-gen-go")
 	protoccmd := "protoc -I" + libDir + "/_proto --go_out=paths=source_relative:" + libDir + " " + libDir + "/_proto/hopeio/utils/"
 	//execx.RunGetOutWithLog(protoccmd + "patch/*.proto")
-	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"))
-	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"))
-	execx.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"enum/*.proto"))
+	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"))
+	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"))
+	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"enum/*.proto"))
 	fs.MoveDirByMode(libDir+"/hopeio", libDir, 0)
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-grpc-gin")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-enum")
-	execx.RunGetOutWithLog("go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway")
-	execx.RunGetOutWithLog("go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-grpc-gin")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-enum")
+	exec.RunGetOutWithLog("go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway")
+	exec.RunGetOutWithLog("go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2")
 	//execx.RunGetOutWithLog("go install github.com/alta/protopatch/cmd/protoc-gen-go-patch")
-	execx.RunGetOutWithLog("go install google.golang.org/grpc/cmd/protoc-gen-go-grpc")
+	exec.RunGetOutWithLog("go install google.golang.org/grpc/cmd/protoc-gen-go-grpc")
 	//execx.RunGetOutWithLog("go install github.com/envoyproxy/protoc-gen-validate")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-validator")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-go-patch")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gql")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-validator")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-go-patch")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gql")
 	//execx.RunGetOutWithLog("go install github.com/danielvladco/go-proto-gql/protoc-gen-gogql")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gogql")
-	execx.RunGetOutWithLog("go install github.com/99designs/gqlgen")
-	execx.RunGetOutWithLog("go install " + libDir + "/tools/protogen")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gogql")
+	exec.RunGetOutWithLog("go install github.com/99designs/gqlgen")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protogen")
 	log.Info("install success")
 }

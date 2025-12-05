@@ -2,15 +2,17 @@ package plugin
 
 import (
 	"fmt"
+
 	"github.com/hopeio/protobuf/utils/validator"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	"google.golang.org/protobuf/proto"
-	descriptor "google.golang.org/protobuf/types/descriptorpb"
 	"os"
 	"reflect"
 	"strconv"
+
+	"google.golang.org/protobuf/proto"
+	descriptor "google.golang.org/protobuf/types/descriptorpb"
 )
 
 const uuidPattern = "^([a-fA-F0-9]{8}-" +
@@ -33,7 +35,7 @@ func New(p *protogen.Plugin) *plugin {
 		regexPkg:     "regexp",
 		fmtPkg:       "fmt",
 		errorsPkg:    "errors",
-		validatorPkg: "github.com/hopeio/gox/validation/validator",
+		validatorPkg: "github.com/hopeio/gox/validator",
 	}
 }
 
