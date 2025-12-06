@@ -9,7 +9,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 
+	"github.com/hopeio/gox"
 	"github.com/hopeio/gox/log"
 	"github.com/hopeio/gox/os/exec"
 	"github.com/hopeio/gox/os/fs"
@@ -23,9 +25,9 @@ func main() {
 	exec.RunGetOutWithLog("go install google.golang.org/protobuf/cmd/protoc-gen-go")
 	protoccmd := "protoc -I" + libDir + "/_proto --go_out=paths=source_relative:" + libDir + " " + libDir + "/_proto/hopeio/utils/"
 	//execx.RunGetOutWithLog(protoccmd + "patch/*.proto")
-	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"))
-	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"))
-	exec.RunGetOutWithLog(fmt.Sprintf(`bash -c "%s"`, protoccmd+"enum/*.proto"))
+	exec.RunGetOutWithLog(gox.TernaryOperator(runtime.GOOS != "windows", fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"), protoccmd+"apiconfig/*.proto"))
+	exec.RunGetOutWithLog(gox.TernaryOperator(runtime.GOOS != "windows", fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"), protoccmd+"openapiconfig/*.proto"))
+	exec.RunGetOutWithLog(gox.TernaryOperator(runtime.GOOS != "windows", fmt.Sprintf(`bash -c "%s"`, protoccmd+"enum/*.proto"), protoccmd+"enum/*.proto"))
 	fs.MoveDirByMode(libDir+"/hopeio", libDir, 0)
 	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-grpc-gin")
 	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-enum")
