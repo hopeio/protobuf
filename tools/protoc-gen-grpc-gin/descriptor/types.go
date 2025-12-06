@@ -2,8 +2,9 @@ package descriptor
 
 import (
 	"fmt"
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 	"strings"
+
+	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 
 	stringsx "github.com/hopeio/gox/strings"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -413,89 +414,89 @@ func (c FieldPathComponent) ValueExpr() string {
 
 var (
 	proto3ConvertFuncs = map[descriptorpb.FieldDescriptorProto_Type]string{
-		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "grpc_0.Float64",
-		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "grpc_0.Float32",
-		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "grpc_0.Int64",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "grpc_0.Uint64",
-		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "grpc_0.Int32",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "grpc_0.Uint64",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "grpc_0.Uint32",
-		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "grpc_0.Bool",
-		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "grpc_0.String",
+		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "strconv.Float64",
+		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "strconv.Float32",
+		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "strconv.Int64",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "strconv.Uint64",
+		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "strconv.Int32",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "strconv.Uint64",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "strconv.Uint32",
+		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "strconv.Bool",
+		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "strconv.String",
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
-		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "grpc_0.Bytes",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "grpc_0.Uint32",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.Enum",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "grpc_0.Int32",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "grpc_0.Int64",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "grpc_0.Int32",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "grpc_0.Int64",
+		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "strconv.Bytes",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strconv.Uint32",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "strconv.Enum",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strconv.Int32",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strconv.Int64",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strconv.Int32",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "strconv.Int64",
 	}
 
 	proto3RepeatedConvertFuncs = map[descriptorpb.FieldDescriptorProto_Type]string{
-		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "grpc_0.Float64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "grpc_0.Float32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "grpc_0.Int64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "grpc_0.Uint64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "grpc_0.Uint64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "grpc_0.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "grpc_0.BoolSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "grpc_0.StringSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "strconv.Float64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "strconv.Float32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "strconv.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "strconv.Uint64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "strconv.Uint64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "strconv.Uint32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "strconv.BoolSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "string",
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
-		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "grpc_0.BytesSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "grpc_0.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "grpc_0.Int64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "grpc_0.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "strconv.BytesSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strconv.Uint32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "strconv.EnumSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strconv.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "strconv.Int64Slice",
 	}
 
 	proto2ConvertFuncs = map[descriptorpb.FieldDescriptorProto_Type]string{
-		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "grpc_0.Float64P",
-		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "grpc_0.Float32P",
-		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "grpc_0.Int64P",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "grpc_0.Uint64P",
-		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "grpc_0.Int32P",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "grpc_0.Uint64P",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "grpc_0.Uint32P",
-		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "grpc_0.BoolP",
-		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "grpc_0.StringP",
+		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "strconv.Float64P",
+		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "strconv.Float32P",
+		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "strconv.Int64P",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "strconv.Uint64P",
+		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "strconv.Int32P",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "strconv.Uint64P",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "strconv.Uint32P",
+		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "strconv.BoolP",
+		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "gox.Pointer",
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
 		// FieldDescriptorProto_TYPE_BYTES
 		// TODO(yugui) Handle bytes
-		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "grpc_0.Uint32P",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumP",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "grpc_0.Int32P",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "grpc_0.Int64P",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "grpc_0.Int32P",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "grpc_0.Int64P",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strconv.Uint32P",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "strconv.EnumP",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strconv.Int32P",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strconv.Int64P",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strconv.Int32P",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "strconv.Int64P",
 	}
 
 	proto2RepeatedConvertFuncs = map[descriptorpb.FieldDescriptorProto_Type]string{
-		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "grpc_0.Float64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "grpc_0.Float32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "grpc_0.Int64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "grpc_0.Uint64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "grpc_0.Uint64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "grpc_0.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "grpc_0.BoolSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "grpc_0.StringSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:  "strconv.Float64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FLOAT:   "strconv.Float32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_INT64:   "strconv.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT64:  "strconv.Uint64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_INT32:   "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "strconv.Uint64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "strconv.Uint32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "strconv.BoolSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "strconv.StringSlice",
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
 		// FieldDescriptorProto_TYPE_BYTES
 		// TODO(maros7) Handle bytes
-		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "grpc_0.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "grpc_0.Int64Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "grpc_0.Int32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "grpc_0.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strconv.Uint32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "strconv.EnumSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strconv.Int64Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strconv.Int32Slice",
+		descriptorpb.FieldDescriptorProto_TYPE_SINT64:   "strconv.Int64Slice",
 	}
 
 	wellKnownTypeConv = map[string]string{

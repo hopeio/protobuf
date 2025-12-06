@@ -236,7 +236,8 @@ var _ codes.Code
 var _ io.Reader
 var _ status.Status
 var _ = metadata.Join
-var _ = binding.Bind
+var _ = gox.Pointer[bool]
+var _ = strconv.Bool
 `))
 
 	handlerTemplate = template.Must(template.New("handler").Parse(`
@@ -310,7 +311,7 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
 	var metadata grpc_0.ServerMetadata
 {{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
-	if err := binding.Bind(ctx, &protoReq); err != nil {
+	if err := gateway.Bind(ctx, &protoReq); err != nil {
 		return nil, metadata, err
 	}
 {{end}}
@@ -454,7 +455,7 @@ func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(se
 {{template "local-request-func-signature" .}} {
 	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
 {{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
-	if err := binding.Bind(ctx, &protoReq); err != nil {
+	if err := gateway.Bind(ctx, &protoReq); err != nil {
 		return nil, err
 	}
 {{end}}
