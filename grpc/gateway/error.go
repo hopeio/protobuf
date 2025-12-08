@@ -9,6 +9,7 @@ package gateway
 import (
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hopeio/gox/errors"
@@ -24,7 +25,7 @@ var HttpError = func(ctx *gin.Context, err error) {
 
 	delete(ctx.Request.Header, httpx.HeaderTrailer)
 	ctx.Header(httpx.HeaderContentType, gateway.Marshaler.ContentType(nil))
-
+	ctx.Header("Grpc-Status", strconv.Itoa(int(s.Code())))
 	se := &errors.ErrResp{Code: errors.ErrCode(s.Code()), Msg: s.Message()}
 	buf, merr := gateway.Marshaler.Marshal(se)
 	if merr != nil {
