@@ -35,12 +35,12 @@ func (ts *Timestamp) GormDataType() string {
 }
 
 func (ts *Timestamp) MarshalBinary() ([]byte, error) {
-	return binary.ToBinary(ts.Millis), nil
+	return binary.FromInteger(ts.Millis), nil
 }
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
 func (ts *Timestamp) UnmarshalBinary(data []byte) error {
-	ts.Millis = binary.BinaryTo[int64](data)
+	ts.Millis = binary.Integer[int64](data)
 	return nil
 }
 

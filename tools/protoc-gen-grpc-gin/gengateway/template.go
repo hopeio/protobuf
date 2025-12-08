@@ -237,7 +237,7 @@ var _ io.Reader
 var _ status.Status
 var _ = metadata.Join
 var _ = gox.Pointer[bool]
-var _ = strconv.Bool
+var _ = text.Bool
 `))
 
 	handlerTemplate = template.Must(template.New("handler").Parse(`

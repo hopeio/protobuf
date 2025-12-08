@@ -47,7 +47,7 @@ func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix s
 		"google.golang.org/grpc/status",
 		"github.com/gin-gonic/gin",
 		"github.com/hopeio/gox/net/http/grpc",
-		"github.com/hopeio/gox/strconv",
+		"github.com/hopeio/gox/encoding/text",
 		"github.com/hopeio/gox",
 		"github.com/hopeio/protobuf/grpc/gateway",
 	} {
