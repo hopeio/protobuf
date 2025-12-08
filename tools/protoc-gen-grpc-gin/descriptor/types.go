@@ -427,7 +427,7 @@ var (
 		// FieldDescriptorProto_TYPE_MESSAGE
 		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "text.Bytes",
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "text.Uint32",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "text.Enum",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.Enum",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "text.Int32",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "text.Int64",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "text.Int32",
@@ -448,7 +448,7 @@ var (
 		// FieldDescriptorProto_TYPE_MESSAGE
 		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "text.BytesSlice",
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "text.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "text.EnumSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumSlice",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "text.Int32Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "text.Int64Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "text.Int32Slice",
@@ -470,7 +470,7 @@ var (
 		// FieldDescriptorProto_TYPE_BYTES
 		// TODO(yugui) Handle bytes
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "text.Uint32P",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "text.EnumP",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumP",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "text.Int32P",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "text.Int64P",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "text.Int32P",
