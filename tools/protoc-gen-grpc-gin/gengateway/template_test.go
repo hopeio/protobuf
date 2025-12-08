@@ -742,10 +742,10 @@ func TestIdentifierCapitalization(t *testing.T) {
 		t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 		return
 	}
-	if want := `msg, err := client.ExampleGe2T(ctx, &protoReq, grpc.Header(&metadata.HeaderMD)`; !strings.Contains(got, want) {
+	if want := `msg, err := client.ExampleGe2T(ctx, &protoReq, grpc.Header(&metadata.Header)`; !strings.Contains(got, want) {
 		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 	}
-	if want := `msg, err := client.ExamplEGet(ctx, &protoReq, grpc.Header(&metadata.HeaderMD)`; !strings.Contains(got, want) {
+	if want := `msg, err := client.ExamplEGet(ctx, &protoReq, grpc.Header(&metadata.Header)`; !strings.Contains(got, want) {
 		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 	}
 	if want := `var protoReq ExamPleRequest`; !strings.Contains(got, want) {

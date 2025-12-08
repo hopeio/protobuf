@@ -443,7 +443,7 @@ var (
 		descriptorpb.FieldDescriptorProto_TYPE_FIXED64: "strconv.Uint64Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_FIXED32: "strconv.Uint32Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_BOOL:    "strconv.BoolSlice",
-		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "string",
+		descriptorpb.FieldDescriptorProto_TYPE_STRING:  "strconv.StringSlice",
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
 		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "strconv.BytesSlice",

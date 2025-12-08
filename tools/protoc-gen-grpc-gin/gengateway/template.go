@@ -259,11 +259,11 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 
 	_ = template.Must(handlerTemplate.New("client-streaming-request-func").Parse(`
 {{template "request-func-signature" .}} {
-	var metadata grpc_0.ServerMetadata
-	stream, err := client.{{.Method.GetName}}(ctx)
+	var md grpc_0.ServerMetadata
+	stream, err := client.{{.Method.GetName}}(metadata.NewOutgoingContext(ctx.Request.Context(),metadata.MD(ctx.Request.Header)))
 	if err != nil {
 		grpclog.Infof("Failed to start streaming: %v", err)
-		return nil, metadata, err
+		return nil, md, err
 	}
 	dec := marshaler.NewDecoder(req.Body)
 	for {
@@ -274,33 +274,33 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 		}
 		if err != nil {
 			grpclog.Infof("Failed to decode request: %v", err)
-			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+			return nil, md, status.Errorf(codes.InvalidArgument, "%v", err)
 		}
 		if err = stream.Send(&protoReq); err != nil {
 			if err == io.EOF {
 				break
 			}
 			grpclog.Infof("Failed to send request: %v", err)
-			return nil, metadata, err
+			return nil, md, err
 		}
 	}
 
 	if err := stream.CloseSend(); err != nil {
 		grpclog.Infof("Failed to terminate client stream: %v", err)
-		return nil, metadata, err
+		return nil, md, err
 	}
 	header, err := stream.Header()
 	if err != nil {
 		grpclog.Infof("Failed to get header from client: %v", err)
-		return nil, metadata, err
+		return nil, md, err
 	}
-	metadata.HeaderMD = header
+	md.Header = header
 {{if .Method.GetServerStreaming}}
-	return stream, metadata, nil
+	return stream, md, nil
 {{else}}
 	msg, err := stream.CloseAndRecv()
-	metadata.TrailerMD = stream.Trailer()
-	return msg, metadata, err
+	md.Trailer = stream.Trailer()
+	return msg, md, err
 {{end}}
 }
 `))
@@ -309,10 +309,10 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 {{$AllowPatchFeature := .AllowPatchFeature}}
 {{template "request-func-signature" .}} {
 	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
-	var metadata grpc_0.ServerMetadata
+	var md grpc_0.ServerMetadata
 {{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
 	if err := gateway.Bind(ctx, &protoReq); err != nil {
-		return nil, metadata, err
+		return nil, md, err
 	}
 {{end}}
 {{if .PathParams}}
@@ -333,23 +333,23 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 {{if $param.IsNestedProto3}}
 	err = gin_1.PopulateFieldFromPath(&protoReq, {{$param | printf "%q"}}, ctx.Param({{$param | printf "%q"}}))
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, md, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 	{{if $enum}}
 		e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
 		if err != nil {
-			return nil, metadata, status.Errorf(codes.InvalidArgument, "could not parse path as enum value, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+			return nil, md, status.Errorf(codes.InvalidArgument, "could not parse path as enum value, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 		}
 	{{end}}
 {{else if $enum}}
 	e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, md, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 {{else}}
 	{{$param.AssignableExpr "protoReq"}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}})
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, md, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 {{end}}
 {{if and $enum $param.IsRepeated}}
@@ -365,29 +365,29 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 {{end}}
 
 {{if .Method.GetServerStreaming}}
-	stream, err := client.{{.Method.GetName}}(ctx, &protoReq)
+	stream, err := client.{{.Method.GetName}}(metadata.NewOutgoingContext(ctx.Request.Context(),md.MD(ctx.Request.Header)), &protoReq)
 	if err != nil {
-		return nil, metadata, err
+		return nil, md, err
 	}
 	header, err := stream.Header()
 	if err != nil {
-		return nil, metadata, err
+		return nil, md, err
 	}
-	metadata.HeaderMD = header
-	return stream, metadata, nil
+	md.Header = header
+	return stream, md, nil
 {{else}}
-	msg, err := client.{{.Method.GetName}}(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
+	msg, err := client.{{.Method.GetName}}(metadata.NewOutgoingContext(ctx.Request.Context(),metadata.MD(ctx.Request.Header)), &protoReq, grpc.Header(&md.Header), grpc.Trailer(&md.Trailer))
+	return msg, md, err
 {{end}}
 }`))
 
 	_ = template.Must(handlerTemplate.New("bidi-streaming-request-func").Parse(`
 {{template "request-func-signature" .}} {
-	var metadata grpc_0.ServerMetadata
-	stream, err := client.{{.Method.GetName}}(ctx)
+	var md grpc_0.ServerMetadata
+	stream, err := client.{{.Method.GetName}}(metadata.NewOutgoingContext(ctx.Request.Context(),metadata.MD(ctx.Request.Header)))
 	if err != nil {
 		grpclog.Infof("Failed to start streaming: %v", err)
-		return nil, metadata, err
+		return nil, md, err
 	}
 	dec := marshaler.NewDecoder(req.Body)
 	handleSend := func() error {
@@ -411,9 +411,9 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 			grpclog.Infof("Failed to terminate client stream: %v", cerr)
 		}
 		if err == io.EOF {
-			return stream, metadata, nil
+			return stream, md, nil
 		}
-		return nil, metadata, err
+		return nil, md, err
 	}
 	go func() {
 		for {
@@ -428,10 +428,10 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 	header, err := stream.Header()
 	if err != nil {
 		grpclog.Infof("Failed to get header from client: %v", err)
-		return nil, metadata, err
+		return nil, md, err
 	}
-	metadata.HeaderMD = header
-	return stream, metadata, nil
+	md.Header = header
+	return stream, md, nil
 }
 `))
 
@@ -447,18 +447,21 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx *gin
 	_ = template.Must(localHandlerTemplate.New("local-request-func-signature").Parse(strings.Replace(`
 {{if .Method.GetServerStreaming}}
 {{else}}
-func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(server {{.Method.Service.InstanceName}}Server, ctx *gin.Context) (proto.Message, error)
+func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(server {{.Method.Service.InstanceName}}Server, ctx *gin.Context) (proto.Message, grpc_0.ServerMetadata, error)
 {{end}}`, "\n", "", -1)))
 
 	_ = template.Must(localHandlerTemplate.New("local-client-rpc-request-func").Parse(`
 {{$AllowPatchFeature := .AllowPatchFeature}}
 {{template "local-request-func-signature" .}} {
+	var stream grpc_0.ServerTransportStream
 	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
 {{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
+	
 	if err := gateway.Bind(ctx, &protoReq); err != nil {
-		return nil, err
+		return nil, stream.ServerMetadata(), err
 	}
 {{end}}
+	ctx.Request = ctx.Request.WithContext(grpc.NewContextWithServerTransportStream(metadata.NewIncomingContext(ctx.Request.Context(), metadata.MD(ctx.Request.Header)), &stream))
 {{if .PathParams}}
 	var (
 		err error
@@ -478,23 +481,23 @@ func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(se
 {{if $param.IsNestedProto3}}
 	err = gin_1.PopulateFieldFromPath(&protoReq, {{$param | printf "%q"}}, ctx.Param({{$param | printf "%q"}}))
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, stream.ServerMetadata(), status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 	{{if $enum}}
 		e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
 		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "could not parse path as enum value, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+			return nil, stream.ServerMetadata(), status.Errorf(codes.InvalidArgument, "could not parse path as enum value, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 		}
 	{{end}}
 {{else if $enum}}
 	e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, stream.ServerMetadata(), status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 {{else}}
 	{{$param.AssignableExpr "protoReq"}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}})
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
+		return nil, stream.ServerMetadata(), status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err)
 	}
 {{end}}
 {{if and $enum $param.IsRepeated}}
@@ -512,7 +515,8 @@ func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(se
 {{if .Method.GetServerStreaming}}
 	// TODO
 {{else}}
-	return server.{{.Method.GetName}}(ctx.Request.Context(), &protoReq)
+	resp, err := server.{{.Method.GetName}}(ctx.Request.Context(), &protoReq)
+	return resp, stream.ServerMetadata(), err
 {{end}}
 }`))
 
@@ -534,8 +538,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	})
 	{{else}}
 	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
-		var md grpc_0.ServerMetadata
-		resp, err := local_request_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(server, ctx)
+		resp, md, err := local_request_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(server, ctx)
 		if err !=nil {
 			gateway.HttpError(ctx, err)
 			return
