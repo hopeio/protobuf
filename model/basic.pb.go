@@ -29,6 +29,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 type ModelTimeStr struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CreatedAt     string                 `protobuf:"bytes,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
@@ -89,6 +90,7 @@ func (x *ModelTimeStr) GetDeletedAt() string {
 	return ""
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 type ModelTime struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CreatedAt     *timestamp.Timestamp   `protobuf:"bytes,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
@@ -149,6 +151,7 @@ func (x *ModelTime) GetDeletedAt() *deletedAt.DeletedAt {
 	return nil
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 type ModelTimeInt struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CreatedAt     int64                  `protobuf:"varint,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
@@ -209,6 +212,7 @@ func (x *ModelTimeInt) GetDeletedAt() int64 {
 	return 0
 }
 
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 type Model struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
