@@ -468,7 +468,7 @@ var (
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
 		// FieldDescriptorProto_TYPE_BYTES
-		// TODO(yugui) Handle bytes
+		// TODO(yugui) Handler bytes
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "text.Uint32P",
 		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumP",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "text.Int32P",
@@ -490,7 +490,7 @@ var (
 		// FieldDescriptorProto_TYPE_GROUP
 		// FieldDescriptorProto_TYPE_MESSAGE
 		// FieldDescriptorProto_TYPE_BYTES
-		// TODO(maros7) Handle bytes
+		// TODO(maros7) Handler bytes
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "text.Uint32Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "text.EnumSlice",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "text.Int32Slice",

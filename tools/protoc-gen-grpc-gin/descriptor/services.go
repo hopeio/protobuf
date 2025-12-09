@@ -2,8 +2,8 @@ package descriptor
 
 import (
 	"fmt"
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 	"github.com/hopeio/gox/log"
+	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
 	"strings"
 
 	options "google.golang.org/genproto/googleapis/api/annotations"
@@ -150,7 +150,7 @@ func (r *Registry) newMethod(svc *Service, md *descriptorpb.MethodDescriptorProt
 			b.PathParams = append(b.PathParams, param)
 		}
 
-		// TODO(yugui) Handle query params
+		// TODO(yugui) Handler query params
 
 		b.Body, err = r.newBody(meth, opts.Body)
 		if err != nil {
