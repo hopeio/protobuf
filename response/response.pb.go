@@ -31,7 +31,7 @@ const (
 
 type AnyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          uint32                 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	Data          *anypb.Any             `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -68,7 +68,7 @@ func (*AnyResp) Descriptor() ([]byte, []int) {
 	return file_hopeio_response_response_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AnyResp) GetCode() uint32 {
+func (x *AnyResp) GetCode() int32 {
 	if x != nil {
 		return x.Code
 	}
@@ -91,7 +91,7 @@ func (x *AnyResp) GetData() *anypb.Any {
 
 type RawResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Code  uint32                 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	Code  int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg   string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	// 字节数组json
 	Data          *any1.RawData `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
@@ -129,7 +129,7 @@ func (*RawResp) Descriptor() ([]byte, []int) {
 	return file_hopeio_response_response_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *RawResp) GetCode() uint32 {
+func (x *RawResp) GetCode() int32 {
 	if x != nil {
 		return x.Code
 	}
@@ -153,7 +153,7 @@ func (x *RawResp) GetData() *any1.RawData {
 // 返回数据为字符串，用于新建修改删除类的成功失败提示
 type CommonResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          uint32                 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -189,7 +189,7 @@ func (*CommonResp) Descriptor() ([]byte, []int) {
 	return file_hopeio_response_response_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CommonResp) GetCode() uint32 {
+func (x *CommonResp) GetCode() int32 {
 	if x != nil {
 		return x.Code
 	}
@@ -207,7 +207,7 @@ type HttpResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Headers       map[string]string      `protobuf:"bytes,1,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Body          []byte                 `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
-	Status        uint32                 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -256,7 +256,7 @@ func (x *HttpResponse) GetBody() []byte {
 	return nil
 }
 
-func (x *HttpResponse) GetStatus() uint32 {
+func (x *HttpResponse) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
@@ -269,21 +269,21 @@ const file_hopeio_response_response_proto_rawDesc = "" +
 	"\n" +
 	"\x1ehopeio/response/response.proto\x12\bresponse\x1a\x19google/protobuf/any.proto\x1a\x14hopeio/any/any.proto\x1a\x1bhopeio/utils/patch/go.proto\"m\n" +
 	"\aAnyResp\x12&\n" +
-	"\x04code\x18\x01 \x01(\rB\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
+	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12(\n" +
 	"\x04data\x18\x03 \x01(\v2\x14.google.protobuf.AnyR\x04data\"e\n" +
 	"\aRawResp\x12&\n" +
-	"\x04code\x18\x01 \x01(\rB\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
+	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12 \n" +
 	"\x04data\x18\x03 \x01(\v2\f.any.RawDataR\x04data\"F\n" +
 	"\n" +
 	"CommonResp\x12&\n" +
-	"\x04code\x18\x01 \x01(\rB\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
+	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\"\xb5\x01\n" +
 	"\fHttpResponse\x12=\n" +
 	"\aheaders\x18\x01 \x03(\v2#.response.HttpResponse.HeadersEntryR\aheaders\x12\x12\n" +
 	"\x04body\x18\x02 \x01(\fR\x04body\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\rR\x06status\x1a:\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BD\n" +

@@ -18,13 +18,13 @@ option java_package = "xyz.hoper.protobuf.response";
 option java_multiple_files = true;
 
 message AnyResp {
-    uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
+    int32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg = 2;
     google.protobuf.Any data = 3;
 }
 
 message RawResp {
-    uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
+    int32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg =2;
     //字节数组json
     any.RawData data =3 ;
@@ -32,12 +32,12 @@ message RawResp {
 
 //返回数据为字符串，用于新建修改删除类的成功失败提示
 message CommonResp {
-    uint32 code = 1 [(go.field) = {tags:'json:"code"'}];
+    int32 code = 1 [(go.field) = {tags:'json:"code"'}];
     string msg = 2;
 }
 
 message HttpResponse{
     map<string, string> headers =1;
     bytes body = 2;
-    uint32 status = 3;
+    int32 status = 3;
 }
