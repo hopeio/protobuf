@@ -16,6 +16,10 @@ message Date {
   int32 days = 1;
 }
 
+message Duration{
+  int64 micro = 1;
+}
+
 message Timestamp {
   int64 millis = 1;
 }

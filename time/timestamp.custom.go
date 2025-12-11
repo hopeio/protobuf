@@ -15,6 +15,10 @@ import (
 	timex "github.com/hopeio/gox/time"
 )
 
+func Now() Timestamp {
+	return Timestamp{Millis: time.Now().UnixMilli()}
+}
+
 func (ts *Timestamp) Scan(value interface{}) (err error) {
 	nullTime := &sql.NullTime{}
 	err = nullTime.Scan(value)

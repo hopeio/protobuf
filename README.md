@@ -6,10 +6,10 @@ protobuf插件集合, 常用proto类型
 ## quick start
 - `go get github.com/hopeio/protobuf@main`
 - `go run $(go list -m -f {{.Dir}}  github.com/hopeio/protobuf)/tools/install_tools.go`
-- `protogen go -p $proto_path -o $proto_output_path`
+- `protogen go -d -i $proto_path -o $proto_output_path`
 
 #### use docker
-`docker run --rm -v $project_path:/work jybl/protogen protogen go --proto=$proto_path --genpath=$proto_output_path`
+`docker run --rm -v $project_path:/work jybl/protogen protogen go --proto=$proto_path --output=$proto_output_path`
 
 
 ## template
@@ -84,13 +84,16 @@ service UserService {
 本项目需要用到的protobuf插件，`go run tools/install_tools.go` 或 `tools/install-tools.sh`，会自动安装
 
 - protogen为go语言写的protobuf生成程序
-    - go/dart 生成go/dart文件，E.g: protogen go -p xxx -o xxx
-    - -p proto dir
+    - go 生成go文件，E.g: protogen go -d -i xxx -o xxx
+    - -i proto dir
     - -o generate dir
-    - -e 是否使用enum扩展插件
-    - -w 是否使用grpc-gateway插件
-    - -v 是否使用validators插件
-    - -g 是否使用graphql插件
+    - -d use openapi
+    - -e use enum
+    - -w use grpc-gateway
+    - -v use validator
+    - -g use graphql
+    - -I proto include dir
+    - -p hopeio/protobuf/_proto dir
     - --patch 是否使用原生protopatch
 - protoc-go-patch 支持通过ast重新生成自定义结构体tag,生成结构体方法等功能
 - protoc-gen-grpc-gin github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway的gin版本，支持生成http路由代理转发到grpc sercvice中

@@ -70,6 +70,50 @@ func (x *Date) GetDays() int32 {
 	return 0
 }
 
+type Duration struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Micro         int64                  `protobuf:"varint,1,opt,name=micro,proto3" json:"micro,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Duration) Reset() {
+	*x = Duration{}
+	mi := &file_hopeio_time_time_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Duration) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Duration) ProtoMessage() {}
+
+func (x *Duration) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_time_time_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Duration.ProtoReflect.Descriptor instead.
+func (*Duration) Descriptor() ([]byte, []int) {
+	return file_hopeio_time_time_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Duration) GetMicro() int64 {
+	if x != nil {
+		return x.Micro
+	}
+	return 0
+}
+
 type Timestamp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Millis        int64                  `protobuf:"varint,1,opt,name=millis,proto3" json:"millis,omitempty"`
@@ -79,7 +123,7 @@ type Timestamp struct {
 
 func (x *Timestamp) Reset() {
 	*x = Timestamp{}
-	mi := &file_hopeio_time_time_proto_msgTypes[1]
+	mi := &file_hopeio_time_time_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -91,7 +135,7 @@ func (x *Timestamp) String() string {
 func (*Timestamp) ProtoMessage() {}
 
 func (x *Timestamp) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_time_time_proto_msgTypes[1]
+	mi := &file_hopeio_time_time_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -104,7 +148,7 @@ func (x *Timestamp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Timestamp.ProtoReflect.Descriptor instead.
 func (*Timestamp) Descriptor() ([]byte, []int) {
-	return file_hopeio_time_time_proto_rawDescGZIP(), []int{1}
+	return file_hopeio_time_time_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Timestamp) GetMillis() int64 {
@@ -120,7 +164,9 @@ const file_hopeio_time_time_proto_rawDesc = "" +
 	"\n" +
 	"\x16hopeio/time/time.proto\x12\x04time\"\x1a\n" +
 	"\x04Date\x12\x12\n" +
-	"\x04days\x18\x01 \x01(\x05R\x04days\"#\n" +
+	"\x04days\x18\x01 \x01(\x05R\x04days\" \n" +
+	"\bDuration\x12\x14\n" +
+	"\x05micro\x18\x01 \x01(\x03R\x05micro\"#\n" +
 	"\tTimestamp\x12\x16\n" +
 	"\x06millis\x18\x01 \x01(\x03R\x06millisB<\n" +
 	"\x17xyz.hoper.protobuf.timeP\x01Z\x1fgithub.com/hopeio/protobuf/timeb\x06proto3"
@@ -137,10 +183,11 @@ func file_hopeio_time_time_proto_rawDescGZIP() []byte {
 	return file_hopeio_time_time_proto_rawDescData
 }
 
-var file_hopeio_time_time_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_hopeio_time_time_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hopeio_time_time_proto_goTypes = []any{
 	(*Date)(nil),      // 0: time.Date
-	(*Timestamp)(nil), // 1: time.Timestamp
+	(*Duration)(nil),  // 1: time.Duration
+	(*Timestamp)(nil), // 2: time.Timestamp
 }
 var file_hopeio_time_time_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -161,7 +208,7 @@ func file_hopeio_time_time_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_time_time_proto_rawDesc), len(file_hopeio_time_time_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
