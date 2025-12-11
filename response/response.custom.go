@@ -8,43 +8,13 @@ package response
 
 import (
 	"context"
-	"errors"
-	"io"
 	"net/http"
 
 	httpx "github.com/hopeio/gox/net/http"
 	"google.golang.org/protobuf/types/known/wrapperspb"
-
-	"google.golang.org/protobuf/proto"
 )
 
-type RespData struct {
-	Code uint32        `json:"code"`
-	Msg  string        `json:"msg"`
-	Data proto.Message `json:"data"`
-}
-
-func (x *HttpResponse) GetContentType() string {
-	return x.Headers[httpx.HeaderContentType]
-}
-
-func (x *HttpResponse) MarshalProto(w io.Writer) {
-	w.Write(x.Body)
-}
-
-func (x *HttpResponse) MarshalGQL(w io.Writer) {
-	w.Write(x.Body)
-}
-
-func (x *HttpResponse) UnmarshalGQL(v interface{}) error {
-	if i, ok := v.([]byte); ok {
-		x.Body = i
-		return nil
-	}
-	return errors.New("error type")
-}
-
-var RespOk = &CommonResp{}
+var RespOk = &ErrResp{}
 
 type StringValue = wrapperspb.StringValue
 

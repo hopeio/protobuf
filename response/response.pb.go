@@ -12,7 +12,7 @@
 package response
 
 import (
-	any1 "github.com/hopeio/protobuf/any"
+	_ "github.com/hopeio/protobuf/any"
 	_ "github.com/hopeio/protobuf/utils/patch"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -29,7 +29,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type AnyResp struct {
+type CommonResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
@@ -38,20 +38,20 @@ type AnyResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AnyResp) Reset() {
-	*x = AnyResp{}
+func (x *CommonResp) Reset() {
+	*x = CommonResp{}
 	mi := &file_hopeio_response_response_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AnyResp) String() string {
+func (x *CommonResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AnyResp) ProtoMessage() {}
+func (*CommonResp) ProtoMessage() {}
 
-func (x *AnyResp) ProtoReflect() protoreflect.Message {
+func (x *CommonResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hopeio_response_response_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -63,26 +63,26 @@ func (x *AnyResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AnyResp.ProtoReflect.Descriptor instead.
-func (*AnyResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use CommonResp.ProtoReflect.Descriptor instead.
+func (*CommonResp) Descriptor() ([]byte, []int) {
 	return file_hopeio_response_response_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AnyResp) GetCode() int32 {
+func (x *CommonResp) GetCode() int32 {
 	if x != nil {
 		return x.Code
 	}
 	return 0
 }
 
-func (x *AnyResp) GetMsg() string {
+func (x *CommonResp) GetMsg() string {
 	if x != nil {
 		return x.Msg
 	}
 	return ""
 }
 
-func (x *AnyResp) GetData() *anypb.Any {
+func (x *CommonResp) GetData() *anypb.Any {
 	if x != nil {
 		return x.Data
 	}
@@ -90,11 +90,10 @@ func (x *AnyResp) GetData() *anypb.Any {
 }
 
 type RawResp struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Code  int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
-	Msg   string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
-	// 字节数组json
-	Data          *any1.RawData `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+	Data          []byte                 `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -143,7 +142,7 @@ func (x *RawResp) GetMsg() string {
 	return ""
 }
 
-func (x *RawResp) GetData() *any1.RawData {
+func (x *RawResp) GetData() []byte {
 	if x != nil {
 		return x.Data
 	}
@@ -151,7 +150,7 @@ func (x *RawResp) GetData() *any1.RawData {
 }
 
 // 返回数据为字符串，用于新建修改删除类的成功失败提示
-type CommonResp struct {
+type ErrResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int32                  `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
@@ -159,20 +158,20 @@ type CommonResp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CommonResp) Reset() {
-	*x = CommonResp{}
+func (x *ErrResp) Reset() {
+	*x = ErrResp{}
 	mi := &file_hopeio_response_response_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CommonResp) String() string {
+func (x *ErrResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CommonResp) ProtoMessage() {}
+func (*ErrResp) ProtoMessage() {}
 
-func (x *CommonResp) ProtoReflect() protoreflect.Message {
+func (x *ErrResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hopeio_response_response_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -184,19 +183,19 @@ func (x *CommonResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CommonResp.ProtoReflect.Descriptor instead.
-func (*CommonResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ErrResp.ProtoReflect.Descriptor instead.
+func (*ErrResp) Descriptor() ([]byte, []int) {
 	return file_hopeio_response_response_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CommonResp) GetCode() int32 {
+func (x *ErrResp) GetCode() int32 {
 	if x != nil {
 		return x.Code
 	}
 	return 0
 }
 
-func (x *CommonResp) GetMsg() string {
+func (x *ErrResp) GetMsg() string {
 	if x != nil {
 		return x.Msg
 	}
@@ -267,17 +266,17 @@ var File_hopeio_response_response_proto protoreflect.FileDescriptor
 
 const file_hopeio_response_response_proto_rawDesc = "" +
 	"\n" +
-	"\x1ehopeio/response/response.proto\x12\bresponse\x1a\x19google/protobuf/any.proto\x1a\x14hopeio/any/any.proto\x1a\x1bhopeio/utils/patch/go.proto\"m\n" +
-	"\aAnyResp\x12&\n" +
-	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
-	"\x03msg\x18\x02 \x01(\tR\x03msg\x12(\n" +
-	"\x04data\x18\x03 \x01(\v2\x14.google.protobuf.AnyR\x04data\"e\n" +
-	"\aRawResp\x12&\n" +
-	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
-	"\x03msg\x18\x02 \x01(\tR\x03msg\x12 \n" +
-	"\x04data\x18\x03 \x01(\v2\f.any.RawDataR\x04data\"F\n" +
+	"\x1ehopeio/response/response.proto\x12\bresponse\x1a\x19google/protobuf/any.proto\x1a\x14hopeio/any/any.proto\x1a\x1bhopeio/utils/patch/go.proto\"p\n" +
 	"\n" +
 	"CommonResp\x12&\n" +
+	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
+	"\x03msg\x18\x02 \x01(\tR\x03msg\x12(\n" +
+	"\x04data\x18\x03 \x01(\v2\x14.google.protobuf.AnyR\x04data\"W\n" +
+	"\aRawResp\x12&\n" +
+	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
+	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\x12\n" +
+	"\x04data\x18\x03 \x01(\fR\x04data\"C\n" +
+	"\aErrResp\x12&\n" +
 	"\x04code\x18\x01 \x01(\x05B\x12ҵ\x03\x0e\xa2\x01\vjson:\"code\"R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\"\xb5\x01\n" +
 	"\fHttpResponse\x12=\n" +
@@ -303,23 +302,21 @@ func file_hopeio_response_response_proto_rawDescGZIP() []byte {
 
 var file_hopeio_response_response_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hopeio_response_response_proto_goTypes = []any{
-	(*AnyResp)(nil),      // 0: response.AnyResp
+	(*CommonResp)(nil),   // 0: response.CommonResp
 	(*RawResp)(nil),      // 1: response.RawResp
-	(*CommonResp)(nil),   // 2: response.CommonResp
+	(*ErrResp)(nil),      // 2: response.ErrResp
 	(*HttpResponse)(nil), // 3: response.HttpResponse
 	nil,                  // 4: response.HttpResponse.HeadersEntry
 	(*anypb.Any)(nil),    // 5: google.protobuf.Any
-	(*any1.RawData)(nil), // 6: any.RawData
 }
 var file_hopeio_response_response_proto_depIdxs = []int32{
-	5, // 0: response.AnyResp.data:type_name -> google.protobuf.Any
-	6, // 1: response.RawResp.data:type_name -> any.RawData
-	4, // 2: response.HttpResponse.headers:type_name -> response.HttpResponse.HeadersEntry
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	5, // 0: response.CommonResp.data:type_name -> google.protobuf.Any
+	4, // 1: response.HttpResponse.headers:type_name -> response.HttpResponse.HeadersEntry
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hopeio_response_response_proto_init() }

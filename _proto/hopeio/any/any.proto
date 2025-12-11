@@ -11,9 +11,6 @@ option go_package = "github.com/hopeio/protobuf/any";
 option java_package = "xyz.hoper.protobuf.any";
 option java_multiple_files = true;
 
-message RawData {
-    bytes data = 1;
-}
 
 enum Encoding {
     JSON = 0;
