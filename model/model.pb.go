@@ -32,7 +32,7 @@ const (
 
 type Enum struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:",inline" gorm:"embedded"`
+	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
 	Group         uint64                 `protobuf:"varint,2,opt,name=group,proto3" json:"group,omitempty" gorm:"size:20"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Type          uint32                 `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty" comment:"类型"`
@@ -71,9 +71,9 @@ func (*Enum) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Enum) GetModel() *Model {
+func (x *Enum) GetBasic() *Model {
 	if x != nil {
-		return x.Model
+		return x.Basic
 	}
 	return nil
 }
@@ -108,7 +108,7 @@ func (x *Enum) GetStatus() uint32 {
 
 type EnumValue struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:",inline" gorm:"embedded"`
+	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
 	EnumId        uint64                 `protobuf:"varint,2,opt,name=enumId,proto3" json:"enumId,omitempty"`
 	Index         uint64                 `protobuf:"varint,3,opt,name=index,proto3" json:"index,omitempty" gorm:"comment:index"`
 	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty" comment:"值"`
@@ -147,9 +147,9 @@ func (*EnumValue) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *EnumValue) GetModel() *Model {
+func (x *EnumValue) GetBasic() *Model {
 	if x != nil {
-		return x.Model
+		return x.Basic
 	}
 	return nil
 }
@@ -320,7 +320,7 @@ func (x *Attribute) GetStatus() uint32 {
 
 type Dict struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:",inline" gorm:"embedded"`
+	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
 	Group         uint32                 `protobuf:"varint,2,opt,name=group,proto3" json:"group,omitempty"`
 	Key           string                 `protobuf:"bytes,4,opt,name=key,proto3" json:"key,omitempty" gorm:"键"`
 	Value         string                 `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty" comment:"值"`
@@ -361,9 +361,9 @@ func (*Dict) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *Dict) GetModel() *Model {
+func (x *Dict) GetBasic() *Model {
 	if x != nil {
-		return x.Model
+		return x.Basic
 	}
 	return nil
 }
@@ -414,15 +414,15 @@ var File_hopeio_model_model_proto protoreflect.FileDescriptor
 
 const file_hopeio_model_model_proto_rawDesc = "" +
 	"\n" +
-	"\x18hopeio/model/model.proto\x12\x05model\x1a\x1bhopeio/utils/patch/go.proto\x1a%hopeio/time/timestamp/timestamp.proto\x1a%hopeio/time/deletedAt/deletedAt.proto\x1a\x18hopeio/model/basic.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x97\x02\n" +
-	"\x04Enum\x12I\n" +
-	"\x05model\x18\x01 \x01(\v2\f.model.ModelB%ҵ\x03!\xa2\x01\x1ejson:\",inline\" gorm:\"embedded\"R\x05model\x12+\n" +
+	"\x18hopeio/model/model.proto\x12\x05model\x1a\x1bhopeio/utils/patch/go.proto\x1a%hopeio/time/timestamp/timestamp.proto\x1a%hopeio/time/deletedAt/deletedAt.proto\x1a\x18hopeio/model/basic.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x9c\x02\n" +
+	"\x04Enum\x12N\n" +
+	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12+\n" +
 	"\x05group\x18\x02 \x01(\x04B\x15ҵ\x03\x11\xa2\x01\x0egorm:\"size:20\"R\x05group\x12*\n" +
 	"\x04name\x18\x03 \x01(\tB\x16ҵ\x03\x12\xa2\x01\x0fcomment:\"名称R\x04name\x12+\n" +
 	"\x04type\x18\x04 \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"类型\"R\x04type\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xa7\x02\n" +
-	"\tEnumValue\x12I\n" +
-	"\x05model\x18\x01 \x01(\v2\f.model.ModelB%ҵ\x03!\xa2\x01\x1ejson:\",inline\" gorm:\"embedded\"R\x05model\x120\n" +
+	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xac\x02\n" +
+	"\tEnumValue\x12N\n" +
+	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x120\n" +
 	"\x06enumId\x18\x02 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11comment:\"枚举idR\x06enumId\x121\n" +
 	"\x05index\x18\x03 \x01(\x04B\x1bҵ\x03\x17\xa2\x01\x14gorm:\"comment:index\"R\x05index\x12*\n" +
 	"\x05value\x18\x04 \x01(\tB\x14ҵ\x03\x10\xa2\x01\rcomment:\"值\"R\x05value\x12>\n" +
@@ -436,9 +436,9 @@ const file_hopeio_model_model_proto_rawDesc = "" +
 	"\tAttribute\x12I\n" +
 	"\x05model\x18\x01 \x01(\v2\f.model.ModelB%ҵ\x03!\xa2\x01\x1ejson:\",inline\" gorm:\"embedded\"R\x05model\x12*\n" +
 	"\x04name\x18\x02 \x01(\tB\x16ҵ\x03\x12\xa2\x01\x0fcomment:\"名称R\x04name\x12>\n" +
-	"\x06status\x18\x12 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xe5\x02\n" +
-	"\x04Dict\x12I\n" +
-	"\x05model\x18\x01 \x01(\v2\f.model.ModelB%ҵ\x03!\xa2\x01\x1ejson:\",inline\" gorm:\"embedded\"R\x05model\x12)\n" +
+	"\x06status\x18\x12 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xea\x02\n" +
+	"\x04Dict\x12N\n" +
+	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12)\n" +
 	"\x05group\x18\x02 \x01(\rB\x13ҵ\x03\x0f\xa2\x01\fcomment:\"组R\x05group\x12#\n" +
 	"\x03key\x18\x04 \x01(\tB\x11ҵ\x03\r\xa2\x01\n" +
 	"gorm:\"键\"R\x03key\x12*\n" +
@@ -471,11 +471,11 @@ var file_hopeio_model_model_proto_goTypes = []any{
 	(*ModelTime)(nil), // 6: model.ModelTime
 }
 var file_hopeio_model_model_proto_depIdxs = []int32{
-	5, // 0: model.Enum.model:type_name -> model.Model
-	5, // 1: model.EnumValue.model:type_name -> model.Model
+	5, // 0: model.Enum.basic:type_name -> model.Model
+	5, // 1: model.EnumValue.basic:type_name -> model.Model
 	6, // 2: model.Area.time:type_name -> model.ModelTime
 	5, // 3: model.Attribute.model:type_name -> model.Model
-	5, // 4: model.Dict.model:type_name -> model.Model
+	5, // 4: model.Dict.basic:type_name -> model.Model
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

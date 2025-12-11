@@ -20,7 +20,7 @@ option java_multiple_files = true;
 option go_package = "github.com/hopeio/protobuf/model";
 
 message Enum{
-  Model model = 1 [(go.field) = {tags:'json:",inline" gorm:"embedded"'}];
+  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
   uint64 group = 2 [(go.field) = {tags:'gorm:"size:20"'}];
   string name = 3 [(go.field) = {tags:'comment:"名称'}];
   uint32 type = 4 [(go.field) = {tags:'comment:"类型"'}];
@@ -31,7 +31,7 @@ message Enum{
 
 
 message EnumValue{
-  Model model = 1 [(go.field) = {tags:'json:",inline" gorm:"embedded"'}];
+  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
   uint64 enumId = 2 [(go.field) = {tags:'comment:"枚举id'}];
   uint64 index = 3 [(go.field) = {tags:'gorm:"comment:index"'}];
   string value = 4 [(go.field) = {tags:'comment:"值"'}];
@@ -42,7 +42,7 @@ message EnumValue{
 
 message Area {
   uint64 code = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
-  string name =2;
+  string name = 2;
   int32 level = 3;
   uint64 pcode = 4;
   model.ModelTime time = 5 [(go.field) = {tags:'json:",inline" gorm:"embedded"'}];
@@ -57,7 +57,7 @@ message Attribute{
 }
 
 message Dict{
-  Model model = 1 [(go.field) = {tags:'json:",inline" gorm:"embedded"'}];
+  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
   uint32 group = 2 [(go.field) = {tags:'comment:"组'}];
   string key = 4 [(go.field) = {tags:'gorm:"键"'}];
   string value = 5 [(go.field) = {tags:'comment:"值"'}];
