@@ -410,6 +410,174 @@ func (x *Dict) GetStatus() uint32 {
 	return 0
 }
 
+type FrontRoute struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Redirect      string                 `protobuf:"bytes,4,opt,name=redirect,proto3" json:"redirect,omitempty"`
+	Meta          *FrontRouteMeta        `protobuf:"bytes,5,opt,name=meta,proto3" json:"meta,inline" gorm:"embedded"`
+	ParentId      uint64                 `protobuf:"varint,6,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	Children      []*FrontRoute          `protobuf:"bytes,7,rep,name=children,proto3" json:"children,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FrontRoute) Reset() {
+	*x = FrontRoute{}
+	mi := &file_hopeio_model_model_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FrontRoute) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FrontRoute) ProtoMessage() {}
+
+func (x *FrontRoute) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_model_model_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FrontRoute.ProtoReflect.Descriptor instead.
+func (*FrontRoute) Descriptor() ([]byte, []int) {
+	return file_hopeio_model_model_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *FrontRoute) GetBasic() *Model {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+func (x *FrontRoute) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *FrontRoute) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *FrontRoute) GetRedirect() string {
+	if x != nil {
+		return x.Redirect
+	}
+	return ""
+}
+
+func (x *FrontRoute) GetMeta() *FrontRouteMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *FrontRoute) GetParentId() uint64 {
+	if x != nil {
+		return x.ParentId
+	}
+	return 0
+}
+
+func (x *FrontRoute) GetChildren() []*FrontRoute {
+	if x != nil {
+		return x.Children
+	}
+	return nil
+}
+
+type FrontRouteMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Icon          string                 `protobuf:"bytes,2,opt,name=icon,proto3" json:"icon,omitempty"`
+	ShowLink      bool                   `protobuf:"varint,3,opt,name=showLink,proto3" json:"showLink,omitempty"`
+	Rank          int32                  `protobuf:"varint,4,opt,name=rank,proto3" json:"rank,omitempty"`
+	Roles         []string               `protobuf:"bytes,5,rep,name=roles,proto3" json:"roles,omitempty" gorm:"type:text[];serializer:string_array"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FrontRouteMeta) Reset() {
+	*x = FrontRouteMeta{}
+	mi := &file_hopeio_model_model_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FrontRouteMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FrontRouteMeta) ProtoMessage() {}
+
+func (x *FrontRouteMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_model_model_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FrontRouteMeta.ProtoReflect.Descriptor instead.
+func (*FrontRouteMeta) Descriptor() ([]byte, []int) {
+	return file_hopeio_model_model_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *FrontRouteMeta) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *FrontRouteMeta) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *FrontRouteMeta) GetShowLink() bool {
+	if x != nil {
+		return x.ShowLink
+	}
+	return false
+}
+
+func (x *FrontRouteMeta) GetRank() int32 {
+	if x != nil {
+		return x.Rank
+	}
+	return 0
+}
+
+func (x *FrontRouteMeta) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
 var File_hopeio_model_model_proto protoreflect.FileDescriptor
 
 const file_hopeio_model_model_proto_rawDesc = "" +
@@ -445,7 +613,22 @@ const file_hopeio_model_model_proto_rawDesc = "" +
 	"\x05value\x18\x05 \x01(\tB\x14ҵ\x03\x10\xa2\x01\rcomment:\"值\"R\x05value\x12+\n" +
 	"\x04type\x18\x06 \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"类型\"R\x04type\x12)\n" +
 	"\x03seq\x18\a \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"顺序\"R\x03seq\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06statusB>\n" +
+	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xc1\x02\n" +
+	"\n" +
+	"FrontRoute\x12N\n" +
+	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
+	"\bredirect\x18\x04 \x01(\tR\bredirect\x12T\n" +
+	"\x04meta\x18\x05 \x01(\v2\x15.model.FrontRouteMetaB)ҵ\x03%\xa2\x01\"json:\"meta,inline\" gorm:\"embedded\"R\x04meta\x12\x1a\n" +
+	"\bparentId\x18\x06 \x01(\x04R\bparentId\x12-\n" +
+	"\bchildren\x18\a \x03(\v2\x11.model.FrontRouteR\bchildren\"\xb3\x01\n" +
+	"\x0eFrontRouteMeta\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
+	"\x04icon\x18\x02 \x01(\tR\x04icon\x12\x1a\n" +
+	"\bshowLink\x18\x03 \x01(\bR\bshowLink\x12\x12\n" +
+	"\x04rank\x18\x04 \x01(\x05R\x04rank\x12G\n" +
+	"\x05roles\x18\x05 \x03(\tB1ҵ\x03-\xa2\x01*gorm:\"type:text[];serializer:string_array\"R\x05rolesB>\n" +
 	"\x18xyz.hoper.protobuf.modelP\x01Z github.com/hopeio/protobuf/modelb\x06proto3"
 
 var (
@@ -460,27 +643,32 @@ func file_hopeio_model_model_proto_rawDescGZIP() []byte {
 	return file_hopeio_model_model_proto_rawDescData
 }
 
-var file_hopeio_model_model_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hopeio_model_model_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hopeio_model_model_proto_goTypes = []any{
-	(*Enum)(nil),      // 0: model.Enum
-	(*EnumValue)(nil), // 1: model.EnumValue
-	(*Area)(nil),      // 2: model.Area
-	(*Attribute)(nil), // 3: model.Attribute
-	(*Dict)(nil),      // 4: model.Dict
-	(*Model)(nil),     // 5: model.Model
-	(*ModelTime)(nil), // 6: model.ModelTime
+	(*Enum)(nil),           // 0: model.Enum
+	(*EnumValue)(nil),      // 1: model.EnumValue
+	(*Area)(nil),           // 2: model.Area
+	(*Attribute)(nil),      // 3: model.Attribute
+	(*Dict)(nil),           // 4: model.Dict
+	(*FrontRoute)(nil),     // 5: model.FrontRoute
+	(*FrontRouteMeta)(nil), // 6: model.FrontRouteMeta
+	(*Model)(nil),          // 7: model.Model
+	(*ModelTime)(nil),      // 8: model.ModelTime
 }
 var file_hopeio_model_model_proto_depIdxs = []int32{
-	5, // 0: model.Enum.basic:type_name -> model.Model
-	5, // 1: model.EnumValue.basic:type_name -> model.Model
-	6, // 2: model.Area.time:type_name -> model.ModelTime
-	5, // 3: model.Attribute.basic:type_name -> model.Model
-	5, // 4: model.Dict.basic:type_name -> model.Model
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	7, // 0: model.Enum.basic:type_name -> model.Model
+	7, // 1: model.EnumValue.basic:type_name -> model.Model
+	8, // 2: model.Area.time:type_name -> model.ModelTime
+	7, // 3: model.Attribute.basic:type_name -> model.Model
+	7, // 4: model.Dict.basic:type_name -> model.Model
+	7, // 5: model.FrontRoute.basic:type_name -> model.Model
+	6, // 6: model.FrontRoute.meta:type_name -> model.FrontRouteMeta
+	5, // 7: model.FrontRoute.children:type_name -> model.FrontRoute
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_hopeio_model_model_proto_init() }
@@ -495,7 +683,7 @@ func file_hopeio_model_model_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_model_model_proto_rawDesc), len(file_hopeio_model_model_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
