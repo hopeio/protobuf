@@ -304,7 +304,7 @@ func (x *IdStr) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use IdStr.ProtoReflect.Descriptor instead.
+// Deprecated: Use GetId.ProtoReflect.Descriptor instead.
 func (*IdStr) Descriptor() ([]byte, []int) {
 	return file_hopeio_request_param_proto_rawDescGZIP(), []int{4}
 }
@@ -498,7 +498,7 @@ var file_hopeio_request_param_proto_goTypes = []any{
 	(*Sort)(nil),       // 2: request.Sort
 	(*Id)(nil),         // 3: request.Id
 	(*Ids)(nil),        // 4: request.Ids
-	(*IdStr)(nil),      // 5: request.IdStr
+	(*IdStr)(nil),      // 5: request.GetId
 	(*IdStrs)(nil),     // 6: request.IdStrs
 	(*Cursor)(nil),     // 7: request.Cursor
 	(*CursorStr)(nil),  // 8: request.CursorStr
