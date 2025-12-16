@@ -418,7 +418,7 @@ type FrontRoute struct {
 	Redirect      string                 `protobuf:"bytes,4,opt,name=redirect,proto3" json:"redirect,omitempty"`
 	Meta          *FrontRouteMeta        `protobuf:"bytes,5,opt,name=meta,proto3" json:"meta,inline" gorm:"embedded"`
 	ParentId      uint64                 `protobuf:"varint,6,opt,name=parentId,proto3" json:"parentId,omitempty"`
-	Children      []*FrontRoute          `protobuf:"bytes,7,rep,name=children,proto3" json:"children,omitempty"`
+	Childrens     []*FrontRoute          `protobuf:"bytes,7,rep,name=childrens,proto3" json:"childrens,omitempty" gorm:"foreignkey:ParentId"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,9 +495,9 @@ func (x *FrontRoute) GetParentId() uint64 {
 	return 0
 }
 
-func (x *FrontRoute) GetChildren() []*FrontRoute {
+func (x *FrontRoute) GetChildrens() []*FrontRoute {
 	if x != nil {
-		return x.Children
+		return x.Childrens
 	}
 	return nil
 }
@@ -613,7 +613,7 @@ const file_hopeio_model_model_proto_rawDesc = "" +
 	"\x05value\x18\x05 \x01(\tB\x14ҵ\x03\x10\xa2\x01\rcomment:\"值\"R\x05value\x12+\n" +
 	"\x04type\x18\x06 \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"类型\"R\x04type\x12)\n" +
 	"\x03seq\x18\a \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"顺序\"R\x03seq\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xc1\x02\n" +
+	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xe6\x02\n" +
 	"\n" +
 	"FrontRoute\x12N\n" +
 	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12\x12\n" +
@@ -621,8 +621,8 @@ const file_hopeio_model_model_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\bredirect\x18\x04 \x01(\tR\bredirect\x12T\n" +
 	"\x04meta\x18\x05 \x01(\v2\x15.model.FrontRouteMetaB)ҵ\x03%\xa2\x01\"json:\"meta,inline\" gorm:\"embedded\"R\x04meta\x12\x1a\n" +
-	"\bparentId\x18\x06 \x01(\x04R\bparentId\x12-\n" +
-	"\bchildren\x18\a \x03(\v2\x11.model.FrontRouteR\bchildren\"\xb3\x01\n" +
+	"\bparentId\x18\x06 \x01(\x04R\bparentId\x12R\n" +
+	"\tchildrens\x18\a \x03(\v2\x11.model.FrontRouteB!ҵ\x03\x1d\xa2\x01\x1agorm:\"foreignkey:ParentId\"R\tchildrens\"\xb3\x01\n" +
 	"\x0eFrontRouteMeta\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
 	"\x04icon\x18\x02 \x01(\tR\x04icon\x12\x1a\n" +
@@ -663,7 +663,7 @@ var file_hopeio_model_model_proto_depIdxs = []int32{
 	7, // 4: model.Dict.basic:type_name -> model.Model
 	7, // 5: model.FrontRoute.basic:type_name -> model.Model
 	6, // 6: model.FrontRoute.meta:type_name -> model.FrontRouteMeta
-	5, // 7: model.FrontRoute.children:type_name -> model.FrontRoute
+	5, // 7: model.FrontRoute.childrens:type_name -> model.FrontRoute
 	8, // [8:8] is the sub-list for method output_type
 	8, // [8:8] is the sub-list for method input_type
 	8, // [8:8] is the sub-list for extension type_name

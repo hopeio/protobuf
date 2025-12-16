@@ -10,6 +10,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/hopeio/gox/errors"
 	httpx "github.com/hopeio/gox/net/http"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
@@ -54,4 +55,15 @@ func (x *HttpResponse) CommonRespond(ctx context.Context, w httpx.CommonResponse
 
 func (x *HttpResponse) ServerHTTP(w http.ResponseWriter, r *http.Request) (int, error) {
 	return x.CommonRespond(r.Context(), httpx.ResponseWriterWrapper{ResponseWriter: w})
+}
+
+func (x *ErrResp) ErrResp() *errors.ErrResp {
+	return &errors.ErrResp{
+		Code: errors.ErrCode(x.Code),
+		Msg:  x.Msg,
+	}
+}
+
+func (x *ErrResp) Error() string {
+	return x.ErrResp().Error()
 }

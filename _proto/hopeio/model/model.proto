@@ -75,7 +75,7 @@ message FrontRoute{
   string redirect = 4 ;
   FrontRouteMeta meta = 5[(go.field) = {tags:'json:"meta,inline" gorm:"embedded"'}];
   uint64 parentId = 6;
-  repeated FrontRoute children = 7;
+  repeated FrontRoute childrens = 7 [(go.field) = {tags:'gorm:"foreignkey:ParentId"'}];
 }
 
 message FrontRouteMeta{

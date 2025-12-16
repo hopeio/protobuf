@@ -63,7 +63,7 @@ service UserService {
   //获取用户信息
   rpc Info (request.Id) returns (User) {
     option (google.api.http) = {
-      get: "/api/v1/user/{id}"
+      get: "/api/user/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags:["用户相关接口", "v1.0.0"]

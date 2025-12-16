@@ -262,6 +262,58 @@ func (x *HttpResponse) GetStatus() int32 {
 	return 0
 }
 
+type ListResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*anypb.Any           `protobuf:"bytes,3,rep,name=list,proto3" json:"list,omitempty"`
+	Total         uint32                 `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListResp) Reset() {
+	*x = ListResp{}
+	mi := &file_hopeio_response_response_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListResp) ProtoMessage() {}
+
+func (x *ListResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hopeio_response_response_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListResp.ProtoReflect.Descriptor instead.
+func (*ListResp) Descriptor() ([]byte, []int) {
+	return file_hopeio_response_response_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListResp) GetList() []*anypb.Any {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListResp) GetTotal() uint32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_hopeio_response_response_proto protoreflect.FileDescriptor
 
 const file_hopeio_response_response_proto_rawDesc = "" +
@@ -285,7 +337,10 @@ const file_hopeio_response_response_proto_rawDesc = "" +
 	"\x06status\x18\x03 \x01(\x05R\x06status\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BD\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"J\n" +
+	"\bListResp\x12(\n" +
+	"\x04list\x18\x03 \x03(\v2\x14.google.protobuf.AnyR\x04list\x12\x14\n" +
+	"\x05total\x18\x04 \x01(\rR\x05totalBD\n" +
 	"\x1bxyz.hoper.protobuf.responseP\x01Z#github.com/hopeio/protobuf/responseb\x06proto3"
 
 var (
@@ -300,23 +355,25 @@ func file_hopeio_response_response_proto_rawDescGZIP() []byte {
 	return file_hopeio_response_response_proto_rawDescData
 }
 
-var file_hopeio_response_response_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hopeio_response_response_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hopeio_response_response_proto_goTypes = []any{
 	(*CommonResp)(nil),   // 0: response.CommonResp
 	(*RawResp)(nil),      // 1: response.RawResp
 	(*ErrResp)(nil),      // 2: response.ErrResp
 	(*HttpResponse)(nil), // 3: response.HttpResponse
-	nil,                  // 4: response.HttpResponse.HeadersEntry
-	(*anypb.Any)(nil),    // 5: google.protobuf.Any
+	(*ListResp)(nil),     // 4: response.ListResp
+	nil,                  // 5: response.HttpResponse.HeadersEntry
+	(*anypb.Any)(nil),    // 6: google.protobuf.Any
 }
 var file_hopeio_response_response_proto_depIdxs = []int32{
-	5, // 0: response.CommonResp.data:type_name -> google.protobuf.Any
-	4, // 1: response.HttpResponse.headers:type_name -> response.HttpResponse.HeadersEntry
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	6, // 0: response.CommonResp.data:type_name -> google.protobuf.Any
+	5, // 1: response.HttpResponse.headers:type_name -> response.HttpResponse.HeadersEntry
+	6, // 2: response.ListResp.list:type_name -> google.protobuf.Any
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hopeio_response_response_proto_init() }
@@ -330,7 +387,7 @@ func file_hopeio_response_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_response_response_proto_rawDesc), len(file_hopeio_response_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
