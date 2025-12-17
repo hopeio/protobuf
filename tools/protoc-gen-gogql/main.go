@@ -188,7 +188,7 @@ func generateMapsAndOneofs(g *protogen.GeneratedFile, messages []*protogen.Messa
 type `, msg.GoIdent.GoName, `Input = `, msg.GoIdent.GoName, `
 type `, msg.GoIdent.GoName, ` struct {
 	Key `, keyType, `
-	Value `, valType, `
+	Values `, valType, `
 }
 `)
 		} else {
@@ -214,7 +214,7 @@ func (r `, msg.GoIdent.GoName, `Resolvers) `, goResolveName(f.GoName, fieldOpts.
 	for k,v := range obj.`, f.GoName, ` {
 		list = append(list, &`, f.Message.GoIdent, `{
 			Key:   k,
-			Value: v,
+			Values: v,
 		})
 	}
 	return
@@ -222,7 +222,7 @@ func (r `, msg.GoIdent.GoName, `Resolvers) `, goResolveName(f.GoName, fieldOpts.
 
 func (m `, msg.GoIdent.GoName, `InputResolvers) `, goResolveName(f.GoName, fieldOpts.GetName()), `(_ `, contextPkg.Ident("Context"), `, obj *`, msg.GoIdent, `, data []*`, f.Message.GoIdent, `) error {
 	for _, v := range data {
-		obj.`, f.GoName, `[v.Key] = v.Value
+		obj.`, f.GoName, `[v.Key] = v.Values
 	}
 	return nil
 }

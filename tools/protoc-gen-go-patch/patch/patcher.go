@@ -125,7 +125,7 @@ func (p *Patcher) scanEnumValue(v *protogen.EnumValue) {
 		}
 	}
 	if newName != "" {
-		p.RenameValue(v.GoIdent, newName) // Value const
+		p.RenameValue(v.GoIdent, newName) // Values const
 	}
 }
 
@@ -656,7 +656,7 @@ func (p *Patcher) findCommentGroups(id *ast.Ident) (doc *ast.CommentGroup, comme
 			return decl.Doc, decl.Comment
 		case *ast.GenDecl:
 			return decl.Doc, nil
-		// For {Type,Value}Spec, if the doc on the spec is absent, search for the enclosing GenDecl.
+		// For {Type,Values}Spec, if the doc on the spec is absent, search for the enclosing GenDecl.
 		case *ast.TypeSpec:
 			if decl.Doc != nil {
 				return decl.Doc, decl.Comment

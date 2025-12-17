@@ -32,11 +32,12 @@ const (
 
 type Enum struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
 	Group         uint64                 `protobuf:"varint,2,opt,name=group,proto3" json:"group,omitempty" gorm:"size:20"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Type          uint32                 `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty" comment:"类型"`
-	Status        uint32                 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	ModelTime     *ModelTime             `protobuf:"bytes,6,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -71,11 +72,11 @@ func (*Enum) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Enum) GetBasic() *Model {
+func (x *Enum) GetId() uint64 {
 	if x != nil {
-		return x.Basic
+		return x.Id
 	}
-	return nil
+	return 0
 }
 
 func (x *Enum) GetGroup() uint64 {
@@ -106,13 +107,21 @@ func (x *Enum) GetStatus() uint32 {
 	return 0
 }
 
+func (x *Enum) GetModelTime() *ModelTime {
+	if x != nil {
+		return x.ModelTime
+	}
+	return nil
+}
+
 type EnumValue struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
 	EnumId        uint64                 `protobuf:"varint,2,opt,name=enumId,proto3" json:"enumId,omitempty"`
 	Index         uint64                 `protobuf:"varint,3,opt,name=index,proto3" json:"index,omitempty" gorm:"comment:index"`
 	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty" comment:"值"`
-	Status        uint32                 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	ModelTime     *ModelTime             `protobuf:"bytes,6,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,11 +156,11 @@ func (*EnumValue) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *EnumValue) GetBasic() *Model {
+func (x *EnumValue) GetId() uint64 {
 	if x != nil {
-		return x.Basic
+		return x.Id
 	}
-	return nil
+	return 0
 }
 
 func (x *EnumValue) GetEnumId() uint64 {
@@ -182,13 +191,20 @@ func (x *EnumValue) GetStatus() uint32 {
 	return 0
 }
 
+func (x *EnumValue) GetModelTime() *ModelTime {
+	if x != nil {
+		return x.ModelTime
+	}
+	return nil
+}
+
 type Area struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          uint64                 `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty" gorm:"primaryKey"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Level         int32                  `protobuf:"varint,3,opt,name=level,proto3" json:"level,omitempty"`
 	Pcode         uint64                 `protobuf:"varint,4,opt,name=pcode,proto3" json:"pcode,omitempty"`
-	Time          *ModelTime             `protobuf:"bytes,5,opt,name=time,proto3" json:"time,inline" gorm:"embedded"`
+	ModelTime     *ModelTime             `protobuf:"bytes,5,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -251,18 +267,19 @@ func (x *Area) GetPcode() uint64 {
 	return 0
 }
 
-func (x *Area) GetTime() *ModelTime {
+func (x *Area) GetModelTime() *ModelTime {
 	if x != nil {
-		return x.Time
+		return x.ModelTime
 	}
 	return nil
 }
 
 type Attribute struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Status        uint32                 `protobuf:"varint,18,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	Status        uint32                 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	ModelTime     *ModelTime             `protobuf:"bytes,4,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,11 +314,11 @@ func (*Attribute) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Attribute) GetBasic() *Model {
+func (x *Attribute) GetId() uint64 {
 	if x != nil {
-		return x.Basic
+		return x.Id
 	}
-	return nil
+	return 0
 }
 
 func (x *Attribute) GetName() string {
@@ -318,15 +335,23 @@ func (x *Attribute) GetStatus() uint32 {
 	return 0
 }
 
+func (x *Attribute) GetModelTime() *ModelTime {
+	if x != nil {
+		return x.ModelTime
+	}
+	return nil
+}
+
 type Dict struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
 	Group         uint32                 `protobuf:"varint,2,opt,name=group,proto3" json:"group,omitempty"`
 	Key           string                 `protobuf:"bytes,4,opt,name=key,proto3" json:"key,omitempty" gorm:"键"`
 	Value         string                 `protobuf:"bytes,5,opt,name=value,proto3" json:"value,omitempty" comment:"值"`
 	Type          uint32                 `protobuf:"varint,6,opt,name=type,proto3" json:"type,omitempty" comment:"类型"`
 	Seq           uint32                 `protobuf:"varint,7,opt,name=seq,proto3" json:"seq,omitempty" comment:"顺序"`
 	Status        uint32                 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty" gorm:"type:int2;default:0"`
+	ModelTime     *ModelTime             `protobuf:"bytes,9,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,11 +386,11 @@ func (*Dict) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *Dict) GetBasic() *Model {
+func (x *Dict) GetId() uint64 {
 	if x != nil {
-		return x.Basic
+		return x.Id
 	}
-	return nil
+	return 0
 }
 
 func (x *Dict) GetGroup() uint32 {
@@ -410,15 +435,23 @@ func (x *Dict) GetStatus() uint32 {
 	return 0
 }
 
+func (x *Dict) GetModelTime() *ModelTime {
+	if x != nil {
+		return x.ModelTime
+	}
+	return nil
+}
+
 type FrontRoute struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Basic         *Model                 `protobuf:"bytes,1,opt,name=basic,proto3" json:"basic,inline" gorm:"embedded"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
 	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Redirect      string                 `protobuf:"bytes,4,opt,name=redirect,proto3" json:"redirect,omitempty"`
 	Meta          *FrontRouteMeta        `protobuf:"bytes,5,opt,name=meta,proto3" json:"meta,inline" gorm:"embedded"`
-	ParentId      uint64                 `protobuf:"varint,6,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	ParentId      uint64                 `protobuf:"varint,6,opt,name=parentId,proto3" json:"parentId,omitempty" gorm:"not null;default:0" comment:"父级id"`
 	Childrens     []*FrontRoute          `protobuf:"bytes,7,rep,name=childrens,proto3" json:"childrens,omitempty" gorm:"foreignkey:ParentId"`
+	ModelTime     *ModelTime             `protobuf:"bytes,8,opt,name=modelTime,proto3" json:"modelTime,inline" gorm:"embedded"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -453,11 +486,11 @@ func (*FrontRoute) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_model_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *FrontRoute) GetBasic() *Model {
+func (x *FrontRoute) GetId() uint64 {
 	if x != nil {
-		return x.Basic
+		return x.Id
 	}
-	return nil
+	return 0
 }
 
 func (x *FrontRoute) GetPath() string {
@@ -498,6 +531,13 @@ func (x *FrontRoute) GetParentId() uint64 {
 func (x *FrontRoute) GetChildrens() []*FrontRoute {
 	if x != nil {
 		return x.Childrens
+	}
+	return nil
+}
+
+func (x *FrontRoute) GetModelTime() *ModelTime {
+	if x != nil {
+		return x.ModelTime
 	}
 	return nil
 }
@@ -582,47 +622,52 @@ var File_hopeio_model_model_proto protoreflect.FileDescriptor
 
 const file_hopeio_model_model_proto_rawDesc = "" +
 	"\n" +
-	"\x18hopeio/model/model.proto\x12\x05model\x1a\x1bhopeio/utils/patch/go.proto\x1a%hopeio/time/timestamp/timestamp.proto\x1a%hopeio/time/deletedAt/deletedAt.proto\x1a\x18hopeio/model/basic.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x9c\x02\n" +
-	"\x04Enum\x12N\n" +
-	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12+\n" +
+	"\x18hopeio/model/model.proto\x12\x05model\x1a\x1bhopeio/utils/patch/go.proto\x1a%hopeio/time/timestamp/timestamp.proto\x1a%hopeio/time/deletedAt/deletedAt.proto\x1a\x18hopeio/model/basic.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xd6\x02\n" +
+	"\x04Enum\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12+\n" +
 	"\x05group\x18\x02 \x01(\x04B\x15ҵ\x03\x11\xa2\x01\x0egorm:\"size:20\"R\x05group\x12*\n" +
 	"\x04name\x18\x03 \x01(\tB\x16ҵ\x03\x12\xa2\x01\x0fcomment:\"名称R\x04name\x12+\n" +
 	"\x04type\x18\x04 \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"类型\"R\x04type\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xac\x02\n" +
-	"\tEnumValue\x12N\n" +
-	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x120\n" +
+	"\x06status\x18\x05 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\x12^\n" +
+	"\tmodelTime\x18\x06 \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\xe6\x02\n" +
+	"\tEnumValue\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x120\n" +
 	"\x06enumId\x18\x02 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11comment:\"枚举idR\x06enumId\x121\n" +
 	"\x05index\x18\x03 \x01(\x04B\x1bҵ\x03\x17\xa2\x01\x14gorm:\"comment:index\"R\x05index\x12*\n" +
 	"\x05value\x18\x04 \x01(\tB\x14ҵ\x03\x10\xa2\x01\rcomment:\"值\"R\x05value\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xc5\x01\n" +
+	"\x06status\x18\x05 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\x12^\n" +
+	"\tmodelTime\x18\x06 \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\xd4\x01\n" +
 	"\x04Area\x12,\n" +
 	"\x04code\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x04code\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05level\x18\x03 \x01(\x05R\x05level\x12\x14\n" +
-	"\x05pcode\x18\x04 \x01(\x04R\x05pcode\x12O\n" +
-	"\x04time\x18\x05 \x01(\v2\x10.model.ModelTimeB)ҵ\x03%\xa2\x01\"json:\"time,inline\" gorm:\"embedded\"R\x04time\"\xc7\x01\n" +
-	"\tAttribute\x12N\n" +
-	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12*\n" +
+	"\x05pcode\x18\x04 \x01(\x04R\x05pcode\x12^\n" +
+	"\tmodelTime\x18\x05 \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\x81\x02\n" +
+	"\tAttribute\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12*\n" +
 	"\x04name\x18\x02 \x01(\tB\x16ҵ\x03\x12\xa2\x01\x0fcomment:\"名称R\x04name\x12>\n" +
-	"\x06status\x18\x12 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xea\x02\n" +
-	"\x04Dict\x12N\n" +
-	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12)\n" +
+	"\x06status\x18\x03 \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\x12^\n" +
+	"\tmodelTime\x18\x04 \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\xa4\x03\n" +
+	"\x04Dict\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12)\n" +
 	"\x05group\x18\x02 \x01(\rB\x13ҵ\x03\x0f\xa2\x01\fcomment:\"组R\x05group\x12#\n" +
 	"\x03key\x18\x04 \x01(\tB\x11ҵ\x03\r\xa2\x01\n" +
 	"gorm:\"键\"R\x03key\x12*\n" +
 	"\x05value\x18\x05 \x01(\tB\x14ҵ\x03\x10\xa2\x01\rcomment:\"值\"R\x05value\x12+\n" +
 	"\x04type\x18\x06 \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"类型\"R\x04type\x12)\n" +
 	"\x03seq\x18\a \x01(\rB\x17ҵ\x03\x13\xa2\x01\x10comment:\"顺序\"R\x03seq\x12>\n" +
-	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\"\xe6\x02\n" +
+	"\x06status\x18\b \x01(\rB&\x92A\x02@\x01ҵ\x03\x1d\xa2\x01\x1agorm:\"type:int2;default:0\"R\x06status\x12^\n" +
+	"\tmodelTime\x18\t \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\xd5\x03\n" +
 	"\n" +
-	"FrontRoute\x12N\n" +
-	"\x05basic\x18\x01 \x01(\v2\f.model.ModelB*ҵ\x03&\xa2\x01#json:\"basic,inline\" gorm:\"embedded\"R\x05basic\x12\x12\n" +
+	"FrontRoute\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\bredirect\x18\x04 \x01(\tR\bredirect\x12T\n" +
-	"\x04meta\x18\x05 \x01(\v2\x15.model.FrontRouteMetaB)ҵ\x03%\xa2\x01\"json:\"meta,inline\" gorm:\"embedded\"R\x04meta\x12\x1a\n" +
-	"\bparentId\x18\x06 \x01(\x04R\bparentId\x12R\n" +
-	"\tchildrens\x18\a \x03(\v2\x11.model.FrontRouteB!ҵ\x03\x1d\xa2\x01\x1agorm:\"foreignkey:ParentId\"R\tchildrens\"\xb3\x01\n" +
+	"\x04meta\x18\x05 \x01(\v2\x15.model.FrontRouteMetaB)ҵ\x03%\xa2\x01\"json:\"meta,inline\" gorm:\"embedded\"R\x04meta\x12O\n" +
+	"\bparentId\x18\x06 \x01(\x04B3ҵ\x03/\xa2\x01,gorm:\"not null;default:0\" comment:\"父级id\"R\bparentId\x12R\n" +
+	"\tchildrens\x18\a \x03(\v2\x11.model.FrontRouteB!ҵ\x03\x1d\xa2\x01\x1agorm:\"foreignkey:ParentId\"R\tchildrens\x12^\n" +
+	"\tmodelTime\x18\b \x01(\v2\x10.model.ModelTimeB.ҵ\x03*\xa2\x01'json:\"modelTime,inline\" gorm:\"embedded\"R\tmodelTime\"\xb3\x01\n" +
 	"\x0eFrontRouteMeta\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
 	"\x04icon\x18\x02 \x01(\tR\x04icon\x12\x1a\n" +
@@ -652,18 +697,17 @@ var file_hopeio_model_model_proto_goTypes = []any{
 	(*Dict)(nil),           // 4: model.Dict
 	(*FrontRoute)(nil),     // 5: model.FrontRoute
 	(*FrontRouteMeta)(nil), // 6: model.FrontRouteMeta
-	(*Model)(nil),          // 7: model.Model
-	(*ModelTime)(nil),      // 8: model.ModelTime
+	(*ModelTime)(nil),      // 7: model.ModelTime
 }
 var file_hopeio_model_model_proto_depIdxs = []int32{
-	7, // 0: model.Enum.basic:type_name -> model.Model
-	7, // 1: model.EnumValue.basic:type_name -> model.Model
-	8, // 2: model.Area.time:type_name -> model.ModelTime
-	7, // 3: model.Attribute.basic:type_name -> model.Model
-	7, // 4: model.Dict.basic:type_name -> model.Model
-	7, // 5: model.FrontRoute.basic:type_name -> model.Model
-	6, // 6: model.FrontRoute.meta:type_name -> model.FrontRouteMeta
-	5, // 7: model.FrontRoute.childrens:type_name -> model.FrontRoute
+	7, // 0: model.Enum.modelTime:type_name -> model.ModelTime
+	7, // 1: model.EnumValue.modelTime:type_name -> model.ModelTime
+	7, // 2: model.Area.modelTime:type_name -> model.ModelTime
+	7, // 3: model.Attribute.modelTime:type_name -> model.ModelTime
+	7, // 4: model.Dict.modelTime:type_name -> model.ModelTime
+	6, // 5: model.FrontRoute.meta:type_name -> model.FrontRouteMeta
+	5, // 6: model.FrontRoute.childrens:type_name -> model.FrontRoute
+	7, // 7: model.FrontRoute.modelTime:type_name -> model.ModelTime
 	8, // [8:8] is the sub-list for method output_type
 	8, // [8:8] is the sub-list for method input_type
 	8, // [8:8] is the sub-list for extension type_name

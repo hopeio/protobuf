@@ -20,7 +20,7 @@ var ForwardResponseMessage = func(ctx *gin.Context, md grpc.ServerMetadata, mess
 		ginx.Respond(ctx, &httpx.ErrResp{})
 		return
 	}
-	err := gateway.ForwardResponseMessage(ctx.Writer, ctx.Request, md, message, gateway.Codec)
+	err := gateway.ForwardResponseMessage(ctx.Writer, ctx.Request, md, message, gateway.DefaultMarshaler)
 	if err != nil {
 		HttpError(ctx, err)
 		return

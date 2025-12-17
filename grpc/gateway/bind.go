@@ -6,4 +6,4 @@ import (
 )
 
 var Bind = binding.Bind
-var Codec = gatewayx.Codec
+var Marshaler = gatewayx.DefaultMarshaler

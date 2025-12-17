@@ -20,24 +20,26 @@ option java_multiple_files = true;
 option go_package = "github.com/hopeio/protobuf/model";
 
 message Enum{
-  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
+  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   uint64 group = 2 [(go.field) = {tags:'gorm:"size:20"'}];
   string name = 3 [(go.field) = {tags:'comment:"名称'}];
   uint32 type = 4 [(go.field) = {tags:'comment:"类型"'}];
-  uint32 status = 8 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  uint32 status = 5 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
     read_only:true
   }];
+  ModelTime modelTime = 6 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 
 message EnumValue{
-  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
+  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   uint64 enumId = 2 [(go.field) = {tags:'comment:"枚举id'}];
   uint64 index = 3 [(go.field) = {tags:'gorm:"comment:index"'}];
   string value = 4 [(go.field) = {tags:'comment:"值"'}];
-  uint32 status = 8 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  uint32 status = 5 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
     read_only:true
   }];
+  ModelTime modelTime = 6 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 message Area {
@@ -45,19 +47,20 @@ message Area {
   string name = 2;
   int32 level = 3;
   uint64 pcode = 4;
-  model.ModelTime time = 5 [(go.field) = {tags:'json:"time,inline" gorm:"embedded"'}];
+  ModelTime modelTime = 5 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 message Attribute{
-  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
+  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   string name = 2 [(go.field) = {tags:'comment:"名称'}];
-  uint32 status = 18 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  uint32 status = 3 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
     read_only:true
   }];
+  ModelTime modelTime = 4 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 message Dict{
-  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
+  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   uint32 group = 2 [(go.field) = {tags:'comment:"组'}];
   string key = 4 [(go.field) = {tags:'gorm:"键"'}];
   string value = 5 [(go.field) = {tags:'comment:"值"'}];
@@ -66,16 +69,18 @@ message Dict{
   uint32 status = 8 [(go.field) = {tags:'gorm:"type:int2;default:0"'}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
     read_only:true
   }];
+  ModelTime modelTime = 9 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 message FrontRoute{
-  Model basic = 1 [(go.field) = {tags:'json:"basic,inline" gorm:"embedded"'}];
+  uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
   string path = 2 ;
   string name = 3 ;
   string redirect = 4 ;
   FrontRouteMeta meta = 5[(go.field) = {tags:'json:"meta,inline" gorm:"embedded"'}];
-  uint64 parentId = 6;
+  uint64 parentId = 6 [(go.field) = {tags:'gorm:"not null;default:0" comment:"父级id"'}];
   repeated FrontRoute childrens = 7 [(go.field) = {tags:'gorm:"foreignkey:ParentId"'}];
+  ModelTime modelTime = 8 [(go.field) = {tags:'json:"modelTime,inline" gorm:"embedded"'}];
 }
 
 message FrontRouteMeta{

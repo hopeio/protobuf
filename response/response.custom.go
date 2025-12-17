@@ -25,7 +25,7 @@ type StringValueInput = wrapperspb.StringValue
 /*// graphql compatible
 type HeaderEntry struct {
 	Key   string
-	Value string
+	Values string
 }
 
 type HttpResponseResolver struct {
@@ -35,7 +35,7 @@ type HttpResponseResolver struct {
 func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpResponse) ([]*HeaderEntry, error) {
 	var header []*HeaderEntry
 	for k, v := range obj.Header {
-		header = append(header, &HeaderEntry{Key: k, Value: v})
+		header = append(header, &HeaderEntry{Key: k, Values: v})
 	}
 	return header, nil
 }
