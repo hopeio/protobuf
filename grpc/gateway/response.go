@@ -8,16 +8,16 @@ package gateway
 
 import (
 	"github.com/gin-gonic/gin"
-	httpx "github.com/hopeio/gox/net/http"
 	ginx "github.com/hopeio/gox/net/http/gin"
 	"github.com/hopeio/gox/net/http/grpc"
 	"github.com/hopeio/gox/net/http/grpc/gateway"
+	"github.com/hopeio/protobuf/response"
 	"google.golang.org/protobuf/proto"
 )
 
 var ForwardResponseMessage = func(ctx *gin.Context, md grpc.ServerMetadata, message proto.Message) {
 	if !message.ProtoReflect().IsValid() {
-		ginx.Respond(ctx, &httpx.ErrResp{})
+		ginx.Respond(ctx, &response.ErrResp{})
 		return
 	}
 	err := gateway.ForwardResponseMessage(ctx.Writer, ctx.Request, md, message, gateway.DefaultMarshaler)
