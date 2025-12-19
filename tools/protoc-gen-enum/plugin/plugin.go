@@ -256,8 +256,11 @@ func (b *Builder) generateErrCode(e *protogen.Enum, g *protogen.GeneratedFile) {
 	g.P()
 
 	g.P("func init() {")
-	g.P("for code, msg := range ", ccTypeName, "_name {")
-	g.P(b.importGoxErrors.Ident("Register"), "(", b.importGoxErrors.Ident("ErrCode"), "(code), ", "msg)")
+	g.P("for code := range ", ccTypeName, "_name {")
+	g.P("if code == 0 {")
+	g.P("continue")
+	g.P("}")
+	g.P(b.importGoxErrors.Ident("Register"), "(", b.importGoxErrors.Ident("ErrCode"), "(code), ", ccTypeName, "(code).Comment())")
 	g.P(`}`)
 	g.P("}")
 	g.P()
