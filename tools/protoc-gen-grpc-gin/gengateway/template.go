@@ -452,7 +452,7 @@ func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(se
 {{template "local-request-func-signature" .}} {
 	var stream grpc_0.ServerTransportStream
 	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
-{{if or (or .RespBody .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
+{{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
 	
 	if err := gateway.Bind(ctx, &protoReq); err != nil {
 		return nil, stream.ServerMetadata(), err
