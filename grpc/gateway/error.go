@@ -7,12 +7,9 @@
 package gateway
 
 import (
-	"io"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hopeio/gox/errors"
 	httpx "github.com/hopeio/gox/net/http"
 	"github.com/hopeio/gox/net/http/grpc/gateway"
 	"google.golang.org/grpc/grpclog"
@@ -20,24 +17,16 @@ import (
 )
 
 var HttpError = func(ctx *gin.Context, err error) {
-	s, _ := status.FromError(err)
-
+	s, ok := status.FromError(err)
+	if !ok {
+		grpclog.Warningf("Failed to convert error to status: %v", err)
+	}
 	delete(ctx.Request.Header, httpx.HeaderTrailer)
 	errcodeHeader := strconv.Itoa(int(s.Code()))
-	ctx.Header(httpx.HeaderContentType, gateway.DefaultMarshaler.ContentType(s))
+	buf, contentType := gateway.DefaultMarshal(ctx.GetHeader(httpx.HeaderAccept), s)
+	ctx.Header(httpx.HeaderContentType, contentType)
 	ctx.Header(httpx.HeaderGrpcStatus, errcodeHeader)
 	ctx.Header(httpx.HeaderErrorCode, errcodeHeader)
-	se := &errors.ErrResp{Code: errors.ErrCode(s.Code()), Msg: s.Message()}
-	buf, merr := gateway.DefaultMarshaler.Marshal(se)
-	if merr != nil {
-		grpclog.Infof("Failed to marshal error message %q: %v", se, merr)
-		ctx.Status(http.StatusInternalServerError)
-		if _, err := io.WriteString(ctx.Writer, err.Error()); err != nil {
-			grpclog.Infof("Failed to write response: %v", err)
-		}
-		return
-	}
-
 	if _, err := ctx.Writer.Write(buf); err != nil {
 		grpclog.Infof("Failed to write response: %v", err)
 	}

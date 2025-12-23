@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	stringsx "github.com/hopeio/gox/strings"
-	"github.com/hopeio/gox/unicode"
+	"github.com/hopeio/gox/text/encoding/unicode"
 
 	"github.com/jhump/protoreflect/desc"
 	"github.com/vektah/gqlparser/v2/ast"
