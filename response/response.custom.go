@@ -41,20 +41,23 @@ func (receiver *HttpResponseResolver) Header(ctx context.Context, obj *HttpRespo
 }
 */
 
-func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int, error) {
-	return x.CommonRespond(ctx, httpx.ResponseWriterWrapper{ResponseWriter: w})
+func (x *HttpResponse) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	x.Respond(r.Context(), w)
 }
 
-func (x *HttpResponse) CommonRespond(ctx context.Context, w httpx.CommonResponseWriter) (int, error) {
-	header := w.Header()
-	for k, v := range x.Headers {
-		header.Set(k, v)
+func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) {
+	if wx, ok := w.(httpx.ResponseWriter); ok {
+		header := wx.HeaderX()
+		for k, v := range x.Headers {
+			header.Add(k, v)
+		}
+	} else {
+		header := w.Header()
+		for k, v := range x.Headers {
+			header.Add(k, v)
+		}
 	}
-	return w.Write(x.Body)
-}
-
-func (x *HttpResponse) ServerHTTP(w http.ResponseWriter, r *http.Request) (int, error) {
-	return x.CommonRespond(r.Context(), httpx.ResponseWriterWrapper{ResponseWriter: w})
+	w.Write(x.Body)
 }
 
 func (x *ErrResp) ErrResp() *errors.ErrResp {
