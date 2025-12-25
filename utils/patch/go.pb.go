@@ -71,7 +71,7 @@ func (x *Options) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Options.ProtoReflect.Descriptor instead.
+// Deprecated: Use GzipOptions.ProtoReflect.Descriptor instead.
 func (*Options) Descriptor() ([]byte, []int) {
 	return file_hopeio_utils_patch_go_proto_rawDescGZIP(), []int{0}
 }
@@ -209,31 +209,31 @@ var file_hopeio_utils_patch_go_proto_extTypes = []protoimpl.ExtensionInfo{
 
 // Extension fields to descriptorpb.MessageOptions.
 var (
-	// optional go.Options message = 7002;
+	// optional go.GzipOptions message = 7002;
 	E_Message = &file_hopeio_utils_patch_go_proto_extTypes[0]
 )
 
 // Extension fields to descriptorpb.FieldOptions.
 var (
-	// optional go.Options field = 7002;
+	// optional go.GzipOptions field = 7002;
 	E_Field = &file_hopeio_utils_patch_go_proto_extTypes[1]
 )
 
 // Extension fields to descriptorpb.OneofOptions.
 var (
-	// optional go.Options oneof = 7001;
+	// optional go.GzipOptions oneof = 7001;
 	E_Oneof = &file_hopeio_utils_patch_go_proto_extTypes[2]
 )
 
 // Extension fields to descriptorpb.EnumOptions.
 var (
-	// optional go.Options enum = 7002;
+	// optional go.GzipOptions enum = 7002;
 	E_Enum = &file_hopeio_utils_patch_go_proto_extTypes[3]
 )
 
 // Extension fields to descriptorpb.EnumValueOptions.
 var (
-	// optional go.Options value = 7002;
+	// optional go.GzipOptions value = 7002;
 	E_Value = &file_hopeio_utils_patch_go_proto_extTypes[4]
 )
 
@@ -281,7 +281,7 @@ func file_hopeio_utils_patch_go_proto_rawDescGZIP() []byte {
 
 var file_hopeio_utils_patch_go_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hopeio_utils_patch_go_proto_goTypes = []any{
-	(*Options)(nil),                       // 0: go.Options
+	(*Options)(nil),                       // 0: go.GzipOptions
 	(*FileOptions)(nil),                   // 1: go.FileOptions
 	(*descriptorpb.MessageOptions)(nil),   // 2: google.protobuf.MessageOptions
 	(*descriptorpb.FieldOptions)(nil),     // 3: google.protobuf.FieldOptions
@@ -297,11 +297,11 @@ var file_hopeio_utils_patch_go_proto_depIdxs = []int32{
 	5,  // 3: go.enum:extendee -> google.protobuf.EnumOptions
 	6,  // 4: go.value:extendee -> google.protobuf.EnumValueOptions
 	7,  // 5: go.file:extendee -> google.protobuf.FileOptions
-	0,  // 6: go.message:type_name -> go.Options
-	0,  // 7: go.field:type_name -> go.Options
-	0,  // 8: go.oneof:type_name -> go.Options
-	0,  // 9: go.enum:type_name -> go.Options
-	0,  // 10: go.value:type_name -> go.Options
+	0,  // 6: go.message:type_name -> go.GzipOptions
+	0,  // 7: go.field:type_name -> go.GzipOptions
+	0,  // 8: go.oneof:type_name -> go.GzipOptions
+	0,  // 9: go.enum:type_name -> go.GzipOptions
+	0,  // 10: go.value:type_name -> go.GzipOptions
 	1,  // 11: go.file:type_name -> go.FileOptions
 	12, // [12:12] is the sub-list for method output_type
 	12, // [12:12] is the sub-list for method input_type

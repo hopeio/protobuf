@@ -23,7 +23,7 @@ var HttpError = func(ctx *gin.Context, err error) {
 	}
 	delete(ctx.Request.Header, httpx.HeaderTrailer)
 	errcodeHeader := strconv.Itoa(int(s.Code()))
-	buf, contentType := gateway.DefaultMarshal(ctx.GetHeader(httpx.HeaderAccept), s)
+	buf, contentType := gateway.DefaultMarshal(ctx, s)
 	ctx.Header(httpx.HeaderContentType, contentType)
 	ctx.Header(httpx.HeaderGrpcStatus, errcodeHeader)
 	ctx.Header(httpx.HeaderErrorCode, errcodeHeader)
