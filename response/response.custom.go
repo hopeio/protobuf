@@ -45,7 +45,7 @@ func (x *HttpResponse) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	x.Respond(r.Context(), w)
 }
 
-func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) {
+func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int, error) {
 	if wx, ok := w.(httpx.ResponseWriter); ok {
 		header := wx.HeaderX()
 		for k, v := range x.Headers {
@@ -57,7 +57,7 @@ func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) {
 			header.Add(k, v)
 		}
 	}
-	w.Write(x.Body)
+	return w.Write(x.Body)
 }
 
 func (x *ErrResp) ErrResp() *errors.ErrResp {
