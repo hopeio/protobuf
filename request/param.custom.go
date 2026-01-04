@@ -7,5 +7,5 @@
 package request
 
 type IdInput = Id
-type IdRep = Id
+type IdResp = Id
 type PaginationInput = Pagination
