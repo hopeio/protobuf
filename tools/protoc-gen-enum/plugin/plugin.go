@@ -7,9 +7,9 @@
 package plugin
 
 import (
+	"fmt"
 	"strings"
 
-	stringsx "github.com/hopeio/gox/strings"
 	"github.com/hopeio/protobuf/tools/protoc-gen-enum/options"
 	"google.golang.org/protobuf/compiler/protogen"
 )
@@ -31,6 +31,7 @@ type Builder struct {
 	importGoxErrors protogen.GoImportPath
 	importErrors    protogen.GoImportPath
 	importIo        protogen.GoImportPath
+	importFmt       protogen.GoImportPath
 }
 
 func NewBuilder(gen *protogen.Plugin) *Builder {
@@ -44,6 +45,7 @@ func NewBuilder(gen *protogen.Plugin) *Builder {
 		importGoxErrors: "github.com/hopeio/gox/errors",
 		importErrors:    "errors",
 		importIo:        "io",
+		importFmt:       "fmt",
 	}
 }
 
@@ -135,9 +137,9 @@ func (b *Builder) generateComment(f *protogen.File, e *protogen.Enum, g *protoge
 				}
 			}
 			if text := options.GetEnumComment(ev); text != "" {
-				g.P(name, " :", stringsx.SimpleQuote(text), ",")
+				g.P(name, " :", fmt.Sprintf(`"%s"`, text), ",")
 			} else {
-				g.P(name, " :", stringsx.SimpleQuote(name), ",")
+				g.P(name, " :", fmt.Sprintf(`"%s"`, name), ",")
 			}
 		}
 		g.P("}")
@@ -163,14 +165,14 @@ func (b *Builder) generateComment(f *protogen.File, e *protogen.Enum, g *protoge
 
 			g.P("case ", name, " :")
 			if text := options.GetEnumComment(ev); text != "" {
-				g.P("return ", stringsx.SimpleQuote(text))
+				g.P("return ", fmt.Sprintf(`"%s"`, text))
 			} else {
-				g.P("return ", stringsx.SimpleQuote(name))
+				g.P("return ", fmt.Sprintf(`"%s"`, name))
 			}
 
 		}
 		g.P("}")
-		g.P("return ", stringsx.SimpleQuote(""))
+		g.P("return \"\"")
 	}
 	g.P("}")
 	g.P()
@@ -184,7 +186,7 @@ func (b *Builder) generateGQLMarshal(e *protogen.Enum, g *protogen.GeneratedFile
 		typ = typ1
 	}
 	g.P("func (x ", ccTypeName, ") MarshalGQL(w ", b.importIo.Ident("Writer"), ") {")
-	g.P(`w.Write(`, b.importStrings.Ident("SimpleQuoteToBytes"), `(x.String()))`)
+	g.P(`w.Write(`, b.importStrings.Ident("ToBytes"), "(", b.importFmt.Ident("Sprintf"), `("\"%s\"", x.String())))`)
 	g.P("}")
 	g.P()
 	g.P("func (x *", ccTypeName, ") UnmarshalGQL(v interface{}) error {")
@@ -201,7 +203,7 @@ func (b *Builder) generateJsonMarshal(e *protogen.Enum, g *protogen.GeneratedFil
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") MarshalJSON() ([]byte, error) {")
-	g.P("return ", b.importStrings.Ident("SimpleQuoteToBytes"), "(x.String())", ", nil")
+	g.P("return ", b.importStrings.Ident("ToBytes"), "(", b.importFmt.Ident("Sprintf"), `("\"%s\"", x.String())))`, ", nil")
 	g.P("}")
 	g.P()
 	g.P("func (x *", ccTypeName, ") UnmarshalJSON(data []byte) error {")
