@@ -2,8 +2,10 @@ package any
 
 import (
 	errors "errors"
-	strings "github.com/hopeio/gox/strings"
+	"fmt"
 	io "io"
+
+	strings "github.com/hopeio/gox/strings"
 )
 
 func (x Encoding) Comment() string {
@@ -15,7 +17,7 @@ func (x Encoding) Comment() string {
 }
 
 func (x Encoding) MarshalGQL(w io.Writer) {
-	w.Write(strings.SimpleQuoteToBytes(x.String()))
+	w.Write(strings.ToBytes(fmt.Sprintf(`"%s"`, x.String())))
 }
 
 func (x *Encoding) UnmarshalGQL(v interface{}) error {

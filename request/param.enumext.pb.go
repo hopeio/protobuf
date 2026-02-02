@@ -2,8 +2,10 @@ package request
 
 import (
 	errors "errors"
-	strings "github.com/hopeio/gox/strings"
+	"fmt"
 	io "io"
+
+	strings "github.com/hopeio/gox/strings"
 )
 
 func (x SortType) Comment() string {
@@ -17,7 +19,7 @@ func (x SortType) Comment() string {
 }
 
 func (x SortType) MarshalGQL(w io.Writer) {
-	w.Write(strings.SimpleQuoteToBytes(x.String()))
+	w.Write(strings.ToBytes(fmt.Sprintf(`"%s"`, x.String())))
 }
 
 func (x *SortType) UnmarshalGQL(v interface{}) error {
