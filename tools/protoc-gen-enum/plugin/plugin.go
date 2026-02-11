@@ -203,7 +203,7 @@ func (b *Builder) generateJsonMarshal(e *protogen.Enum, g *protogen.GeneratedFil
 	ccTypeName := e.GoIdent
 
 	g.P("func (x ", ccTypeName, ") MarshalJSON() ([]byte, error) {")
-	g.P("return ", b.importStrings.Ident("ToBytes"), "(", b.importFmt.Ident("Sprintf"), `("\"%s\"", x.String())))`, ", nil")
+	g.P("return ", b.importStrings.Ident("ToBytes"), "(", b.importFmt.Ident("Sprintf"), `("\"%s\"", x.String()))`, ", nil")
 	g.P("}")
 	g.P()
 	g.P("func (x *", ccTypeName, ") UnmarshalJSON(data []byte) error {")
