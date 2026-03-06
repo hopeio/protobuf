@@ -47,7 +47,7 @@ var (
 
 func main() {
 	flag.Parse()
-	log.SetDefaultLogger(&log.Config{Development: true, Level: zapcore.Level(*logLevel)})
+	log.SetDefaultLogger((&log.Config{Development: true, Level: zapcore.Level(*logLevel)}).NewLogger())
 	defer log.Sync()
 
 	if *versionFlag {
