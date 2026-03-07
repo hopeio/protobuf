@@ -1,6 +1,6 @@
 module github.com/hopeio/protobuf
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/99designs/gqlgen v0.17.60
@@ -24,7 +24,7 @@ require (
 	github.com/danielvladco/go-proto-gql v0.10.1-0.20221227181908-22fca0a9469c
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-openapi/swag/yamlutils v0.25.4
-	github.com/hopeio/gox v1.8.3
+	github.com/hopeio/gox v1.9.0
 	github.com/jhump/protoreflect v1.16.0
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.10.2
@@ -78,12 +78,12 @@ require (
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/bridges/otelzap v0.16.0 // indirect
-	go.opentelemetry.io/otel v1.41.0 // indirect
-	go.opentelemetry.io/otel/log v0.17.0 // indirect
-	go.opentelemetry.io/otel/metric v1.41.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.41.0 // indirect
-	go.opentelemetry.io/otel/sdk/log v0.17.0 // indirect
-	go.opentelemetry.io/otel/trace v1.41.0 // indirect
+	go.opentelemetry.io/otel v1.42.0 // indirect
+	go.opentelemetry.io/otel/log v0.18.0 // indirect
+	go.opentelemetry.io/otel/metric v1.42.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.42.0 // indirect
+	go.opentelemetry.io/otel/sdk/log v0.18.0 // indirect
+	go.opentelemetry.io/otel/trace v1.42.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/arch v0.23.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
