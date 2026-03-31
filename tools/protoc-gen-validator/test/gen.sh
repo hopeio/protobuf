@@ -1,0 +1,1 @@
+protoc -I. -I../../../_proto --go_out=paths=source_relative:. --validator_out=paths=source_relative:. *.proto

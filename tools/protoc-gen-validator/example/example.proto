@@ -4,6 +4,17 @@ import "hopeio/utils/validator/validator.proto";
 
 option go_package = "github.com/hopeio/protobuf/tools/protoc-gen-validator/example";
 
+message SomeMsg {
+  Action do = 1 [(validator.field) = {is_in_enum : true}];
+}
+
+enum Action {
+  ALLOW = 0;
+  DENY = 1;
+  CHILL = 2;
+}
+
+
 message InnerMessage {
   // some_integer can only be in range (1, 100).
   int32 some_integer = 1 [(validator.field) = {int_gt: 0, int_lt: 100}];
@@ -14,4 +25,9 @@ message OuterMessage {
   string important_string = 1 [(validator.field) = {regex: "^[a-z]{2,5}$"}];
   // proto3 doesn't have `required`, the `msg_exist` enforces presence of InnerMessage.
   InnerMessage inner = 2 [(validator.field) = {msg_exists : true}];
+}
+
+message UUIDMsg {
+  // user_id must be a valid version 4 UUID.
+  string user_id = 1 [(validator.field) = {uuid_ver: 4, string_not_empty: true}];
 }

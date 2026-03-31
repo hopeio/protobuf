@@ -69,7 +69,7 @@ func buildProto3(someString string, someInt uint32, identifier string, someValue
 		SomeBytesGtReq: someBytes,
 		SomeBytesEqReq: someBytes,
 
-		RepeatedBaseTypeResp: []int32{},
+		RepeatedBaseType: []int32{},
 
 		UUIDAny:       optionalUUIDAny,
 		UUID4NotEmpty: uuid4,
@@ -138,7 +138,7 @@ func buildProto2(someString string, someInt uint32, identifier string,
 		SomeBytesLtReq:       someBytes,
 		SomeBytesGtReq:       someBytes,
 		SomeBytesEqReq:       someBytes,
-		RepeatedBaseTypeResp: []int32{},
+		RepeatedBaseType: []int32{},
 
 		UUIDAny:       &optionalUUIDAny,
 		UUID4NotEmpty: &uuid5,
