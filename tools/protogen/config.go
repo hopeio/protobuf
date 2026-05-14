@@ -7,12 +7,12 @@
 package main
 
 type Config struct {
-	proto, genpath, currentDir string
-	thirdIncludes              []string
-	include                    string
-	useGqlPlugin               bool
-	useOpenapiPlugin           bool
-	apidocDir                  string
+	proto, genpath, hopeProto string
+	thirdIncludes             []string
+	include                   string
+	useGqlPlugin              bool
+	useOpenapiPlugin          bool
+	apidocDir                 string
 }
 
 type Goconfig struct {

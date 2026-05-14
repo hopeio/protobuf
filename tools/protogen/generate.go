@@ -76,7 +76,7 @@ func init() {
 	pflag := rootCmd.PersistentFlags()
 	pflag.StringVarP(&config.proto, "proto", "i", protodef, "proto dir")
 	pflag.StringVarP(&config.genpath, "output", "o", pwd+"/protobuf", "generate dir")
-	pflag.StringVarP(&config.currentDir, "protobuf", "p", "/proto", "手动指定protobuf项目目录")
+	pflag.StringVarP(&config.hopeProto, "protobuf", "p", "/proto", "手动指定protobuf项目目录")
 	pflag.StringArrayVarP(&config.thirdIncludes, "include", "I", nil, "外部proto依赖")
 	pflag.BoolVarP(&config.useGqlPlugin, "graphql", "g", false, "是否使用graphql插件")
 	pflag.BoolVarP(&config.useOpenapiPlugin, "openapi", "d", false, "是否使用openapi插件")
@@ -137,9 +137,9 @@ func getInclude() {
 
 	libDir, err := execx.RunGetOut(gox.GoListDir + DepProtobuf)
 	if err == nil {
-		config.currentDir = libDir + "/_proto"
+		config.hopeProto = libDir + "/_proto"
 	}
-	config.include = "-I" + config.currentDir + " -I" + config.proto
+	config.include = "-I" + config.hopeProto + " -I" + config.proto
 	for _, include := range config.thirdIncludes {
 		config.include += " -I" + include
 	}
