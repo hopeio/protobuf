@@ -36,20 +36,18 @@ func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix s
 	allowPatchFeature, standalone bool) Generator {
 	var imports []descriptorx.GoPackage
 	for _, pkgpath := range []string{
-		"context",
 		"io",
 
 		"google.golang.org/protobuf/proto",
 		"google.golang.org/grpc",
 		"google.golang.org/grpc/codes",
-		"google.golang.org/grpc/grpclog",
 		"google.golang.org/grpc/metadata",
 		"google.golang.org/grpc/status",
 		"github.com/gin-gonic/gin",
 		"github.com/hopeio/gox/net/http/grpc",
 		"github.com/hopeio/gox/strings",
 		"github.com/hopeio/gox",
-		"github.com/hopeio/protobuf/grpc/gateway",
+		"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/gateway",
 	} {
 		pkg := descriptorx.GoPackage{
 			Path: pkgpath,
@@ -99,7 +97,7 @@ func (g *generator) Generate(targets []*descriptorx.File) ([]*descriptorx.Respon
 		files = append(files, &descriptorx.ResponseFile{
 			GoPkg: file.GoPkg,
 			CodeGeneratorResponse_File: &pluginpb.CodeGeneratorResponse_File{
-				Name:    proto.String(file.GeneratedFilenamePrefix + ".pb.gw.go"),
+				Name:    proto.String(file.GeneratedFilenamePrefix + ".gateway.pb.go"),
 				Content: proto.String(string(formatted)),
 			},
 		})

@@ -13,6 +13,7 @@ type Config struct {
 	useGqlPlugin              bool
 	useOpenapiPlugin          bool
 	apidocDir                 string
+	args                      []string
 }
 
 type Goconfig struct {

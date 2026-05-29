@@ -23,6 +23,7 @@ var tsCmd = &cobra.Command{
 		} else {
 			pluginPaths = append(pluginPaths, tsPluginPath)
 		}
+		config.args = []string{"--ts_proto_opt=outputJsonMethods=false", "--ts_proto_opt=useOptionals=messages", "--ts_proto_opt=outputPartialMethods=false" , "--ts_proto_opt=outputClientImpl=false"}
 		run(config.proto)
 	},
 }

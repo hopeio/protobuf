@@ -215,7 +215,7 @@ func protocCmd(file, mod, modDir string) {
 		args += " --" + plugin + ":" + genpath
 
 	}
-	cmd += args
+	cmd += args + " " + strings.Join(config.args, " ")
 	if runtime.GOOS != "windows" {
 		cmd = fmt.Sprintf(`bash -c "%s"`, cmd)
 	}
