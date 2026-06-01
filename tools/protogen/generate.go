@@ -47,13 +47,10 @@ var rootCmd = &cobra.Command{
 	Use: "protogen",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		os.MkdirAll(config.genpath, os.ModePerm)
-		if config.useGqlPlugin {
-			plugins = append(plugins, gqlOut)
-		}
 		if config.useOpenapiPlugin {
 			plugins = append(plugins, openapiv2Out)
 		}
-		if config.useGqlPlugin || config.useOpenapiPlugin {
+		if config.useOpenapiPlugin {
 			if config.apidocDir == "" {
 				var err error
 				config.apidocDir, err = filepath.Abs(config.genpath + "/../apidoc")
@@ -78,7 +75,6 @@ func init() {
 	pflag.StringVarP(&config.genpath, "output", "o", pwd+"/protobuf", "generate dir")
 	pflag.StringVarP(&config.hopeProto, "protobuf", "p", "/proto", "手动指定protobuf项目目录")
 	pflag.StringArrayVarP(&config.thirdIncludes, "include", "I", nil, "外部proto依赖")
-	pflag.BoolVarP(&config.useGqlPlugin, "graphql", "g", false, "是否使用graphql插件")
 	pflag.BoolVarP(&config.useOpenapiPlugin, "openapi", "d", false, "是否使用openapi插件")
 	pflag.StringVar(&config.apidocDir, "apiDocDir", "", "api doc目录")
 
@@ -206,10 +202,6 @@ func protocCmd(file, mod, modDir string) {
 		genpath := config.genpath
 		if strings.HasPrefix(plugin, "openapiv2_out") {
 			plugin += mod
-			genpath = config.apidocDir
-		}
-
-		if strings.HasPrefix(plugin, "gql_out") {
 			genpath = config.apidocDir
 		}
 		args += " --" + plugin + ":" + genpath

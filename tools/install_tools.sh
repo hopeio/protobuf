@@ -31,7 +31,6 @@ protoc -I$protoDir --go_out=paths=source_relative:$protobuf $protoDir/hopeio/uti
 cp -r $protobuf/hopeio/* $protobuf/ # 与install_tools.go不一致，mv的问题，无法覆盖非空目录
 rm -rf $protobuf/hopeio
 go install ./protoc-gen-enum
-go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
 go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 #go install github.com/alta/protopatch/cmd/protoc-gen-go-patch
 go install ./protoc-gen-grpc-gin
@@ -39,10 +38,5 @@ go install ./protoc-gen-grpc-gin
 go install ./protoc-gen-validator
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 go install ./protoc-gen-go-patch
-# go install github.com/danielvladco/go-proto-gql/protoc-gen-gql
-# go install github.com/danielvladco/go-proto-gql/protoc-gen-gogql
-go install ./protoc-gen-gql
-go install ./protoc-gen-gogql
-go install github.com/99designs/gqlgen
 go install ./protogen
 echo "Installation Finished"

@@ -10,7 +10,6 @@ type Config struct {
 	proto, genpath, hopeProto string
 	thirdIncludes             []string
 	include                   string
-	useGqlPlugin              bool
 	useOpenapiPlugin          bool
 	apidocDir                 string
 	args                      []string
