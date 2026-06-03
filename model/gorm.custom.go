@@ -4,7 +4,7 @@
  * @Created by jyb
  */
 
-package deletedAt
+package model
 
 import (
 	"database/sql"

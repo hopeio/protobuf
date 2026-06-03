@@ -594,7 +594,11 @@ func findTags(tag string, tagKeys []string, kvMap map[string]string) []string {
 			i++
 		}
 		if i == 0 || i+1 >= len(tag) || tag[i] != ':' || tag[i+1] != '"' {
-			tag = tag[i:]
+			if i == 0 && len(tag) > 0 {
+				tag = tag[1:]
+			} else {
+				tag = tag[i:]
+			}
 			continue
 		}
 		key := tag[:i]
