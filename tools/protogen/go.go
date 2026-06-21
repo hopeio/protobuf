@@ -10,7 +10,6 @@ import (
 const (
 	goOut         = "go-patch_out=plugin=go,paths=source_relative"
 	grpcOut       = "go-patch_out=plugin=go-grpc,paths=source_relative"
-	enumOut       = "enum_out=paths=source_relative"
 	gatewayOut    = "grpc-gin_out=paths=source_relative"
 	validatorsOut = "validator_out=paths=source_relative"
 )
@@ -24,9 +23,6 @@ var goCmd = &cobra.Command{
 	Use: "go",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		plugins = append(plugins, goOut, grpcOut)
-		if goconfig.useEnumPlugin {
-			plugins = append(plugins, enumOut)
-		}
 		if goconfig.useGateWayPlugin {
 			plugins = append(plugins, gatewayOut)
 		}
@@ -50,8 +46,6 @@ var goCmd = &cobra.Command{
 
 func init() {
 	pflag := goCmd.Flags()
-	pflag.BoolVarP(&goconfig.useEnumPlugin, "enum", "e", false, "是否使用enum扩展插件")
 	pflag.BoolVarP(&goconfig.useGateWayPlugin, "gateway", "w", false, "是否使用grpc-gateway插件")
 	pflag.BoolVarP(&goconfig.useValidatorOutPlugin, "validator", "v", false, "是否使用validators插件")
-	pflag.BoolVar(&goconfig.stdPatch, "patch", false, "是否使用原生protopatch")
 }

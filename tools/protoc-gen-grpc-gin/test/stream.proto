@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package stream_test;
+
+option go_package = "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/test/stream_test";
+
+import "google/api/annotations.proto";
+
+// ---- messages ----
+
+message SearchRequest {
+  string query = 1;
+  int32  page_size = 2;
+  optional string sort_by = 3;  // proto3 optional 测试
+}
+
+message SearchResult {
+  string title = 1;
+  string url = 2;
+  float  score = 3;
+}
+
+message PingRequest {
+  string msg = 1;
+}
+
+message PongResponse {
+  string msg = 1;
+  int64  timestamp = 2;
+}
+
+// ---- service ----
+
+service DemoService {
+  // unary
+  rpc Ping(PingRequest) returns (PongResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ping"
+    };
+  }
+
+  // server streaming — 核心测试场景
+  rpc Search(SearchRequest) returns (stream SearchResult) {
+    option (google.api.http) = {
+      get: "/api/v1/search"
+    };
+  }
+
+  // client streaming — 应生成 Unimplemented
+  rpc Upload(stream PingRequest) returns (PongResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/upload"
+    };
+  }
+
+  // bidirectional streaming — 应生成 Unimplemented
+  rpc Chat(stream PingRequest) returns (stream PongResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/chat"
+    };
+  }
+}

@@ -37,6 +37,7 @@ func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix s
 	var imports []descriptorx.GoPackage
 	for _, pkgpath := range []string{
 		"io",
+		"strconv",
 
 		"google.golang.org/protobuf/proto",
 		"google.golang.org/grpc",

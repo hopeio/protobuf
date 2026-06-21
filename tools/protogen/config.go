@@ -16,7 +16,7 @@ type Config struct {
 }
 
 type Goconfig struct {
-	useEnumPlugin, useGateWayPlugin, useValidatorOutPlugin, stdPatch bool
+	useGateWayPlugin, useValidatorOutPlugin bool
 }
 
 var config = Config{}

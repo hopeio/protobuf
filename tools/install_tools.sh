@@ -37,6 +37,5 @@ go install ./protoc-gen-grpc-gin
 #go install github.com/envoyproxy/protoc-gen-validate
 go install ./protoc-gen-validator
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-go install ./protoc-gen-go-patch
 go install ./protogen
 echo "Installation Finished"

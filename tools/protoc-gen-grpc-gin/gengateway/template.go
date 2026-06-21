@@ -226,12 +226,14 @@ var _ status.Status
 var _ = metadata.Join
 var _ = gox.Pointer[bool]
 var _ = strings.Bool
+var _ = strconv.Itoa
 `))
 
 	localHandlerTemplate = template.Must(template.New("local-handler").Parse(`
 {{if and .Method.GetClientStreaming .Method.GetServerStreaming}}
 {{else if .Method.GetClientStreaming}}
 {{else if .Method.GetServerStreaming}}
+{{template "local-server-stream-request-func" .}}
 {{else}}
 {{template "local-client-rpc-request-func" .}}
 {{end}}
@@ -313,21 +315,118 @@ func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(se
 {{end}}
 }`))
 
+	_ = template.Must(localHandlerTemplate.New("local-server-stream-request-func").Parse(`
+{{$AllowPatchFeature := .AllowPatchFeature}}
+func local_request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(server {{.Method.Service.InstanceName}}Server, ctx *gin.Context) {
+	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
+	var err error
+{{if or (or .Body .HasQueryParam) (and (ne .HTTPMethod "GET") (ne .HTTPMethod "DELETE"))}}
+
+	if err = gateway.Bind(ctx, &protoReq); err != nil {
+		gateway.HttpError(ctx, err)
+		return
+	}
+{{end}}
+	ctx.Request = ctx.Request.WithContext(grpc.NewContextWithServerTransportStream(metadata.NewIncomingContext(ctx.Request.Context(), metadata.MD(ctx.Request.Header)), &grpc_0.ServerTransportStream{}))
+{{if .PathParams}}
+{{if or .HasEnumPathParam .HasRepeatedEnumPathParam}}
+	var (
+	{{- if .HasEnumPathParam}}
+		e int32
+	{{- end}}
+	{{- if .HasRepeatedEnumPathParam}}
+		es []int32
+	{{- end}}
+	)
+{{end}}
+
+	{{$binding := .}}
+	{{range $param := .PathParams}}
+	{{$enum := $binding.LookupEnum $param}}
+
+
+{{if $param.IsNestedProto3}}
+	err = gin_1.PopulateFieldFromPath(&protoReq, {{$param | printf "%q"}}, ctx.Param({{$param | printf "%q"}}))
+	if err != nil {
+		gateway.HttpError(ctx, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err))
+		return
+	}
+	{{if $enum}}
+		e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
+		if err != nil {
+			gateway.HttpError(ctx, status.Errorf(codes.InvalidArgument, "could not parse path as enum value, parameter: %s, error: %v", {{$param | printf "%q"}}, err))
+			return
+		}
+	{{end}}
+{{else if $enum}}
+	e{{if $param.IsRepeated}}s{{end}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}}, {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}_value)
+	if err != nil {
+		gateway.HttpError(ctx, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err))
+		return
+	}
+{{else}}
+	{{$param.AssignableExpr "protoReq"}}, err = {{$param.ConvertFuncExpr}}(ctx.Param({{$param | printf "%q"}}){{if $param.IsRepeated}}, {{$binding.Registry.GetRepeatedPathParamSeparator | printf "%c" | printf "%q"}}{{end}})
+	if err != nil {
+		gateway.HttpError(ctx, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", {{$param | printf "%q"}}, err))
+		return
+	}
+{{end}}
+{{if and $enum $param.IsRepeated}}
+	s := make([]{{$enum.GoType $param.Method.Service.File.GoPkg.Path}}, len(es))
+	for i, v := range es {
+		s[i] = {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}(v)
+	}
+	{{$param.AssignableExpr "protoReq"}} = s
+{{else if $enum}}
+	{{$param.AssignableExpr "protoReq"}} = {{$enum.GoType $param.Method.Service.File.GoPkg.Path}}(e)
+{{end}}
+	{{end}}
+{{end}}
+
+	stream := gateway.NewServerStream[{{"*"}}{{.Method.ResponseType.GoType .Method.Service.File.GoPkg.Path}}](ctx)
+	defer func() {
+		if stream.Status() {
+			if err != nil {
+				s := status.Code(err)
+				ctx.Writer.Header().Set("Grpc-Status", strconv.Itoa(int(s)))
+				ctx.Writer.Header().Set("Grpc-Message", err.Error())
+			} else {
+				ctx.Writer.Header().Set("Grpc-Status", "0")
+			}
+		}
+	}()
+	if err = server.{{.Method.GetName}}(&protoReq, stream); err != nil {
+		gateway.HttpError(ctx, err)
+		return
+	}
+}
+`))
+
 	localTrailerTemplate = template.Must(template.New("local-trailer").Parse(`
 {{$UseRequestContext := .UseRequestContext}}
 {{range $svc := .Services}}
 // Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server registers the http handlers for service {{$svc.GetName}} to "mux".
-// UnaryRPC     :call {{$svc.GetName}}Server directly.
-// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}FromEndpoint instead.
+// UnaryRPC        : call {{$svc.GetName}}Server directly.
+// ServerStreaming : HTTP/2 chunked with gRPC length-prefixed JSON frames.
+// ClientStreaming : currently unsupported.
 func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, server {{$svc.InstanceName}}Server) {
 	{{range $m := $svc.Methods}}
 	{{range $b := $m.Bindings}}
-	{{if or $m.GetClientStreaming $m.GetServerStreaming}}
+	{{if and $m.GetClientStreaming $m.GetServerStreaming}}
 	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
-		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		err := status.Error(codes.Unimplemented, "bidirectional streaming is not yet supported")
 		gateway.HttpError(ctx, err)
 		return
+	})
+	{{else if $m.GetClientStreaming}}
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
+		err := status.Error(codes.Unimplemented, "client streaming is not yet supported")
+		gateway.HttpError(ctx, err)
+		return
+	})
+	{{else if $m.GetServerStreaming}}
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {
+		local_request_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(server, ctx)
 	})
 	{{else}}
 	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, func(ctx *gin.Context) {

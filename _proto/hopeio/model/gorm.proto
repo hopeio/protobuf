@@ -7,7 +7,7 @@
 syntax = "proto3";
 package model;
 
-import "hopeio/utils/patch/go.proto";
+import "patch/go.proto";;
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "hopeio/time/timestamp/timestamp.proto";
 
@@ -44,7 +44,7 @@ message ModelTimeStr{
   string deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"', embed:true}]
 message ModelTime{
   timestamp.Timestamp createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
   timestamp.Timestamp updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];

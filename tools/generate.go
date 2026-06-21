@@ -48,18 +48,16 @@ func main() {
 
 const goOut = "go-patch_out=plugin=go,paths=source_relative"
 const grpcOut = "go-patch_out=plugin=go-grpc,paths=source_relative"
-const enumOut = "enum_out=paths=source_relative"
 
 const (
 	goListDir      = `go list -m -f {{.Dir}} `
 	goListDep      = `go list -m -f {{.Path}}@{{.Version}} `
 	DepGoogleapis  = "github.com/googleapis/googleapis@v0.0.0-20220520010701-4c6f5836a32f"
 	DepProtobuf    = "github.com/hopeio/protobuf"
-	DepGrpcGateway = "github.com/grpc-ecosystem/grpc-gateway/v2"
 	DepProtopatch  = "github.com/alta/protopatch"
 )
 
-var model = []string{goOut, grpcOut, enumOut}
+var model = []string{goOut, grpcOut}
 
 func generate(dir string) {
 	fileInfos, err := os.ReadDir(dir)

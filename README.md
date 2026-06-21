@@ -1,24 +1,28 @@
 # protobuf
+
 protobuf插件集合, 常用proto类型
 一个proto文件生产grpc,http,graphql三种接口
-![protobuf](_assets/protobuf.webp)
+protobuf
 
 ## quick start
+
 - `go get github.com/hopeio/protobuf@main`
 - `go run $(go list -m -f {{.Dir}}  github.com/hopeio/protobuf)/tools/install_tools.go`
 - `protogen go -d -i $proto_path -o $proto_output_path`
 
 #### use docker
+
 `docker run --rm -v $project_path:/work jybl/protogen protogen go --proto=$proto_path --output=$proto_output_path`
 
-
 ## template
+
 user.proto
+
 ```protobuf
 syntax = "proto3";
 package user;
-import "hopeio/utils/enum/enum.proto";
-import "hopeio/utils/patch/go.proto";
+
+import "patch/go.proto";;
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "hopeio/utils/validator/validator.proto";
 import "google/api/annotations.proto";
@@ -30,9 +34,7 @@ import "google/protobuf/wrappers.proto";
 
 option java_package = "protobuf.user";
 option go_package = "protobuf/user";
-option (enum.gqlgen_all) = true;
-option (enum.no_prefix_all) = false;
-option (go.file) = {no_enum_prefix:true};
+
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     version: "1.0"
@@ -48,12 +50,6 @@ message User {
   }];
 }
 
-// 用户性别
-enum Gender{
-  GenderPlaceholder = 0 [(enum.comment)= "占位"];
-  GenderMale = 1 [(enum.comment)= "男"];
-  GenderFemale = 2 [(enum.comment)= "女"];
-}
 
 service UserService {
 
@@ -75,36 +71,39 @@ service UserService {
 
 }
 ```
+
 # contribute
 
 ## 生成库protobuf代码
+
 `go run protobuf/generate.go`
 
 ## tools
+
 本项目需要用到的protobuf插件，`go run tools/install_tools.go` 或 `tools/install-tools.sh`，会自动安装
 
 - protogen为go语言写的protobuf生成程序
-    - go 生成go文件，E.g: protogen go -d -i xxx -o xxx
-    - -i proto dir
-    - -o generate dir
-    - -d use openapi
-    - -e use enum
-    - -w use grpc-gateway
-    - -v use validator
-    - -g use graphql
-    - -I proto include dir
-    - -p hopeio/protobuf/_proto dir
-    - --patch 是否使用原生protopatch
+  - go 生成go文件，E.g: protogen go -d -i xxx -o xxx
+  - -i proto dir
+  - -o generate dir
+  - -d use openapi
+  - -w use gin-gateway
+  - -v use validator
+  - -I proto include dir
+  - -p hopeio/protobuf/_proto dir
+  - --patch 是否使用原生protopatch
 - protoc-go-patch 支持通过ast重新生成自定义结构体tag,生成结构体方法等功能
 - protoc-gen-grpc-gin github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway的gin版本，支持生成http路由代理转发到grpc sercvice中
-- protoc-gin-enum 分为错误enum及普通enum，生成性能更高支持中文的`String()`,错误enum会额外生成`Error()string`，支持生成枚举的辅助方法,错误enum会额外生成`Error()string`
 - protoc-gen-validator 用于生成请求的校验的代码
 - 集成github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 用于生成swagger文档
 - 集成github.com/danielvladco/go-proto-gql 用于生成graphql schema 及 grahpql服务
 
 ### build docker image
+
 ```base
 `$protobuf_dir/tools/docker/docker_build_local.sh $GOPATH $PROTOC $Image`
 ```
+
 ### upgrade go
+
 `docker build -t jybl/protogen -f $protobuf_dir/tools/docker/Dockerfile_upgrade .`

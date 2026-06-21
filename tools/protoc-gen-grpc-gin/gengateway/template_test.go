@@ -452,29 +452,30 @@ func TestApplyTemplateInProcess(t *testing.T) {
 			clientStreaming: false,
 			serverStreaming: false,
 			sigWant: []string{
-				`func local_request_ExampleService_Echo_0(ctx context.Context, marshaler runtime.Marshaler, server ExampleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {`,
-				`resp, md, err := local_request_ExampleService_Echo_0(rctx, inboundMarshaler, server, req, pathParams)`,
+				`func local_request_ExampleService_Echo_0(server ExampleServiceServer, ctx *gin.Context) (proto.Message, grpc_0.ServerMetadata, error)`,
+				`resp, md, err := local_request_ExampleService_Echo_0(server, ctx)`,
 			},
 		},
 		{
 			clientStreaming: true,
 			serverStreaming: true,
 			sigWant: []string{
-				`err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")`,
+				`err := status.Error(codes.Unimplemented, "bidirectional streaming is not yet supported")`,
 			},
 		},
 		{
 			clientStreaming: true,
 			serverStreaming: false,
 			sigWant: []string{
-				`err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")`,
+				`err := status.Error(codes.Unimplemented, "client streaming is not yet supported")`,
 			},
 		},
 		{
 			clientStreaming: false,
 			serverStreaming: true,
 			sigWant: []string{
-				`err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")`,
+				`local_request_ExampleService_Echo_0(server, ctx)`,
+				`stream := gateway.NewServerStream[*ExampleMessage](ctx)`,
 			},
 		},
 	} {
@@ -573,7 +574,7 @@ func TestApplyTemplateInProcess(t *testing.T) {
 			}
 		}
 
-		if want := `func RegisterExampleServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ExampleServiceServer) error {`; !strings.Contains(got, want) {
+		if want := `func RegisterExampleServiceHandlerServer(mux *gin.Engine, server ExampleServiceServer)`; !strings.Contains(got, want) {
 			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
 	}
