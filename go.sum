@@ -92,6 +92,8 @@ github.com/hopeio/gox v1.11.2-0.20260420112748-5d76cdfb2b8c h1:mgP0OKKOgBocw+WS/
 github.com/hopeio/gox v1.11.2-0.20260420112748-5d76cdfb2b8c/go.mod h1:MM4xUlPSl4A87YnUbTTcRmck8u3e1RZDqDcge4zlKus=
 github.com/hopeio/gox v1.11.2 h1:aF6KqUte1EGW3RWWelN6ul8/HfOykOdEXwDj+tfLB6o=
 github.com/hopeio/gox v1.11.2/go.mod h1:yoGLcC6fraE7/wTQCXE3NFqSzw8PqbtufAJpz0c4LKg=
+github.com/hopeio/gox v1.11.3 h1:FVdlH3TC9RXkAKkWLZ0MWd4pORBV04GdS/x1QJ/HIv4=
+github.com/hopeio/gox v1.11.3/go.mod h1:yoGLcC6fraE7/wTQCXE3NFqSzw8PqbtufAJpz0c4LKg=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/jhump/protoreflect v1.16.0 h1:54fZg+49widqXYQ0b+usAFHbMkBGR4PpXrsHc8+TBDg=
