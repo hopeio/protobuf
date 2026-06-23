@@ -10,7 +10,7 @@ import (
 const (
 	goOut         = "go-patch_out=plugin=go,paths=source_relative"
 	grpcOut       = "go-patch_out=plugin=go-grpc,paths=source_relative"
-	gatewayOut    = "grpc-gin_out=paths=source_relative"
+	gatewayOut    = "gateway_out=paths=source_relative"
 	validatorsOut = "validator_out=paths=source_relative"
 )
 

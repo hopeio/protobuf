@@ -1,8 +1,8 @@
 package gengateway
 
 import (
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
+	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/httprule"
 	"strings"
 	"testing"
 
@@ -77,7 +77,7 @@ func TestApplyTemplateHeader(t *testing.T) {
 			},
 		},
 	}
-	got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true}, descriptor2.NewRegistry())
+	got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: FrameworkGin}, descriptor2.NewRegistry())
 	if err != nil {
 		t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 		return
@@ -133,11 +133,11 @@ func TestApplyTemplateRequestWithoutClientStreaming(t *testing.T) {
 	}{
 		{
 			serverStreaming: false,
-			sigWant:         `func request_ExampleService_Echo_0(ctx context.Context, marshaler runtime.Marshaler, client ExampleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {`,
+			sigWant:         `gateway.UnaryCall(server.Echo)`,
 		},
 		{
 			serverStreaming: true,
-			sigWant:         `func request_ExampleService_Echo_0(ctx context.Context, marshaler runtime.Marshaler, client ExampleServiceClient, req *http.Request, pathParams map[string]string) (ExampleService_EchoClient, runtime.ServerMetadata, error) {`,
+			sigWant:         `gateway.ServerSideStreamCall(server.Echo)`,
 		},
 	} {
 		meth.ServerStreaming = proto.Bool(spec.serverStreaming)
@@ -222,7 +222,7 @@ func TestApplyTemplateRequestWithoutClientStreaming(t *testing.T) {
 				},
 			},
 		}
-		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true}, descriptor2.NewRegistry())
+		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: FrameworkGin}, descriptor2.NewRegistry())
 		if err != nil {
 			t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 			return
@@ -230,22 +230,7 @@ func TestApplyTemplateRequestWithoutClientStreaming(t *testing.T) {
 		if want := spec.sigWant; !strings.Contains(got, want) {
 			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
-		if want := `marshaler.NewDecoder(newReader()).Decode(&protoReq.GetNested().Bool)`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `val, ok = pathParams["nested.int32"]`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `protoReq.GetNested().Int32, err = runtime.Int32P(val)`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `func RegisterExampleServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `pattern_ExampleService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{0, 0}, []string(nil), ""))`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `rctx, err := runtime.AnnotateContext(ctx, mux, req, "/example.ExampleService/Echo")`; !strings.Contains(got, want) {
+		if want := `func RegisterExampleServiceHandlerServer(mux *gin.Engine, server ExampleServiceServer) {`; !strings.Contains(got, want) {
 			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
 	}
@@ -297,11 +282,11 @@ func TestApplyTemplateRequestWithClientStreaming(t *testing.T) {
 	}{
 		{
 			serverStreaming: false,
-			sigWant:         `func request_ExampleService_Echo_0(ctx context.Context, marshaler runtime.Marshaler, client ExampleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {`,
+			sigWant:         `gateway.ClientSideStreamCall(server.Echo)`,
 		},
 		{
 			serverStreaming: true,
-			sigWant:         `func request_ExampleService_Echo_0(ctx context.Context, marshaler runtime.Marshaler, client ExampleServiceClient, req *http.Request, pathParams map[string]string) (ExampleService_EchoClient, runtime.ServerMetadata, error) {`,
+			sigWant:         `gateway.BidiStreamCall(server.Echo)`,
 		},
 	} {
 		meth.ServerStreaming = proto.Bool(spec.serverStreaming)
@@ -386,7 +371,7 @@ func TestApplyTemplateRequestWithClientStreaming(t *testing.T) {
 				},
 			},
 		}
-		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true}, descriptor2.NewRegistry())
+		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: FrameworkGin}, descriptor2.NewRegistry())
 		if err != nil {
 			t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 			return
@@ -394,10 +379,7 @@ func TestApplyTemplateRequestWithClientStreaming(t *testing.T) {
 		if want := spec.sigWant; !strings.Contains(got, want) {
 			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
-		if want := `func RegisterExampleServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {`; !strings.Contains(got, want) {
-			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-		}
-		if want := `pattern_ExampleService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{0, 0}, []string(nil), ""))`; !strings.Contains(got, want) {
+		if want := `func RegisterExampleServiceHandlerServer(mux *gin.Engine, server ExampleServiceServer) {`; !strings.Contains(got, want) {
 			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
 	}
@@ -452,30 +434,28 @@ func TestApplyTemplateInProcess(t *testing.T) {
 			clientStreaming: false,
 			serverStreaming: false,
 			sigWant: []string{
-				`func local_request_ExampleService_Echo_0(server ExampleServiceServer, ctx *gin.Context) (proto.Message, grpc_0.ServerMetadata, error)`,
-				`resp, md, err := local_request_ExampleService_Echo_0(server, ctx)`,
+				`gateway.UnaryCall(server.Echo)`,
 			},
 		},
 		{
 			clientStreaming: true,
 			serverStreaming: true,
 			sigWant: []string{
-				`err := status.Error(codes.Unimplemented, "bidirectional streaming is not yet supported")`,
+				`gateway.BidiStreamCall(server.Echo)`,
 			},
 		},
 		{
 			clientStreaming: true,
 			serverStreaming: false,
 			sigWant: []string{
-				`err := status.Error(codes.Unimplemented, "client streaming is not yet supported")`,
+				`gateway.ClientSideStreamCall(server.Echo)`,
 			},
 		},
 		{
 			clientStreaming: false,
 			serverStreaming: true,
 			sigWant: []string{
-				`local_request_ExampleService_Echo_0(server, ctx)`,
-				`stream := gateway.NewServerStream[*ExampleMessage](ctx)`,
+				`gateway.ServerSideStreamCall(server.Echo)`,
 			},
 		},
 	} {
@@ -562,7 +542,7 @@ func TestApplyTemplateInProcess(t *testing.T) {
 				},
 			},
 		}
-		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true}, descriptor2.NewRegistry())
+		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: FrameworkGin}, descriptor2.NewRegistry())
 		if err != nil {
 			t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 			return
@@ -643,21 +623,15 @@ func TestAllowPatchFeature(t *testing.T) {
 			},
 		},
 	}
-	want := "if protoReq.UpdateMask == nil || len(protoReq.UpdateMask.GetPaths()) == 0 {\n"
+	want := `gateway.UnaryCall(server.Example)`
 	for _, allowPatchFeature := range []bool{true, false} {
-		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: allowPatchFeature}, descriptor2.NewRegistry())
+		got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: allowPatchFeature, Framework: FrameworkGin}, descriptor2.NewRegistry())
 		if err != nil {
 			t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 			return
 		}
-		if allowPatchFeature {
-			if !strings.Contains(got, want) {
-				t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
-			}
-		} else {
-			if strings.Contains(got, want) {
-				t.Errorf("applyTemplate(%#v) = %s; want to _not_ contain %s", file, got, want)
-			}
+		if !strings.Contains(got, want) {
+			t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 		}
 	}
 }
@@ -738,21 +712,64 @@ func TestIdentifierCapitalization(t *testing.T) {
 		},
 	}
 
-	got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true}, descriptor2.NewRegistry())
+	got, err := applyTemplate(param{File: crossLinkFixture(&file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: FrameworkGin}, descriptor2.NewRegistry())
 	if err != nil {
 		t.Errorf("applyTemplate(%#v) failed with %v; want success", file, err)
 		return
 	}
-	if want := `msg, err := client.ExampleGe2T(ctx, &protoReq, grpc.Header(&metadata.Header)`; !strings.Contains(got, want) {
+	if want := `gateway.UnaryCall(server.ExampleGe2T)`; !strings.Contains(got, want) {
 		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 	}
-	if want := `msg, err := client.ExamplEGet(ctx, &protoReq, grpc.Header(&metadata.Header)`; !strings.Contains(got, want) {
+	if want := `gateway.UnaryCall(server.ExamplEGet)`; !strings.Contains(got, want) {
 		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
 	}
-	if want := `var protoReq ExamPleRequest`; !strings.Contains(got, want) {
-		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
+}
+
+func TestApplyTemplateFrameworks(t *testing.T) {
+	file := minimalServiceFile(t)
+	for _, spec := range []struct {
+		fw   Framework
+		want []string
+	}{
+		{FrameworkGin, []string{`*gin.Engine`, `mux.Handle("GET"`}},
+		{FrameworkFiber, []string{`*fiber.App`, `app.Add("GET"`}},
+		{FrameworkNetHTTP, []string{`*http.ServeMux`, `mux.Handle("GET /v1/ping"`}},
+	} {
+		got, err := applyTemplate(param{File: crossLinkFixture(file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: spec.fw}, descriptor2.NewRegistry())
+		if err != nil {
+			t.Fatalf("framework %s: %v", spec.fw, err)
+		}
+		for _, w := range spec.want {
+			if !strings.Contains(got, w) {
+				t.Fatalf("framework %s: want %q in:\n%s", spec.fw, w, got)
+			}
+		}
 	}
-	if want := `var protoReq ExampleResponse`; !strings.Contains(got, want) {
-		t.Errorf("applyTemplate(%#v) = %s; want to contain %s", file, got, want)
+}
+
+func minimalServiceFile(t *testing.T) *descriptor2.File {
+	t.Helper()
+	msgdesc := &descriptorpb.DescriptorProto{Name: proto.String("PingRequest")}
+	meth := &descriptorpb.MethodDescriptorProto{
+		Name: proto.String("Ping"), InputType: proto.String("PingRequest"), OutputType: proto.String("PingRequest"),
+	}
+	svc := &descriptorpb.ServiceDescriptorProto{Name: proto.String("DemoService"), Method: []*descriptorpb.MethodDescriptorProto{meth}}
+	msg := &descriptor2.Message{DescriptorProto: msgdesc}
+	return &descriptor2.File{
+		FileDescriptorProto: &descriptorpb.FileDescriptorProto{
+			Name: proto.String("demo.proto"), Package: proto.String("demo"),
+			MessageType: []*descriptorpb.DescriptorProto{msgdesc},
+			Service:     []*descriptorpb.ServiceDescriptorProto{svc},
+		},
+		GoPkg: descriptor2.GoPackage{Path: "example.com/demo", Name: "demo"},
+		Messages: []*descriptor2.Message{msg},
+		Services: []*descriptor2.Service{{
+			ServiceDescriptorProto: svc,
+			Methods: []*descriptor2.Method{{
+				MethodDescriptorProto: meth,
+				RequestType: msg, ResponseType: msg,
+				Bindings: []*descriptor2.Binding{{HTTPMethod: "GET", PathTmpl: httprule.Template{Template: "/v1/ping"}}},
+			}},
+		}},
 	}
 }

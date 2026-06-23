@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"go/format"
 	"path"
+	"strings"
 
 	"github.com/hopeio/gox/log"
-	descriptorx "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
+	descriptorx "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -17,8 +18,28 @@ var (
 	errNoTargetService = errors.New("no target service defined in the file")
 )
 
+type Framework string
+
+const (
+	FrameworkGin     Framework = "gin"
+	FrameworkFiber   Framework = "fiber"
+	FrameworkNetHTTP Framework = "nethttp"
+)
+
+func ParseFramework(s string) (Framework, error) {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "", "gin":
+		return FrameworkGin, nil
+	case "fiber":
+		return FrameworkFiber, nil
+	case "nethttp", "net/http", "http":
+		return FrameworkNetHTTP, nil
+	default:
+		return "", fmt.Errorf("unsupported framework %q (want gin, fiber, nethttp)", s)
+	}
+}
+
 type Generator interface {
-	// Generate generates output files from input .proto files.
 	Generate(targets []*descriptorx.File) ([]*descriptorx.ResponseFile, error)
 }
 
@@ -29,27 +50,34 @@ type generator struct {
 	registerFuncSuffix string
 	allowPatchFeature  bool
 	standalone         bool
+	framework          Framework
+}
+
+func frameworkImports(fw Framework) []string {
+	switch fw {
+	case FrameworkFiber:
+		return []string{
+			"github.com/gofiber/fiber/v2",
+			"github.com/hopeio/protobuf/tools/protoc-gen-gateway/gateway/fiber",
+		}
+	case FrameworkNetHTTP:
+		return []string{
+			"net/http",
+			"github.com/hopeio/gox/net/http/grpc/gateway",
+		}
+	default:
+		return []string{
+			"github.com/gin-gonic/gin",
+			"github.com/hopeio/protobuf/tools/protoc-gen-gateway/gateway/gin",
+		}
+	}
 }
 
 // New returns a new generator which generates grpc gateway files.
 func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix string,
-	allowPatchFeature, standalone bool) Generator {
+	allowPatchFeature, standalone bool, framework Framework) Generator {
 	var imports []descriptorx.GoPackage
-	for _, pkgpath := range []string{
-		"io",
-		"strconv",
-
-		"google.golang.org/protobuf/proto",
-		"google.golang.org/grpc",
-		"google.golang.org/grpc/codes",
-		"google.golang.org/grpc/metadata",
-		"google.golang.org/grpc/status",
-		"github.com/gin-gonic/gin",
-		"github.com/hopeio/gox/net/http/grpc",
-		"github.com/hopeio/gox/strings",
-		"github.com/hopeio/gox",
-		"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/gateway",
-	} {
+	for _, pkgpath := range frameworkImports(framework) {
 		pkg := descriptorx.GoPackage{
 			Path: pkgpath,
 			Name: path.Base(pkgpath),
@@ -74,6 +102,7 @@ func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix s
 		registerFuncSuffix: registerFuncSuffix,
 		allowPatchFeature:  allowPatchFeature,
 		standalone:         standalone,
+		framework:          framework,
 	}
 }
 
@@ -136,6 +165,7 @@ func (g *generator) generate(file *descriptorx.File) (string, error) {
 		UseRequestContext:  g.useRequestContext,
 		RegisterFuncSuffix: g.registerFuncSuffix,
 		AllowPatchFeature:  g.allowPatchFeature,
+		Framework:          g.framework,
 	}
 	if g.reg != nil {
 		params.OmitPackageDoc = g.reg.GetOmitPackageDoc()
@@ -143,7 +173,6 @@ func (g *generator) generate(file *descriptorx.File) (string, error) {
 	return applyTemplate(params, g.reg)
 }
 
-// addEnumPathParamImports handles adding import of enum path parameter go packages
 func (g *generator) addEnumPathParamImports(file *descriptorx.File, m *descriptorx.Method, pkgSeen map[string]bool) []descriptorx.GoPackage {
 	var imports []descriptorx.GoPackage
 	for _, b := range m.Bindings {

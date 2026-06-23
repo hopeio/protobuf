@@ -33,7 +33,7 @@ rm -rf $protobuf/hopeio
 go install ./protoc-gen-enum
 go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 #go install github.com/alta/protopatch/cmd/protoc-gen-go-patch
-go install ./protoc-gen-grpc-gin
+go install ./protoc-gen-gateway
 #go install github.com/envoyproxy/protoc-gen-validate
 go install ./protoc-gen-validator
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc

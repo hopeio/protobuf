@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/httprule"
 
 	stringsx "github.com/hopeio/gox/strings"
 	"google.golang.org/protobuf/types/descriptorpb"

@@ -1,7 +1,7 @@
 package descriptor
 
 import (
-	httprule2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/httprule"
+	httprule2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/httprule"
 	"reflect"
 	"testing"
 

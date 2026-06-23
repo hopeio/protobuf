@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package stream_test;
 
-option go_package = "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/test/stream_test";
+option go_package = "github.com/hopeio/protobuf/tools/protoc-gen-gateway/test/stream_test";
 
 import "google/api/annotations.proto";
 
@@ -46,7 +46,7 @@ service DemoService {
     };
   }
 
-  // client streaming — 应生成 Unimplemented
+  // client streaming — HTTP 请求体 gRPC 帧
   rpc Upload(stream PingRequest) returns (PongResponse) {
     option (google.api.http) = {
       post: "/api/v1/upload"

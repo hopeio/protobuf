@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
 	"testing"
 )
 

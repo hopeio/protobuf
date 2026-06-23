@@ -4,7 +4,7 @@
 // You rarely need to run this program directly. Instead, put this program
 // into your $PATH with a name "protoc-gen-grpc-gateway" and run
 //
-//	protoc --grpc-gateway_out=output_directory path/to/input.proto
+//	protoc --gateway_out=output_directory path/to/input.proto
 //
 // See README.md for more details.
 package main
@@ -12,8 +12,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/descriptor"
-	"github.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/gengateway"
+	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/gengateway"
 	"github.com/hopeio/gox/log"
 	"go.uber.org/zap/zapcore"
 	"os"
@@ -37,6 +37,7 @@ var (
 	warnOnUnboundMethods       = flag.Bool("warn_on_unbound_methods", false, "emit a warning message if an RPC method has no HttpRule annotation")
 	generateUnboundMethods     = flag.Bool("generate_unbound_methods", false, "generate proxy methods even for RPC methods that have no HttpRule annotation")
 	logLevel                   = flag.Int("log_level", 2, "log_level")
+	framework                  = flag.String("framework", "gin", "HTTP framework for generated handlers: gin, fiber, nethttp")
 )
 
 // Variables set by goreleaser at build time
@@ -67,7 +68,12 @@ func main() {
 			return err
 		}
 
-		generator := gengateway.New(reg, *useRequestContext, *registerFuncSuffix, *allowPatchFeature, *standalone)
+		fw, err := gengateway.ParseFramework(*framework)
+		if err != nil {
+			return err
+		}
+
+		generator := gengateway.New(reg, *useRequestContext, *registerFuncSuffix, *allowPatchFeature, *standalone, fw)
 
 		log.Infof("Parsing code generator request")
 

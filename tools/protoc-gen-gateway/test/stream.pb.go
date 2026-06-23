@@ -262,7 +262,7 @@ const file_stream_proto_rawDesc = "" +
 	"\x04Ping\x12\x18.stream_test.PingRequest\x1a\x19.stream_test.PongResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/api/v1/ping\x12Y\n" +
 	"\x06Search\x12\x1a.stream_test.SearchRequest\x1a\x19.stream_test.SearchResult\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/search0\x01\x12W\n" +
 	"\x06Upload\x12\x18.stream_test.PingRequest\x1a\x19.stream_test.PongResponse\"\x16\x82\xd3\xe4\x93\x02\x10\"\x0e/api/v1/upload(\x01\x12U\n" +
-	"\x04Chat\x12\x18.stream_test.PingRequest\x1a\x19.stream_test.PongResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\"\f/api/v1/chat(\x010\x01BGZEgithub.com/hopeio/protobuf/tools/protoc-gen-grpc-gin/test/stream_testb\x06proto3"
+	"\x04Chat\x12\x18.stream_test.PingRequest\x1a\x19.stream_test.PongResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\"\f/api/v1/chat(\x010\x01BGZEgithub.com/hopeio/protobuf/tools/protoc-gen-gateway/test/stream_testb\x06proto3"
 
 var (
 	file_stream_proto_rawDescOnce sync.Once

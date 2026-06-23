@@ -28,7 +28,7 @@ func main() {
 	exec.RunGetOutWithLog(gox.TernaryOperator(runtime.GOOS != "windows", fmt.Sprintf(`bash -c "%s"`, protoccmd+"apiconfig/*.proto"), protoccmd+"apiconfig/*.proto"))
 	exec.RunGetOutWithLog(gox.TernaryOperator(runtime.GOOS != "windows", fmt.Sprintf(`bash -c "%s"`, protoccmd+"openapiconfig/*.proto"), protoccmd+"openapiconfig/*.proto"))
 	fs.MoveDirByMode(libDir+"/hopeio", libDir, 0)
-	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-grpc-gin")
+	exec.RunGetOutWithLog("go install " + libDir + "/tools/protoc-gen-gateway")
 	exec.RunGetOutWithLog("go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2")
 	exec.RunGetOutWithLog("go install github.com/alta/protopatch/cmd/protoc-gen-go-patch")
 	exec.RunGetOutWithLog("go install google.golang.org/grpc/cmd/protoc-gen-go-grpc")
