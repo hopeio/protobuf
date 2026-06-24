@@ -3,12 +3,12 @@ package fiber
 import (
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // responseWriter 将 fiber.Ctx 适配为 http.ResponseWriter（含 Flush），供 gateway 流式写出复用。
 type responseWriter struct {
-	ctx *fiber.Ctx
+	ctx fiber.Ctx
 }
 
 func (w *responseWriter) Header() http.Header {
@@ -33,11 +33,11 @@ func (w *responseWriter) Flush() {
 
 var _ http.Flusher = (*responseWriter)(nil)
 
-func newResponseWriter(ctx *fiber.Ctx) *responseWriter {
+func newResponseWriter(ctx fiber.Ctx) *responseWriter {
 	return &responseWriter{ctx: ctx}
 }
 
-func fasthttpRespHeader(ctx *fiber.Ctx) http.Header {
+func fasthttpRespHeader(ctx fiber.Ctx) http.Header {
 	h := make(http.Header)
 	ctx.Response().Header.VisitAll(func(key, value []byte) {
 		h.Add(string(key), string(value))
@@ -45,7 +45,7 @@ func fasthttpRespHeader(ctx *fiber.Ctx) http.Header {
 	return h
 }
 
-func fiberReqHeader(ctx *fiber.Ctx) http.Header {
+func fiberReqHeader(ctx fiber.Ctx) http.Header {
 	h := make(http.Header)
 	ctx.Request().Header.VisitAll(func(key, value []byte) {
 		h.Add(string(key), string(value))

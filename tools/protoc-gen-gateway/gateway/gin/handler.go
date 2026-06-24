@@ -4,12 +4,11 @@ import (
 	"context"
 
 	"github.com/gin-gonic/gin"
-	ginx "github.com/hopeio/gox/net/http/gin"
 	grpcx "github.com/hopeio/gox/net/http/grpc"
 	gatewayx "github.com/hopeio/gox/net/http/grpc/gateway"
 )
 
-var Bind = ginx.Bind
+
 var Marshaler = gatewayx.DefaultMarshal
 
 func withMetadataContext(ctx *gin.Context, stream interface {

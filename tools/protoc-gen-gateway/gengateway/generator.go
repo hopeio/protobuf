@@ -57,7 +57,7 @@ func frameworkImports(fw Framework) []string {
 	switch fw {
 	case FrameworkFiber:
 		return []string{
-			"github.com/gofiber/fiber/v2",
+			"github.com/gofiber/fiber/v3",
 			"github.com/hopeio/protobuf/tools/protoc-gen-gateway/gateway/fiber",
 		}
 	case FrameworkNetHTTP:

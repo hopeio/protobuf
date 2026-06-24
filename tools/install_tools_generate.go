@@ -12,7 +12,7 @@ import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2"
 	_ "google.golang.org/grpc/cmd/protoc-gen-go-grpc"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go"
-	_ "github.com/alta/protopatch"
+	_ "github.com/alta/protopatch/patch"
 )
 
 //go:generate go run ./install_tools.go

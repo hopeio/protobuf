@@ -191,7 +191,7 @@ It translates gRPC into RESTful JSON APIs.
 package {{.GoPkg.Name}}
 import (
 {{- if eq .Framework "fiber"}}
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	gateway "github.com/hopeio/protobuf/tools/protoc-gen-gateway/gateway/fiber"
 {{- else if eq .Framework "nethttp"}}
 	"net/http"

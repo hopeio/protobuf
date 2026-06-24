@@ -3,7 +3,7 @@ package fiber
 import (
 	"io"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	gatewayx "github.com/hopeio/gox/net/http/grpc/gateway"
 	grpcx "github.com/hopeio/gox/net/http/grpc"
 	"google.golang.org/grpc/codes"
@@ -18,7 +18,7 @@ type ServerStream[Req, Resp any, ReqPtr grpcx.ProtoMessage[Req], RespPtr grpcx.P
 	unaryResponse bool
 }
 
-func NewServerStream[Req, Resp any, ReqPtr grpcx.ProtoMessage[Req], RespPtr grpcx.ProtoMessage[Resp]](ctx *fiber.Ctx) *ServerStream[Req, Resp, ReqPtr, RespPtr] {
+func NewServerStream[Req, Resp any, ReqPtr grpcx.ProtoMessage[Req], RespPtr grpcx.ProtoMessage[Resp]](ctx fiber.Ctx) *ServerStream[Req, Resp, ReqPtr, RespPtr] {
 	return &ServerStream[Req, Resp, ReqPtr, RespPtr]{fiberStreamBase: newFiberStreamBase(ctx)}
 }
 
@@ -54,7 +54,7 @@ func (s *ServerStream[Req, Resp, ReqPtr, RespPtr]) RecvMsg(m any) error {
 	if err != nil {
 		return err
 	}
-	return gatewayx.Unmarshaller(s.ctx.UserContext(), s.contentType, data, pm)
+	return gatewayx.Unmarshaller(s.ctx.Context(), s.contentType, data, pm)
 }
 
 func (s *ServerStream[Req, Resp, ReqPtr, RespPtr]) SendAndClose(msg RespPtr) error {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	httpx "github.com/hopeio/gox/net/http"
 	gatewayx "github.com/hopeio/gox/net/http/grpc/gateway"
 	"google.golang.org/grpc/grpclog"
@@ -14,25 +14,25 @@ import (
 
 var Marshaler = gatewayx.DefaultMarshal
 
-var HandleResponseMessage = func(ctx *fiber.Ctx, message proto.Message) {
+var HandleResponseMessage = func(ctx fiber.Ctx, message proto.Message) {
 	_ = gatewayx.HandleResponseMessage(newResponseWriter(ctx), fiberRequest(ctx), message, Marshaler)
 }
 
-func fiberRequest(ctx *fiber.Ctx) *http.Request {
-	req, _ := http.NewRequestWithContext(ctx.UserContext(), ctx.Method(), ctx.OriginalURL(), nil)
+func fiberRequest(ctx fiber.Ctx) *http.Request {
+	req, _ := http.NewRequestWithContext(ctx.Context(), ctx.Method(), ctx.OriginalURL(), nil)
 	ctx.Request().Header.VisitAll(func(k, v []byte) {
 		req.Header.Add(string(k), string(v))
 	})
 	return req
 }
 
-var HttpError = func(ctx *fiber.Ctx, err error) {
+var HttpError = func(ctx fiber.Ctx, err error) {
 	s, ok := status.FromError(err)
 	if !ok {
 		grpclog.Warningf("Failed to convert error to status: %v", err)
 	}
 	errcodeHeader := strconv.Itoa(int(s.Code()))
-	buf, contentType := gatewayx.DefaultMarshal(ctx.UserContext(), s)
+	buf, contentType := gatewayx.DefaultMarshal(ctx.Context(), s)
 	ctx.Set(httpx.HeaderContentType, contentType)
 	ctx.Set(httpx.HeaderGrpcStatus, errcodeHeader)
 	ctx.Set(httpx.HeaderErrorCode, errcodeHeader)

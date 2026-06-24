@@ -7,10 +7,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	gatewayx "github.com/hopeio/gox/net/http/grpc/gateway"
 	httpx "github.com/hopeio/gox/net/http"
-	fiberx "github.com/hopeio/gox/net/http/fiber"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -18,7 +17,7 @@ import (
 )
 
 type fiberStreamBase struct {
-	ctx         *fiber.Ctx
+	ctx         fiber.Ctx
 	w           *responseWriter
 	method      string
 	trailers    metadata.MD
@@ -26,7 +25,7 @@ type fiberStreamBase struct {
 	contentType string
 }
 
-func newFiberStreamBase(ctx *fiber.Ctx) fiberStreamBase {
+func newFiberStreamBase(ctx fiber.Ctx) fiberStreamBase {
 	return fiberStreamBase{
 		ctx:         ctx,
 		w:           newResponseWriter(ctx),
@@ -34,7 +33,7 @@ func newFiberStreamBase(ctx *fiber.Ctx) fiberStreamBase {
 	}
 }
 
-func (b *fiberStreamBase) Context() context.Context { return b.ctx.UserContext() }
+func (b *fiberStreamBase) Context() context.Context { return b.ctx.Context() }
 
 func (b *fiberStreamBase) Method() string { return b.method }
 
@@ -68,7 +67,7 @@ func (b *fiberStreamBase) setTrailer(md metadata.MD) {
 }
 
 func (b *fiberStreamBase) bindContext(c context.Context) {
-	b.ctx.SetUserContext(c)
+	b.ctx.SetContext(c)
 }
 
 func (b *fiberStreamBase) FinalizeTrailers(err error) {
@@ -80,7 +79,7 @@ func (b *fiberStreamBase) finalize(err error) {
 }
 
 func (b *fiberStreamBase) sendFrame(msg proto.Message) error {
-	data, contentType := Marshaler(b.ctx.UserContext(), msg)
+	data, contentType := Marshaler(b.ctx.Context(), msg)
 	if !b.started {
 		b.started = true
 		gatewayx.BeginGRPCStream(b.w, b.trailers)
@@ -110,5 +109,3 @@ func (b *fiberStreamBase) recvFrame() ([]byte, error) {
 	}
 	return payload, nil
 }
-
-var Bind = fiberx.Bind
