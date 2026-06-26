@@ -17,7 +17,7 @@ func withMetadataContext(ctx fiber.Ctx, stream interface {
 }
 
 func UnaryCall[Req, Resp any, ReqPtr grpcx.ProtoMessage[Req], RespPtr grpcx.ProtoMessage[Resp]](
-	handler func(context.Context, ReqPtr) (RespPtr, error),
+	handler grpcx.GrpcHandler[Req, Resp, ReqPtr, RespPtr],
 ) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		var req Req

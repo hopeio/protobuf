@@ -53,7 +53,7 @@ service DemoService {
     };
   }
 
-  // bidirectional streaming — 应生成 Unimplemented
+  // bidirectional streaming —
   rpc Chat(stream PingRequest) returns (stream PongResponse) {
     option (google.api.http) = {
       post: "/api/v1/chat"

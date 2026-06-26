@@ -8,6 +8,7 @@ package stream_test
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -33,9 +34,9 @@ type DemoServiceClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PongResponse, error)
 	// server streaming — 核心测试场景
 	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (DemoService_SearchClient, error)
-	// client streaming — 应生成 Unimplemented
+	// client streaming —
 	Upload(ctx context.Context, opts ...grpc.CallOption) (DemoService_UploadClient, error)
-	// bidirectional streaming — 应生成 Unimplemented
+	// bidirectional streaming —
 	Chat(ctx context.Context, opts ...grpc.CallOption) (DemoService_ChatClient, error)
 }
 
@@ -161,9 +162,9 @@ type DemoServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PongResponse, error)
 	// server streaming — 核心测试场景
 	Search(*SearchRequest, DemoService_SearchServer) error
-	// client streaming — 应生成 Unimplemented
+	// client streaming —
 	Upload(DemoService_UploadServer) error
-	// bidirectional streaming — 应生成 Unimplemented
+	// bidirectional streaming —
 	Chat(DemoService_ChatServer) error
 	mustEmbedUnimplementedDemoServiceServer()
 }
