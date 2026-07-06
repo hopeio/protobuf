@@ -76,12 +76,12 @@ type HeaderSource fasthttp.RequestHeader
 
 func (form *HeaderSource) Get(key string) ([]string, bool) {
 	var values []string
-	(*fasthttp.RequestHeader)(form).VisitAll(func(k, v []byte) {
+	for k,v:=range (*fasthttp.RequestHeader)(form).All() {
 		if string(k) == key {
 			v, _ := url.QueryUnescape(stringsx.FromBytes(v))
 			values = append(values, v)
 		}
-	})
+	}
 	return values, len(values) > 0
 }
 

@@ -1,7 +1,6 @@
 package fiber
 
 import (
-	"net/http"
 	"strconv"
 
 	"github.com/gofiber/fiber/v3"
@@ -12,19 +11,26 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-var Marshaler = gatewayx.DefaultMarshal
-
-var HandleResponseMessage = func(ctx fiber.Ctx, message proto.Message) {
-	_ = gatewayx.HandleResponseMessage(newResponseWriter(ctx), fiberRequest(ctx), message, Marshaler)
+var HandleResponseMessage = func(ctx fiber.Ctx, message proto.Message) error {
+	var contentType string
+	var buf []byte
+	switch rb := message.(type) {
+	case httpx.Responder:
+		rb.Respond(ctx, newResponseWriter(ctx))
+		return nil
+	case httpx.ResponseBody:
+		buf, contentType = rb.ResponseBody()
+	case httpx.XXXResponseBody:
+		buf, contentType = gatewayx.DefaultMarshal(ctx, rb.XXX_ResponseBody())
+	default:
+		buf, contentType = gatewayx.DefaultMarshal(ctx, message)
+	}
+	ctx.Response().Header.Set(httpx.HeaderContentType, contentType)
+	_, err := ctx.Write(buf)
+	return err
 }
 
-func fiberRequest(ctx fiber.Ctx) *http.Request {
-	req, _ := http.NewRequestWithContext(ctx.Context(), ctx.Method(), ctx.OriginalURL(), nil)
-	ctx.Request().Header.VisitAll(func(k, v []byte) {
-		req.Header.Add(string(k), string(v))
-	})
-	return req
-}
+
 
 var HttpError = func(ctx fiber.Ctx, err error) {
 	s, ok := status.FromError(err)

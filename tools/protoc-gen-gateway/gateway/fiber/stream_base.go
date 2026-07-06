@@ -79,7 +79,7 @@ func (b *fiberStreamBase) finalize(err error) {
 }
 
 func (b *fiberStreamBase) sendFrame(msg proto.Message) error {
-	data, contentType := Marshaler(b.ctx.Context(), msg)
+	data, contentType := gatewayx.DefaultMarshal(b.ctx.Context(), msg)
 	if !b.started {
 		b.started = true
 		gatewayx.BeginGRPCStream(b.w, b.trailers)

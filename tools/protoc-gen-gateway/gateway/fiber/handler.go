@@ -11,7 +11,7 @@ import (
 func withMetadataContext(ctx fiber.Ctx, stream interface {
 	bindContext(context.Context)
 }) context.Context {
-	c := gatewayx.NewMetadataContext(ctx.Context(), fasthttpRespHeader(ctx), fiberReqHeader(ctx))
+	c := gatewayx.NewMetadataContext(ctx.Context(), fiberReqHeader(ctx))
 	stream.bindContext(c)
 	return c
 }

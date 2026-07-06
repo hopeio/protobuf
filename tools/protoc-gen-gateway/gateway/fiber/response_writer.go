@@ -13,9 +13,9 @@ type responseWriter struct {
 
 func (w *responseWriter) Header() http.Header {
 	h := make(http.Header)
-	w.ctx.Response().Header.VisitAll(func(key, value []byte) {
+	for key, value :=range w.ctx.Response().Header.All() {
 		h.Add(string(key), string(value))
-	})
+	}
 	return h
 }
 
@@ -37,18 +37,10 @@ func newResponseWriter(ctx fiber.Ctx) *responseWriter {
 	return &responseWriter{ctx: ctx}
 }
 
-func fasthttpRespHeader(ctx fiber.Ctx) http.Header {
-	h := make(http.Header)
-	ctx.Response().Header.VisitAll(func(key, value []byte) {
-		h.Add(string(key), string(value))
-	})
-	return h
-}
-
 func fiberReqHeader(ctx fiber.Ctx) http.Header {
 	h := make(http.Header)
-	ctx.Request().Header.VisitAll(func(key, value []byte) {
+	for key, value :=range ctx.Request().Header.All() {
 		h.Add(string(key), string(value))
-	})
+	}
 	return h
 }

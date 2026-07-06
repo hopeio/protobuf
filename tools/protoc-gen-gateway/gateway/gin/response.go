@@ -12,7 +12,7 @@ import (
 )
 
 var HandleResponseMessage = func(ctx *gin.Context, message proto.Message) {
-	_ = gatewayx.HandleResponseMessage(ctx.Writer, ctx.Request, message, Marshaler)
+	_ = gatewayx.HandleResponseMessage(ctx.Writer, ctx.Request, message)
 }
 
 var HttpError = func(ctx *gin.Context, err error) {

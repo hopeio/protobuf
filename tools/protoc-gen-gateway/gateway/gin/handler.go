@@ -9,12 +9,10 @@ import (
 )
 
 
-var Marshaler = gatewayx.DefaultMarshal
-
 func withMetadataContext(ctx *gin.Context, stream interface {
 	bindContext(context.Context)
 }) context.Context {
-	c := gatewayx.NewMetadataContext(ctx.Request.Context(), ctx.Writer.Header(), ctx.Request.Header)
+	c := gatewayx.NewMetadataContext(ctx.Request.Context(), ctx.Request.Header)
 	stream.bindContext(c)
 	return c
 }
