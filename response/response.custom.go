@@ -11,7 +11,7 @@ import (
 	"net/http"
 
 	"github.com/hopeio/gox/errors"
-	httpx "github.com/hopeio/gox/net/http"
+	httpx "github.com/hopeio/mix/http"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
