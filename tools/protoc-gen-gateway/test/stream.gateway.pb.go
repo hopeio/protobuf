@@ -10,7 +10,7 @@ package stream_test
 
 import (
 	"github.com/gin-gonic/gin"
-	gateway "github.com/hopeio/protobuf/tools/protoc-gen-gateway/gateway/gin"
+	gateway "github.com/hopeio/mix/gin"
 )
 
 // RegisterDemoServiceHandlerServer registers the http handlers for service DemoService to "mux".

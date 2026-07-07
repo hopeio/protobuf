@@ -13,7 +13,7 @@ import (
 	"flag"
 	"fmt"
 	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
-	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/gengateway"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/generator"
 	"github.com/hopeio/gox/log"
 	"go.uber.org/zap/zapcore"
 	"os"

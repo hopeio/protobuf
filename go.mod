@@ -23,7 +23,7 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-openapi/swag/yamlutils v0.25.4
 	github.com/gofiber/fiber/v3 v3.3.0
-	github.com/hopeio/gox v1.11.5
+	github.com/hopeio/gox v1.11.7
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.10.2
 	github.com/valyala/fasthttp v1.71.0
@@ -85,8 +85,15 @@ require (
 	golang.org/x/arch v0.23.0 // indirect
 	golang.org/x/crypto v0.51.0 // indirect
 	golang.org/x/exp v0.0.0-20260112195511-716be5621a96 // indirect
-	golang.org/x/sys v0.44.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260209200024-4cfbd4190f57 // indirect
+)
+
+tool (
+	github.com/alta/protopatch/patch
+	github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	google.golang.org/protobuf/cmd/protoc-gen-go
 )
