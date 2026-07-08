@@ -133,6 +133,13 @@ type trailerParams struct {
 	Framework          Framework
 }
 
+// toColonParams converts Go 1.22 style {param} to :param for gin/fiber routers.
+func toColonParams(p string) string {
+	p = strings.ReplaceAll(p, "{", ":")
+	p = strings.ReplaceAll(p, "}", "")
+	return p
+}
+
 func applyTemplate(p param, reg *descriptor2.Registry) (string, error) {
 	w := bytes.NewBuffer(nil)
 	if err := headerTemplate.Execute(w, p); err != nil {
@@ -203,7 +210,8 @@ import (
 )
 `))
 
-	localTrailerTemplate = template.Must(template.New("local-trailer").Parse(`
+	templateFuncs        = template.FuncMap{"toColonParams": toColonParams}
+	localTrailerTemplate = template.Must(template.New("local-trailer").Funcs(templateFuncs).Parse(`
 {{range $svc := .Services}}
 // Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server registers the http handlers for service {{$svc.GetName}}.
 // UnaryRPC        : call {{$svc.GetName}}Server directly.
@@ -221,35 +229,35 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{range $b := $m.Bindings}}
 	{{if and $m.GetClientStreaming $m.GetServerStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
+	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
 	{{- else}}
-	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
 	{{- end}}
 	{{else if $m.GetClientStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
+	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
 	{{- else}}
-	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
 	{{- end}}
 	{{else if $m.GetServerStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
+	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
 	{{- else}}
-	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
 	{{- end}}
 	{{else}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
+	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
 	{{- else}}
-	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{$b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
 	{{- end}}
 	{{end}}
 	{{end}}

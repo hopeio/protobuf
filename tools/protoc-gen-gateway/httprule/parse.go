@@ -27,8 +27,6 @@ func Parse(tmpl string) (Compiler, error) {
 	if err != nil {
 		return template{}, InvalidTemplateError{tmpl: tmpl, msg: err.Error()}
 	}
-	tmpl = strings.ReplaceAll(tmpl, "{", ":")
-	tmpl = strings.ReplaceAll(tmpl, "}", "")
 	return template{
 		segments: segs,
 		verb:     verb,
