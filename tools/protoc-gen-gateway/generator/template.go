@@ -140,6 +140,10 @@ func toColonParams(p string) string {
 	return p
 }
 
+func httpMethod(m string) string {
+	return stringsx.UpperCaseFirst(strings.ToLower(m))
+}
+
 func applyTemplate(p param, reg *descriptor2.Registry) (string, error) {
 	w := bytes.NewBuffer(nil)
 	if err := headerTemplate.Execute(w, p); err != nil {
@@ -210,7 +214,7 @@ import (
 )
 `))
 
-	templateFuncs        = template.FuncMap{"toColonParams": toColonParams}
+	templateFuncs        = template.FuncMap{"toColonParams": toColonParams, "httpMethod": httpMethod}
 	localTrailerTemplate = template.Must(template.New("local-trailer").Funcs(templateFuncs).Parse(`
 {{range $svc := .Services}}
 // Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server registers the http handlers for service {{$svc.GetName}}.
@@ -229,7 +233,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{range $b := $m.Bindings}}
 	{{if and $m.GetClientStreaming $m.GetServerStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
+	app.{{httpMethod $b.HTTPMethod}}({{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.BidiStreamCall(server.{{$m.GetName}}))
 	{{- else}}
@@ -237,7 +241,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{- end}}
 	{{else if $m.GetClientStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
+	app.{{httpMethod $b.HTTPMethod}}({{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.ClientSideStreamCall(server.{{$m.GetName}}))
 	{{- else}}
@@ -245,7 +249,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{- end}}
 	{{else if $m.GetServerStreaming}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
+	app.{{httpMethod $b.HTTPMethod}}({{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.ServerSideStreamCall(server.{{$m.GetName}}))
 	{{- else}}
@@ -253,7 +257,7 @@ func Register{{$svc.GetName}}{{$.RegisterFuncSuffix}}Server(mux *gin.Engine, ser
 	{{- end}}
 	{{else}}
 	{{- if eq $.Framework "fiber"}}
-	app.Add({{$b.HTTPMethod | printf "%q"}}, {{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
+	app.{{httpMethod $b.HTTPMethod}}({{toColonParams $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
 	{{- else if eq $.Framework "nethttp"}}
 	mux.Handle({{printf "%s %s" $b.HTTPMethod $b.PathTmpl.Template | printf "%q"}}, gateway.UnaryCall(server.{{$m.GetName}}))
 	{{- else}}
