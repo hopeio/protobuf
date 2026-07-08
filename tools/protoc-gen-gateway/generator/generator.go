@@ -28,11 +28,11 @@ const (
 
 func ParseFramework(s string) (Framework, error) {
 	switch strings.ToLower(strings.TrimSpace(s)) {
-	case "", "gin":
+	case "gin":
 		return FrameworkGin, nil
 	case "fiber":
 		return FrameworkFiber, nil
-	case "nethttp", "net/http", "http":
+	case "", "nethttp", "net/http", "http":
 		return FrameworkNetHTTP, nil
 	default:
 		return "", fmt.Errorf("unsupported framework %q (want gin, fiber, nethttp)", s)

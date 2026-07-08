@@ -37,7 +37,7 @@ var (
 	warnOnUnboundMethods       = flag.Bool("warn_on_unbound_methods", false, "emit a warning message if an RPC method has no HttpRule annotation")
 	generateUnboundMethods     = flag.Bool("generate_unbound_methods", false, "generate proxy methods even for RPC methods that have no HttpRule annotation")
 	logLevel                   = flag.Int("log_level", 2, "log_level")
-	framework                  = flag.String("framework", "gin", "HTTP framework for generated handlers: gin, fiber, nethttp")
+	framework                  = flag.String("framework", "nethttp", "HTTP framework for generated handlers: gin, fiber, nethttp")
 )
 
 // Variables set by goreleaser at build time

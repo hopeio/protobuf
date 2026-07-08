@@ -24,6 +24,13 @@ var goCmd = &cobra.Command{
 	PreRun: func(cmd *cobra.Command, args []string) {
 		plugins = append(plugins, goOut, grpcOut)
 		if goconfig.useGateWayPlugin {
+			cmd.Flags().StringVar(&goconfig.gatewayFramework, "framework", "", "grpc-gateway框架")
+			switch goconfig.gatewayFramework {
+			case "fiber":
+				plugins = append(plugins, gatewayOut+",framework=fiber")
+			case "gin":
+				plugins = append(plugins, gatewayOut+",framework=gin")
+			}
 			plugins = append(plugins, gatewayOut)
 		}
 		if goconfig.useValidatorOutPlugin {
