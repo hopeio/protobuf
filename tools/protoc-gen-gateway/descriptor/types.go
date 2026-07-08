@@ -427,7 +427,7 @@ var (
 		// FieldDescriptorProto_TYPE_MESSAGE
 		descriptorpb.FieldDescriptorProto_TYPE_BYTES:    "strings.Bytes",
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strings.Uint32",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.Enum",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "gateway.Enum",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strings.Int32",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strings.Int64",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strings.Int32",
@@ -470,7 +470,7 @@ var (
 		// FieldDescriptorProto_TYPE_BYTES
 		// TODO(yugui) Handler bytes
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strings.Uint32P",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumP",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "gateway.EnumP",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strings.Int32P",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strings.Int64P",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strings.Int32P",
@@ -492,7 +492,7 @@ var (
 		// FieldDescriptorProto_TYPE_BYTES
 		// TODO(maros7) Handler bytes
 		descriptorpb.FieldDescriptorProto_TYPE_UINT32:   "strings.Uint32Slice",
-		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "grpc_0.EnumSlice",
+		descriptorpb.FieldDescriptorProto_TYPE_ENUM:     "gateway.EnumSlice",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED32: "strings.Int32Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_SFIXED64: "strings.Int64Slice",
 		descriptorpb.FieldDescriptorProto_TYPE_SINT32:   "strings.Int32Slice",
@@ -500,16 +500,16 @@ var (
 	}
 
 	wellKnownTypeConv = map[string]string{
-		".google.protobuf.Timestamp":   "grpc_0.Timestamp",
-		".google.protobuf.Duration":    "grpc_0.Duration",
-		".google.protobuf.StringValue": "grpc_0.StringValue",
-		".google.protobuf.FloatValue":  "grpc_0.FloatValue",
-		".google.protobuf.DoubleValue": "grpc_0.DoubleValue",
-		".google.protobuf.BoolValue":   "grpc_0.BoolValue",
-		".google.protobuf.BytesValue":  "grpc_0.BytesValue",
-		".google.protobuf.Int32Value":  "grpc_0.Int32Value",
-		".google.protobuf.UInt32Value": "grpc_0.UInt32Value",
-		".google.protobuf.Int64Value":  "grpc_0.Int64Value",
-		".google.protobuf.UInt64Value": "grpc_0.UInt64Value",
+		".google.protobuf.Timestamp":   "gateway.Timestamp",
+		".google.protobuf.Duration":    "gateway.Duration",
+		".google.protobuf.StringValue": "gateway.StringValue",
+		".google.protobuf.FloatValue":  "gateway.FloatValue",
+		".google.protobuf.DoubleValue": "gateway.DoubleValue",
+		".google.protobuf.BoolValue":   "gateway.BoolValue",
+		".google.protobuf.BytesValue":  "gateway.BytesValue",
+		".google.protobuf.Int32Value":  "gateway.Int32Value",
+		".google.protobuf.UInt32Value": "gateway.UInt32Value",
+		".google.protobuf.Int64Value":  "gateway.Int64Value",
+		".google.protobuf.UInt64Value": "gateway.UInt64Value",
 	}
 )
