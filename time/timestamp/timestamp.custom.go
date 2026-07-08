@@ -9,12 +9,11 @@ package timestamp
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
-	"io"
 	"time"
 
-	timex "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
+
+	timex "github.com/hopeio/gox/time"
 )
 
 // Now constructs a new Timestamp from the current time.
@@ -86,36 +85,3 @@ func (x *Timestamp) GormDataType() string {
 func (x *Timestamp) Time() time.Time {
 	return time.Unix(x.Seconds, int64(x.Nanos))
 }
-
-func (x *Timestamp) MarshalJSON() ([]byte, error) {
-	return timex.MarshalJSON(x.Time())
-}
-
-func (x *Timestamp) UnmarshalJSON(data []byte) error {
-	var st time.Time
-	if err := timex.UnmarshalJSON(&st, data); err != nil {
-		return err
-	}
-	x.Seconds, x.Nanos = st.Unix(), int32(st.Nanosecond())
-	return nil
-}
-
-func (x *Timestamp) MarshalGQL(w io.Writer) {
-	data, _ := timex.MarshalText(x.Time())
-	w.Write(data)
-}
-
-func (x *Timestamp) UnmarshalGQL(v interface{}) error {
-	var t time.Time
-	if i, ok := v.(string); ok {
-		err := timex.UnmarshalText(&t, []byte(i))
-		if err != nil {
-			return err
-		}
-		*x = Timestamp{Seconds: t.Unix(), Nanos: int32(t.Nanosecond())}
-		return nil
-	}
-	return errors.New("enum need integer type")
-}
-
-type TimestampInput = Timestamp

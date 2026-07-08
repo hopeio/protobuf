@@ -9,8 +9,6 @@ package model
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
-	"io"
 	"strings"
 	"time"
 
@@ -102,38 +100,3 @@ func getTimeType(settings map[string]string) schema.TimeType {
 	return schema.UnixSecond
 }
 
-func (x *DeletedAt) MarshalGQL(w io.Writer) {
-	data, _ := timex.MarshalText(x.Time())
-	w.Write(data)
-}
-
-func (x *DeletedAt) UnmarshalGQL(v interface{}) error {
-	var t time.Time
-	if i, ok := v.(string); ok {
-		err := timex.UnmarshalText(&t, []byte(i))
-		if err != nil {
-			return err
-		}
-		*x = DeletedAt{Seconds: t.Unix(), Nanos: int32(t.Nanosecond())}
-		return nil
-	}
-	return errors.New("enum need integer type")
-}
-
-func (x *DeletedAt) MarshalJSON() ([]byte, error) {
-	if x == nil {
-		return []byte("null"), nil
-	}
-	return timex.MarshalJSON(x.Time())
-}
-
-func (x *DeletedAt) UnmarshalJSON(data []byte) error {
-	var st time.Time
-	if err := timex.UnmarshalJSON(&st, data); err != nil {
-		return err
-	}
-	*x = DeletedAt{Seconds: st.Unix(), Nanos: int32(st.Nanosecond())}
-	return nil
-}
-
-type DeletedAtInput = DeletedAt

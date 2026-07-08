@@ -9,7 +9,6 @@ package time
 import (
 	"time"
 
-	timex "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
@@ -65,20 +64,4 @@ func (x *Duration) check() uint {
 	default:
 		return 0
 	}
-}
-
-func (t Duration) MarshalJSON() ([]byte, error) {
-	return timex.Duration(t.Micro * 1000).MarshalJSON()
-}
-
-// UnmarshalJSON implements the [encoding/json.Unmarshaler] interface.
-// The time must be a quoted string in the RFC 3339 format.
-func (t *Duration) UnmarshalJSON(data []byte) error {
-	var t1 timex.Duration
-	err := (*timex.Duration)(&t1).UnmarshalJSON(data)
-	if err != nil {
-		return err
-	}
-	t.Micro = int64(t1 / 1000)
-	return nil
 }

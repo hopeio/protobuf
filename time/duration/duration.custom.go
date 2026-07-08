@@ -10,7 +10,6 @@ import (
 	"math"
 	"time"
 
-	timex "github.com/hopeio/gox/time"
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
@@ -97,21 +96,4 @@ func (x *Duration) check() uint {
 	default:
 		return 0
 	}
-}
-
-func (t Duration) MarshalJSON() ([]byte, error) {
-	return timex.Duration(t.AsDuration()).MarshalJSON()
-}
-
-// UnmarshalJSON implements the [encoding/json.Unmarshaler] interface.
-// The time must be a quoted string in the RFC 3339 format.
-func (t *Duration) UnmarshalJSON(data []byte) error {
-	var t1 timex.Duration
-	if err := t1.UnmarshalJSON(data); err != nil {
-		return err
-	}
-	nanos := time.Duration(t1).Nanoseconds()
-	t.Seconds = nanos / 1e9
-	t.Nanos -= int32(t.Seconds * 1e9)
-	return nil
 }

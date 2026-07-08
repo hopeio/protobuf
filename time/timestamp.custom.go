@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/hopeio/gox/encoding/binary"
-	timex "github.com/hopeio/gox/time"
 )
 
 func Now() Timestamp {
@@ -54,22 +53,4 @@ func (ts *Timestamp) GobEncode() ([]byte, error) {
 
 func (ts *Timestamp) GobDecode(data []byte) error {
 	return ts.UnmarshalBinary(data)
-}
-
-func (ts *Timestamp) MarshalJSON() ([]byte, error) {
-	if ts == nil {
-		return []byte("null"), nil
-	}
-	t := time.UnixMilli(ts.Millis)
-	return timex.MarshalJSON(t)
-}
-
-func (ts *Timestamp) UnmarshalJSON(data []byte) error {
-	var t time.Time
-	err := timex.UnmarshalJSON(&t, data)
-	if err != nil {
-		return err
-	}
-	ts.Millis = t.UnixMilli()
-	return err
 }
