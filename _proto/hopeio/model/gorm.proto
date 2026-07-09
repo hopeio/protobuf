@@ -7,19 +7,19 @@
 syntax = "proto3";
 package model;
 
-import "patch/go.proto";;
-import "protoc-gen-openapiv2/options/annotations.proto";
-import "hopeio/time/timestamp/timestamp.proto";
+import "patch/go.proto";
 
 option go_package = "github.com/hopeio/protobuf/model";
 option java_multiple_files = true;
 option java_package = "xyz.hoper.protobuf.model";
 
 message DeletedAt {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    example: '"2006-01-02T15:04:05.999999999Z07:00"'
-  };
-  // Represents seconds of UTC time since Unix epoch
+  int64 mills = 1;
+}
+
+
+message DeletedAtTimestamp {
+    // Represents seconds of UTC time since Unix epoch
   // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
   // 9999-12-31T23:59:59Z inclusive.
   int64 seconds = 1;
@@ -31,37 +31,18 @@ message DeletedAt {
   int32 nanos = 2;
 }
 
-
-message DeletedAtTimestamp {
-  int64 mills = 1;
-}
-
-
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
-message ModelTimeStr{
-  string createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  string updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
-  string deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
-}
-
 // [(go.field) = {tags:'json:",inline" gorm:"embedded"', embed:true}]
 message ModelTime{
-  timestamp.Timestamp createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  timestamp.Timestamp updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
+  int64 createdAt = 1 [(go.field) = {tags:'gorm:"serializer:unix_milli_time;type:timestamptz(6);default:now();index"'}];
+  int64 updatedAt = 2 [(go.field) = {tags:'gorm:"serializer:unix_milli_time;type:timestamptz(6)"'}];
   DeletedAt deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }
 
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
-message ModelTimeInt{
-  int64 createdAt = 1 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now();index"'}];
-  int64 updatedAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
-  int64 deletedAt = 3 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
-}
 
 // [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 message Model{
   uint64 id = 1 [(go.field) = {tags:'gorm:"primaryKey"'}];
-  timestamp.Timestamp createdAt = 2 [(go.field) = {tags:'gorm:"type:timestamptz(6);default:now()"'}];
-  timestamp.Timestamp updatedAt = 3 [(go.field) = {tags:'gorm:"type:timestamptz(6)"'}];
+  int64 createdAt = 2 [(go.field) = {tags:'gorm:"serializer:unix_milli_time;type:timestamptz(6);default:now()"'}];
+  int64 updatedAt = 3 [(go.field) = {tags:'gorm:"serializer:unix_milli_time;type:timestamptz(6)"'}];
   DeletedAt deletedAt = 4 [(go.field) = {tags:'gorm:"<-:false;type:timestamptz(6);index"'}];
 }

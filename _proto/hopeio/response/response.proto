@@ -39,8 +39,3 @@ message HttpResponse{
   bytes body = 2;
   int32 status = 3;
 }
-
-message ListResp {
-  repeated google.protobuf.Any list = 3;
-  uint32  total = 4;
-}

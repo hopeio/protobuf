@@ -33,12 +33,12 @@ syntax = "proto3";
 package timestamp;
 
 option cc_enable_arenas = true;
-option go_package = "github.com/hopeio/protobuf/time/timestamp";
-option java_package = "xyz.hoper.protobuf.time.timestamp";
+option go_package = "github.com/hopeio/protobuf/model/timestamp";
+option java_package = "xyz.hoper.protobuf.model.timestamp";
 option java_outer_classname = "TimestampProto";
 option java_multiple_files = true;
 option objc_class_prefix = "GPB";
-option csharp_namespace = "Hoper.Cherry.Protobuf.TimeStamp";
+option csharp_namespace = "Hoper.Protobuf.Model.TimeStamp";
 
 // A Timestamp represents a point in time independent of any time zone or local
 // calendar, encoded as a count of seconds and fractions of seconds at

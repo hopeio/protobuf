@@ -33,12 +33,12 @@ syntax = "proto3";
 package duration;
 
 option cc_enable_arenas = true;
-option go_package = "github.com/hopeio/protobuf/time/duration";
-option java_package = "xyz.hoper.protobuf.time.duration";
+option go_package = "github.com/hopeio/protobuf/model/duration";
+option java_package = "xyz.hoper.protobuf.model.duration";
 option java_outer_classname = "DurationProto";
 option java_multiple_files = true;
 option objc_class_prefix = "HCPB";
-option csharp_namespace = "Hoper.Cherry.Protobuf.Duration";
+option csharp_namespace = "Hoper.Protobuf.Model.Duration";
 
 // A Duration represents a signed, fixed-length span of time represented
 // as a count of seconds and fractions of seconds at nanosecond
