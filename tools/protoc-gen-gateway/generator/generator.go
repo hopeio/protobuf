@@ -58,7 +58,7 @@ func frameworkImports(fw Framework) []string {
 	case FrameworkFiber:
 		return []string{
 			"github.com/gofiber/fiber/v3",
-			"github.com/hopeio/mix/fiber",
+			"github.com/hopeio/mix/contrib/fiber",
 		}
 	case FrameworkNetHTTP:
 		return []string{
@@ -68,7 +68,7 @@ func frameworkImports(fw Framework) []string {
 	default:
 		return []string{
 			"github.com/gin-gonic/gin",
-			"github.com/hopeio/mix/gin",
+			"github.com/hopeio/mix/contrib/gin",
 		}
 	}
 }

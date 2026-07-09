@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	timex "github.com/hopeio/gox/time"
 	"github.com/jinzhu/now"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -20,11 +19,11 @@ import (
 )
 
 func (x *DeletedAt) Time() time.Time {
-	return time.Unix(x.Seconds, int64(x.Nanos))
+	return time.UnixMilli(x.Mills)
 }
 
 func (x *DeletedAt) IsValid() bool {
-	return x != nil && timex.Check(x) == 0
+	return x != nil && x.Mills > 0
 }
 
 // Scan implements the Scanner interface.
@@ -35,17 +34,17 @@ func (x *DeletedAt) Scan(value interface{}) error {
 		return err
 	}
 	if nullTime.Valid {
-		*x = DeletedAt{Seconds: nullTime.Time.Unix(), Nanos: int32(nullTime.Time.Nanosecond())}
+		*x = DeletedAt{Mills: nullTime.Time.UnixMilli()}
 	}
 	return nil
 }
 
 // Value implements the driver Valuer interface.
 func (x *DeletedAt) Value() (driver.Value, error) {
-	if x == nil || timex.Check(x) != 0 {
+	if x == nil || x.Mills == 0 {
 		return nil, nil
 	}
-	return time.Unix(x.Seconds, int64(x.Nanos)), nil
+	return time.UnixMilli(x.Mills), nil
 }
 
 func (x *DeletedAt) GormDataType() string {

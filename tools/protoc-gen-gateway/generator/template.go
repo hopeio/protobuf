@@ -203,13 +203,13 @@ package {{.GoPkg.Name}}
 import (
 {{- if eq .Framework "fiber"}}
 	"github.com/gofiber/fiber/v3"
-	gateway "github.com/hopeio/mix/fiber"
+	gateway "github.com/hopeio/mix/contrib/fiber"
 {{- else if eq .Framework "nethttp"}}
 	"net/http"
 	gateway "github.com/hopeio/mix/http/gateway"
 {{- else}}
 	"github.com/gin-gonic/gin"
-	gateway "github.com/hopeio/mix/gin"
+	gateway "github.com/hopeio/mix/contrib/gin"
 {{- end}}
 )
 `))

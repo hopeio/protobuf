@@ -11,8 +11,6 @@ gatewayDir=${gatewayDir//\\/\/}
 
 protopatchDir=$(go list -m -f {{.Dir}} github.com/alta/protopatch)
 protopatchDir=${protopatchDir//\\/\/}
-gqlDir=$(go list -m -f {{.Dir}} github.com/danielvladco/go-proto-gql)
-gqlDir=${gqlDir//\\/\/}
 
 protoDir=$protobuf/_proto
 
@@ -33,6 +31,8 @@ echo $protobufDir
 ## copy
 mkdir -p $protoDir/protoc-gen-openapiv2/options
 cp  $gatewayDir/protoc-gen-openapiv2/options/*.proto $protoDir/protoc-gen-openapiv2/options
+mkdir -p $protoDir/protoc-gen-openapiv3/options
+cp  $gatewayDir/protoc-gen-openapiv3/options/*.proto $protoDir/protoc-gen-openapiv3/options
 mkdir -p $protoDir/google/api
 cp  $googleapisDir/google/api/*.proto $protoDir/google/api
 mkdir -p $protoDir/google/protobuf

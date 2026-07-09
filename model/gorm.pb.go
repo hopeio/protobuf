@@ -12,8 +12,7 @@
 package model
 
 import (
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	timestamp "github.com/hopeio/protobuf/time/timestamp"
+	_ "github.com/alta/protopatch/patch/gopb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -29,16 +28,8 @@ const (
 )
 
 type DeletedAt struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Represents seconds of UTC time since Unix epoch
-	// 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-	// 9999-12-31T23:59:59Z inclusive.
-	Seconds int64 `protobuf:"varint,1,opt,name=seconds,proto3" json:"seconds,omitempty"`
-	// Non-negative fractions of a second at nanosecond resolution. Negative
-	// second values with fractions must still have non-negative nanos values
-	// that count forward in time. Must be from 0 to 999,999,999
-	// inclusive.
-	Nanos         int32 `protobuf:"varint,2,opt,name=nanos,proto3" json:"nanos,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Mills         int64                  `protobuf:"varint,1,opt,name=mills,proto3" json:"mills,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,23 +64,24 @@ func (*DeletedAt) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *DeletedAt) GetSeconds() int64 {
+func (x *DeletedAt) GetMills() int64 {
 	if x != nil {
-		return x.Seconds
-	}
-	return 0
-}
-
-func (x *DeletedAt) GetNanos() int32 {
-	if x != nil {
-		return x.Nanos
+		return x.Mills
 	}
 	return 0
 }
 
 type DeletedAtTimestamp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Mills         int64                  `protobuf:"varint,1,opt,name=mills,proto3" json:"mills,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Represents seconds of UTC time since Unix epoch
+	// 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+	// 9999-12-31T23:59:59Z inclusive.
+	Seconds int64 `protobuf:"varint,1,opt,name=seconds,proto3" json:"seconds,omitempty"`
+	// Non-negative fractions of a second at nanosecond resolution. Negative
+	// second values with fractions must still have non-negative nanos values
+	// that count forward in time. Must be from 0 to 999,999,999
+	// inclusive.
+	Nanos         int32 `protobuf:"varint,2,opt,name=nanos,proto3" json:"nanos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -124,79 +116,25 @@ func (*DeletedAtTimestamp) Descriptor() ([]byte, []int) {
 	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *DeletedAtTimestamp) GetMills() int64 {
+func (x *DeletedAtTimestamp) GetSeconds() int64 {
 	if x != nil {
-		return x.Mills
+		return x.Seconds
 	}
 	return 0
 }
 
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
-type ModelTimeStr struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CreatedAt     string                 `protobuf:"bytes,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
-	UpdatedAt     string                 `protobuf:"bytes,2,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"type:timestamptz(6)"`
-	DeletedAt     string                 `protobuf:"bytes,3,opt,name=deletedAt,proto3" json:"deletedAt,omitempty" gorm:"<-:false;type:timestamptz(6);index"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ModelTimeStr) Reset() {
-	*x = ModelTimeStr{}
-	mi := &file_hopeio_model_gorm_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ModelTimeStr) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ModelTimeStr) ProtoMessage() {}
-
-func (x *ModelTimeStr) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_model_gorm_proto_msgTypes[2]
+func (x *DeletedAtTimestamp) GetNanos() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+		return x.Nanos
 	}
-	return mi.MessageOf(x)
+	return 0
 }
 
-// Deprecated: Use ModelTimeStr.ProtoReflect.Descriptor instead.
-func (*ModelTimeStr) Descriptor() ([]byte, []int) {
-	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *ModelTimeStr) GetCreatedAt() string {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return ""
-}
-
-func (x *ModelTimeStr) GetUpdatedAt() string {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return ""
-}
-
-func (x *ModelTimeStr) GetDeletedAt() string {
-	if x != nil {
-		return x.DeletedAt
-	}
-	return ""
-}
-
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
+// [(go.field) = {tags:'json:",inline" gorm:"embedded"', embed:true}]
 type ModelTime struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CreatedAt     *timestamp.Timestamp   `protobuf:"bytes,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
-	UpdatedAt     *timestamp.Timestamp   `protobuf:"bytes,2,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"type:timestamptz(6)"`
+	CreatedAt     int64                  `protobuf:"varint,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"serializer:unix_milli_time;type:timestamptz(6);default:now();index"`
+	UpdatedAt     int64                  `protobuf:"varint,2,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"serializer:unix_milli_time;type:timestamptz(6)"`
 	DeletedAt     *DeletedAt             `protobuf:"bytes,3,opt,name=deletedAt,proto3" json:"deletedAt,omitempty" gorm:"<-:false;type:timestamptz(6);index"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -204,7 +142,7 @@ type ModelTime struct {
 
 func (x *ModelTime) Reset() {
 	*x = ModelTime{}
-	mi := &file_hopeio_model_gorm_proto_msgTypes[3]
+	mi := &file_hopeio_model_gorm_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -216,7 +154,7 @@ func (x *ModelTime) String() string {
 func (*ModelTime) ProtoMessage() {}
 
 func (x *ModelTime) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_model_gorm_proto_msgTypes[3]
+	mi := &file_hopeio_model_gorm_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -229,21 +167,21 @@ func (x *ModelTime) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelTime.ProtoReflect.Descriptor instead.
 func (*ModelTime) Descriptor() ([]byte, []int) {
-	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{3}
+	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ModelTime) GetCreatedAt() *timestamp.Timestamp {
+func (x *ModelTime) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return nil
+	return 0
 }
 
-func (x *ModelTime) GetUpdatedAt() *timestamp.Timestamp {
+func (x *ModelTime) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
-	return nil
+	return 0
 }
 
 func (x *ModelTime) GetDeletedAt() *DeletedAt {
@@ -254,72 +192,11 @@ func (x *ModelTime) GetDeletedAt() *DeletedAt {
 }
 
 // [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
-type ModelTimeInt struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CreatedAt     int64                  `protobuf:"varint,1,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now();index"`
-	UpdatedAt     int64                  `protobuf:"varint,2,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"type:timestamptz(6)"`
-	DeletedAt     int64                  `protobuf:"varint,3,opt,name=deletedAt,proto3" json:"deletedAt,omitempty" gorm:"<-:false;type:timestamptz(6);index"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ModelTimeInt) Reset() {
-	*x = ModelTimeInt{}
-	mi := &file_hopeio_model_gorm_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ModelTimeInt) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ModelTimeInt) ProtoMessage() {}
-
-func (x *ModelTimeInt) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_model_gorm_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ModelTimeInt.ProtoReflect.Descriptor instead.
-func (*ModelTimeInt) Descriptor() ([]byte, []int) {
-	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ModelTimeInt) GetCreatedAt() int64 {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return 0
-}
-
-func (x *ModelTimeInt) GetUpdatedAt() int64 {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return 0
-}
-
-func (x *ModelTimeInt) GetDeletedAt() int64 {
-	if x != nil {
-		return x.DeletedAt
-	}
-	return 0
-}
-
-// [(go.field) = {tags:'json:",inline" gorm:"embedded"'}]
 type Model struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"primaryKey"`
-	CreatedAt     *timestamp.Timestamp   `protobuf:"bytes,2,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"type:timestamptz(6);default:now()"`
-	UpdatedAt     *timestamp.Timestamp   `protobuf:"bytes,3,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"type:timestamptz(6)"`
+	CreatedAt     int64                  `protobuf:"varint,2,opt,name=createdAt,proto3" json:"createdAt,omitempty" gorm:"serializer:unix_milli_time;type:timestamptz(6);default:now()"`
+	UpdatedAt     int64                  `protobuf:"varint,3,opt,name=updatedAt,proto3" json:"updatedAt,omitempty" gorm:"serializer:unix_milli_time;type:timestamptz(6)"`
 	DeletedAt     *DeletedAt             `protobuf:"bytes,4,opt,name=deletedAt,proto3" json:"deletedAt,omitempty" gorm:"<-:false;type:timestamptz(6);index"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -327,7 +204,7 @@ type Model struct {
 
 func (x *Model) Reset() {
 	*x = Model{}
-	mi := &file_hopeio_model_gorm_proto_msgTypes[5]
+	mi := &file_hopeio_model_gorm_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -339,7 +216,7 @@ func (x *Model) String() string {
 func (*Model) ProtoMessage() {}
 
 func (x *Model) ProtoReflect() protoreflect.Message {
-	mi := &file_hopeio_model_gorm_proto_msgTypes[5]
+	mi := &file_hopeio_model_gorm_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -352,7 +229,7 @@ func (x *Model) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Model.ProtoReflect.Descriptor instead.
 func (*Model) Descriptor() ([]byte, []int) {
-	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{5}
+	return file_hopeio_model_gorm_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Model) GetId() uint64 {
@@ -362,18 +239,18 @@ func (x *Model) GetId() uint64 {
 	return 0
 }
 
-func (x *Model) GetCreatedAt() *timestamp.Timestamp {
+func (x *Model) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return nil
+	return 0
 }
 
-func (x *Model) GetUpdatedAt() *timestamp.Timestamp {
+func (x *Model) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
-	return nil
+	return 0
 }
 
 func (x *Model) GetDeletedAt() *DeletedAt {
@@ -387,29 +264,21 @@ var File_hopeio_model_gorm_proto protoreflect.FileDescriptor
 
 const file_hopeio_model_gorm_proto_rawDesc = "" +
 	"\n" +
-	"\x17hopeio/model/gorm.proto\x12\x05model\x1a\x1bhopeio/utils/patch/go.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a%hopeio/time/timestamp/timestamp.proto\"g\n" +
-	"\tDeletedAt\x12\x18\n" +
+	"\x17hopeio/model/gorm.proto\x12\x05model\x1a\x0epatch/go.proto\"!\n" +
+	"\tDeletedAt\x12\x14\n" +
+	"\x05mills\x18\x01 \x01(\x03R\x05mills\"D\n" +
+	"\x12DeletedAtTimestamp\x12\x18\n" +
 	"\aseconds\x18\x01 \x01(\x03R\aseconds\x12\x14\n" +
-	"\x05nanos\x18\x02 \x01(\x05R\x05nanos:*\x92A'2%\"2006-01-02T15:04:05.999999999Z07:00\"\"*\n" +
-	"\x12DeletedAtTimestamp\x12\x14\n" +
-	"\x05mills\x18\x01 \x01(\x03R\x05mills\"\xf4\x01\n" +
-	"\fModelTimeStr\x12S\n" +
-	"\tcreatedAt\x18\x01 \x01(\tB5ҵ\x031\xa2\x01.gorm:\"type:timestamptz(6);default:now();index\"R\tcreatedAt\x12?\n" +
-	"\tupdatedAt\x18\x02 \x01(\tB!ҵ\x03\x1d\xa2\x01\x1agorm:\"type:timestamptz(6)\"R\tupdatedAt\x12N\n" +
-	"\tdeletedAt\x18\x03 \x01(\tB0ҵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAt\"\xaf\x02\n" +
-	"\tModelTime\x12i\n" +
-	"\tcreatedAt\x18\x01 \x01(\v2\x14.timestamp.TimestampB5ҵ\x031\xa2\x01.gorm:\"type:timestamptz(6);default:now();index\"R\tcreatedAt\x12U\n" +
-	"\tupdatedAt\x18\x02 \x01(\v2\x14.timestamp.TimestampB!ҵ\x03\x1d\xa2\x01\x1agorm:\"type:timestamptz(6)\"R\tupdatedAt\x12`\n" +
-	"\tdeletedAt\x18\x03 \x01(\v2\x10.model.DeletedAtB0ҵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAt\"\xf4\x01\n" +
-	"\fModelTimeInt\x12S\n" +
-	"\tcreatedAt\x18\x01 \x01(\x03B5ҵ\x031\xa2\x01.gorm:\"type:timestamptz(6);default:now();index\"R\tcreatedAt\x12?\n" +
-	"\tupdatedAt\x18\x02 \x01(\x03B!ҵ\x03\x1d\xa2\x01\x1agorm:\"type:timestamptz(6)\"R\tupdatedAt\x12N\n" +
-	"\tdeletedAt\x18\x03 \x01(\x03B0ҵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAt\"\xcf\x02\n" +
+	"\x05nanos\x18\x02 \x01(\x05R\x05nanos\"\xb9\x02\n" +
+	"\tModelTime\x12n\n" +
+	"\tcreatedAt\x18\x01 \x01(\x03BPʵ\x03L\xa2\x01Igorm:\"serializer:unix_milli_time;type:timestamptz(6);default:now();index\"R\tcreatedAt\x12Z\n" +
+	"\tupdatedAt\x18\x02 \x01(\x03B<ʵ\x038\xa2\x015gorm:\"serializer:unix_milli_time;type:timestamptz(6)\"R\tupdatedAt\x12`\n" +
+	"\tdeletedAt\x18\x03 \x01(\v2\x10.model.DeletedAtB0ʵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAt\"\xd9\x02\n" +
 	"\x05Model\x12(\n" +
-	"\x02id\x18\x01 \x01(\x04B\x18ҵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12c\n" +
-	"\tcreatedAt\x18\x02 \x01(\v2\x14.timestamp.TimestampB/ҵ\x03+\xa2\x01(gorm:\"type:timestamptz(6);default:now()\"R\tcreatedAt\x12U\n" +
-	"\tupdatedAt\x18\x03 \x01(\v2\x14.timestamp.TimestampB!ҵ\x03\x1d\xa2\x01\x1agorm:\"type:timestamptz(6)\"R\tupdatedAt\x12`\n" +
-	"\tdeletedAt\x18\x04 \x01(\v2\x10.model.DeletedAtB0ҵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAtB>\n" +
+	"\x02id\x18\x01 \x01(\x04B\x18ʵ\x03\x14\xa2\x01\x11gorm:\"primaryKey\"R\x02id\x12h\n" +
+	"\tcreatedAt\x18\x02 \x01(\x03BJʵ\x03F\xa2\x01Cgorm:\"serializer:unix_milli_time;type:timestamptz(6);default:now()\"R\tcreatedAt\x12Z\n" +
+	"\tupdatedAt\x18\x03 \x01(\x03B<ʵ\x038\xa2\x015gorm:\"serializer:unix_milli_time;type:timestamptz(6)\"R\tupdatedAt\x12`\n" +
+	"\tdeletedAt\x18\x04 \x01(\v2\x10.model.DeletedAtB0ʵ\x03,\xa2\x01)gorm:\"<-:false;type:timestamptz(6);index\"R\tdeletedAtB>\n" +
 	"\x18xyz.hoper.protobuf.modelP\x01Z github.com/hopeio/protobuf/modelb\x06proto3"
 
 var (
@@ -424,28 +293,21 @@ func file_hopeio_model_gorm_proto_rawDescGZIP() []byte {
 	return file_hopeio_model_gorm_proto_rawDescData
 }
 
-var file_hopeio_model_gorm_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hopeio_model_gorm_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_hopeio_model_gorm_proto_goTypes = []any{
-	(*DeletedAt)(nil),           // 0: model.DeletedAt
-	(*DeletedAtTimestamp)(nil),  // 1: model.DeletedAtTimestamp
-	(*ModelTimeStr)(nil),        // 2: model.ModelTimeStr
-	(*ModelTime)(nil),           // 3: model.ModelTime
-	(*ModelTimeInt)(nil),        // 4: model.ModelTimeInt
-	(*Model)(nil),               // 5: model.Model
-	(*timestamp.Timestamp)(nil), // 6: timestamp.Timestamp
+	(*DeletedAt)(nil),          // 0: model.DeletedAt
+	(*DeletedAtTimestamp)(nil), // 1: model.DeletedAtTimestamp
+	(*ModelTime)(nil),          // 2: model.ModelTime
+	(*Model)(nil),              // 3: model.Model
 }
 var file_hopeio_model_gorm_proto_depIdxs = []int32{
-	6, // 0: model.ModelTime.createdAt:type_name -> timestamp.Timestamp
-	6, // 1: model.ModelTime.updatedAt:type_name -> timestamp.Timestamp
-	0, // 2: model.ModelTime.deletedAt:type_name -> model.DeletedAt
-	6, // 3: model.Model.createdAt:type_name -> timestamp.Timestamp
-	6, // 4: model.Model.updatedAt:type_name -> timestamp.Timestamp
-	0, // 5: model.Model.deletedAt:type_name -> model.DeletedAt
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0, // 0: model.ModelTime.deletedAt:type_name -> model.DeletedAt
+	0, // 1: model.Model.deletedAt:type_name -> model.DeletedAt
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hopeio_model_gorm_proto_init() }
@@ -459,7 +321,7 @@ func file_hopeio_model_gorm_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hopeio_model_gorm_proto_rawDesc), len(file_hopeio_model_gorm_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

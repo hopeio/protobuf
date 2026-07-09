@@ -4,8 +4,12 @@
  * @Created by jyb
  */
 
-package request
+package protogen
 
-type IdInput = Id
-type IdResp = Id
-type PaginationInput = Pagination
+import (
+	"google.golang.org/protobuf/compiler/protogen"
+)
+
+type Generator struct {
+	*protogen.Plugin
+}
