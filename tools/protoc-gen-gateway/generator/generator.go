@@ -63,7 +63,7 @@ func frameworkImports(fw Framework) []string {
 	case FrameworkNetHTTP:
 		return []string{
 			"net/http",
-			"github.com/hopeio/mix/http/gateway",
+			"github.com/hopeio/mix/gateway",
 		}
 	default:
 		return []string{

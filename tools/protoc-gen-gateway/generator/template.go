@@ -206,7 +206,7 @@ import (
 	gateway "github.com/hopeio/mix/contrib/fiber"
 {{- else if eq .Framework "nethttp"}}
 	"net/http"
-	gateway "github.com/hopeio/mix/http/gateway"
+	gateway "github.com/hopeio/mix/gateway"
 {{- else}}
 	"github.com/gin-gonic/gin"
 	gateway "github.com/hopeio/mix/contrib/gin"
