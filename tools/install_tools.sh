@@ -28,8 +28,6 @@ cd $protobuf/tools
 echo "Start Installation"
 go install google.golang.org/protobuf/cmd/protoc-gen-go
 protoc -I$protoDir --go_out=paths=source_relative:$protobuf $protoDir/hopeio/utils/**/*.proto
-cp -r $protobuf/hopeio/* $protobuf/ # 与install_tools.go不一致，mv的问题，无法覆盖非空目录
-rm -rf $protobuf/hopeio
 go install ./protoc-gen-enum
 go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 #go install github.com/alta/protopatch/cmd/protoc-gen-go-patch
