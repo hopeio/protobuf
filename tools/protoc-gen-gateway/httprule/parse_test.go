@@ -4,8 +4,44 @@ import (
 	"fmt"
 	"github.com/hopeio/gox/log"
 	"reflect"
+	"strings"
 	"testing"
 )
+
+func TestParse(t *testing.T) {
+	for _, spec := range []struct {
+		tmpl    string
+		wantErr string
+	}{
+		{"/v1/items", ""},
+		{"/v1/items/{id}", ""},
+		{"/v1/items:batchGet", ""},
+		{"v1/items", "no leading /"},
+		{"/v1//items", "unexpected token"},
+	} {
+		c, err := Parse(spec.tmpl)
+		if spec.wantErr != "" {
+			if err == nil {
+				t.Fatalf("Parse(%q) succeeded; want error", spec.tmpl)
+			}
+			if !strings.Contains(err.Error(), spec.wantErr) {
+				t.Fatalf("Parse(%q) err=%v want contains %q", spec.tmpl, err, spec.wantErr)
+			}
+			continue
+		}
+		if err != nil {
+			t.Fatalf("Parse(%q): %v", spec.tmpl, err)
+		}
+		if got := c.Compile().Template; got != spec.tmpl {
+			t.Fatalf("Parse(%q).Compile().Template=%q want %q", spec.tmpl, got, spec.tmpl)
+		}
+		if spec.tmpl == "/v1/items:batchGet" {
+			if got := c.Compile().Verb; got != "batchGet" {
+				t.Fatalf("Parse(%q).Compile().Verb=%q want batchGet", spec.tmpl, got)
+			}
+		}
+	}
+}
 
 func TestTokenize(t *testing.T) {
 	for _, spec := range []struct {
