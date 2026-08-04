@@ -1,19 +1,25 @@
 package descriptor
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
-	"github.com/go-openapi/swag/yamlutils"
 	"github.com/hopeio/protobuf/utils/openapiconfig"
 
+	"go.yaml.in/yaml/v3"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func loadOpenAPIConfigFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*openapiconfig.OpenAPIConfig, error) {
-	jsonContents, err := yamlutils.YAMLToJSON(yamlFileContents)
+	var yamlContents interface{}
+	if err := yaml.Unmarshal(yamlFileContents, &yamlContents); err != nil {
+		return nil, fmt.Errorf("failed to parse gRPC API Configuration from YAML in '%v': %v", yamlSourceLogName, err)
+	}
+
+	jsonContents, err := json.Marshal(yamlContents)
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert OpenAPI Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
+		return nil, err
 	}
 
 	// Reject unknown fields because OpenAPIConfig is only used here
@@ -45,7 +51,7 @@ func registerOpenAPIOptions(registry *Registry, openAPIConfig *openapiconfig.Ope
 // and registers the OpenAPI options the given registry.
 // This must be done after loading the proto file.
 func (r *Registry) LoadOpenAPIConfigFromYAML(yamlFile string) error {
-	yamlFileContents, err := ioutil.ReadFile(yamlFile)
+	yamlFileContents, err := os.ReadFile(yamlFile)
 	if err != nil {
 		return fmt.Errorf("failed to read gRPC API Configuration description from '%v': %v", yamlFile, err)
 	}

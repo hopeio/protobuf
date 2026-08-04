@@ -732,7 +732,7 @@ func TestApplyTemplateFrameworks(t *testing.T) {
 		want []string
 	}{
 		{FrameworkGin, []string{`*gin.Engine`, `mux.Handle("GET"`}},
-		{FrameworkFiber, []string{`*fiber.App`, `app.Add("GET"`}},
+		{FrameworkFiber, []string{`*fiber.App`, `app.Get("/v1/ping"`}},
 		{FrameworkNetHTTP, []string{`*http.ServeMux`, `mux.Handle("GET /v1/ping"`}},
 	} {
 		got, err := applyTemplate(param{File: crossLinkFixture(file), RegisterFuncSuffix: "Handler", AllowPatchFeature: true, Framework: spec.fw}, descriptor2.NewRegistry())

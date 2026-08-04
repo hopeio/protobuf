@@ -1,7 +1,6 @@
 package httprule
 
 import (
-	"flag"
 	"fmt"
 	"github.com/hopeio/gox/log"
 	"reflect"
@@ -101,10 +100,6 @@ func TestTokenize(t *testing.T) {
 }
 
 func TestParseSegments(t *testing.T) {
-	err := flag.Set("v", "3")
-	if err != nil {
-		t.Fatalf("failed to set flag: %v", err)
-	}
 	for _, spec := range []struct {
 		tokens []string
 		want   []segment
@@ -249,10 +244,6 @@ func TestParseSegments(t *testing.T) {
 }
 
 func TestParseSegmentsWithErrors(t *testing.T) {
-	err := flag.Set("v", "3")
-	if err != nil {
-		t.Fatalf("failed to set flag: %v", err)
-	}
 	for _, spec := range []struct {
 		tokens []string
 	}{

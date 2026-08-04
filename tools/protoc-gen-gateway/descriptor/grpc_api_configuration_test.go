@@ -67,8 +67,8 @@ http:
 		t.Fatal(err)
 	}
 
-	if !strings.Contains(err.Error(), "line 7") {
-		t.Errorf("Expected yaml error to be detected in line 7. Got other error: %v", err)
+	if !strings.Contains(err.Error(), "line 6") {
+		t.Errorf("Expected yaml error to be detected in line 6. Got other error: %v", err)
 	}
 
 	if service != nil {

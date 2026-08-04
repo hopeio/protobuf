@@ -1,21 +1,26 @@
 package descriptor
 
 import (
+	"encoding/json"
 	"fmt"
-
-	"github.com/go-openapi/swag/yamlutils"
-	"github.com/hopeio/protobuf/utils/apiconfig"
-
-	"io/ioutil"
+	"os"
 	"strings"
 
+	"github.com/hopeio/protobuf/utils/apiconfig"
+
+	"go.yaml.in/yaml/v3"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func loadGrpcAPIServiceFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*apiconfig.GrpcAPIService, error) {
-	jsonContents, err := yamlutils.YAMLToJSON(yamlFileContents)
+	var yamlContents interface{}
+	if err := yaml.Unmarshal(yamlFileContents, &yamlContents); err != nil {
+		return nil, fmt.Errorf("failed to parse gRPC API Configuration from YAML in '%v': %v", yamlSourceLogName, err)
+	}
+
+	jsonContents, err := json.Marshal(yamlContents)
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert gRPC API Configuration from YAML in '%v' to JSON: %v", yamlSourceLogName, err)
+		return nil, err
 	}
 
 	// As our GrpcAPIService is incomplete, accept unknown fields.
@@ -59,7 +64,7 @@ func registerHTTPRulesFromGrpcAPIService(registry *Registry, service *apiconfig.
 // Note that for the purposes of the gateway generator we only consider a subset of all
 // available features google supports in their service descriptions.
 func (r *Registry) LoadGrpcAPIServiceFromYAML(yamlFile string) error {
-	yamlFileContents, err := ioutil.ReadFile(yamlFile)
+	yamlFileContents, err := os.ReadFile(yamlFile)
 	if err != nil {
 		return fmt.Errorf("failed to read gRPC API Configuration description from '%v': %v", yamlFile, err)
 	}
