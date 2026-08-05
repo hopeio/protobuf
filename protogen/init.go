@@ -39,6 +39,7 @@ type structFields struct {
 	unexported map[int]string
 }
 
+// append records a field name, tracking unexported fields by index.
 func (sf *structFields) append(name string) {
 	if r, _ := utf8.DecodeRuneInString(name); !unicode.IsUpper(r) {
 		if sf.unexported == nil {
@@ -49,6 +50,7 @@ func (sf *structFields) append(name string) {
 	sf.count++
 }
 
+// newFileInfo builds a fileInfo from a protogen.File, collecting all enums, messages, and extensions.
 func newFileInfo(file *protogen.File) *fileInfo {
 	f := &fileInfo{File: file}
 
@@ -112,6 +114,7 @@ type enumInfo struct {
 	genRawDescMethod bool
 }
 
+// newEnumInfo creates an enumInfo with JSON and raw descriptor generation enabled by default.
 func newEnumInfo(f *fileInfo, enum *protogen.Enum) *enumInfo {
 	e := &enumInfo{Enum: enum}
 	e.genJSONMethod = true
@@ -129,6 +132,7 @@ type messageInfo struct {
 	hasWeak   bool
 }
 
+// newMessageInfo creates a messageInfo, detecting weak fields and field-tracking options.
 func newMessageInfo(f *fileInfo, message *protogen.Message) *messageInfo {
 	m := &messageInfo{Message: message}
 	m.genRawDescMethod = true
@@ -164,6 +168,7 @@ type extensionInfo struct {
 	*protogen.Extension
 }
 
+// newExtensionInfo wraps a protogen.Extension into an extensionInfo.
 func newExtensionInfo(f *fileInfo, extension *protogen.Extension) *extensionInfo {
 	x := &extensionInfo{Extension: extension}
 	return x

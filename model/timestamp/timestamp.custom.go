@@ -77,6 +77,7 @@ func (x *Timestamp) Value() (driver.Value, error) {
 	return x.Time(), nil
 }
 
+// GormDataType returns the GORM data type for the field.
 func (x *Timestamp) GormDataType() string {
 	return "time"
 }

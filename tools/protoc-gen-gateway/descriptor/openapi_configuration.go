@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+// loadOpenAPIConfigFromYAML parses YAML bytes into an OpenAPIConfig proto message.
 func loadOpenAPIConfigFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*openapiconfig.OpenAPIConfig, error) {
 	var yamlContents interface{}
 	if err := yaml.Unmarshal(yamlFileContents, &yamlContents); err != nil {
@@ -35,6 +36,7 @@ func loadOpenAPIConfigFromYAML(yamlFileContents []byte, yamlSourceLogName string
 	return &openapiConfiguration, nil
 }
 
+// registerOpenAPIOptions applies the parsed OpenAPI options to the registry.
 func registerOpenAPIOptions(registry *Registry, openAPIConfig *openapiconfig.OpenAPIConfig, yamlSourceLogName string) error {
 	if openAPIConfig.OpenapiOptions == nil {
 		// Nothing to do

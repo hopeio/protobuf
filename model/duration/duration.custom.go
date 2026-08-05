@@ -78,6 +78,7 @@ const (
 	invalidNanosSign
 )
 
+// check returns a non-zero validity code if the duration is out of range or malformed.
 func (x *Duration) check() uint {
 	const absDuration = 315576000000 // 10000yr * 365.25day/yr * 24hr/day * 60min/hr * 60sec/min
 	secs := x.GetSeconds()

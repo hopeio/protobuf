@@ -18,10 +18,12 @@ var RespOk = &ErrResp{}
 
 type StringValue = wrapperspb.StringValue
 
+// ServeHTTP implements http.Handler by delegating to Respond.
 func (x *HttpResponse) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	x.Respond(r.Context(), w)
 }
 
+// Respond writes the response headers and body to the provided ResponseWriter.
 func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int, error) {
 	if wx, ok := w.(mix.ResponseWriter); ok {
 		header := wx.HeaderX()
@@ -37,6 +39,7 @@ func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int,
 	return w.Write(x.Body)
 }
 
+// ErrResp converts the protobuf ErrResp to the mix.ErrResp type.
 func (x *ErrResp) ErrResp() *mix.ErrResp {
 	return &mix.ErrResp{
 		Code: mix.ErrCode(x.Code),
@@ -44,6 +47,7 @@ func (x *ErrResp) ErrResp() *mix.ErrResp {
 	}
 }
 
+// Error implements the error interface.
 func (x *ErrResp) Error() string {
 	return x.ErrResp().Error()
 }

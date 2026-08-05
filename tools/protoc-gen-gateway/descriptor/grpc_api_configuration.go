@@ -12,6 +12,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+// loadGrpcAPIServiceFromYAML parses YAML bytes into a GrpcAPIService proto message.
 func loadGrpcAPIServiceFromYAML(yamlFileContents []byte, yamlSourceLogName string) (*apiconfig.GrpcAPIService, error) {
 	var yamlContents interface{}
 	if err := yaml.Unmarshal(yamlFileContents, &yamlContents); err != nil {
@@ -36,6 +37,7 @@ func loadGrpcAPIServiceFromYAML(yamlFileContents []byte, yamlSourceLogName strin
 	return &serviceConfiguration, nil
 }
 
+// registerHTTPRulesFromGrpcAPIService adds per-method HttpRules from the service config into the registry.
 func registerHTTPRulesFromGrpcAPIService(registry *Registry, service *apiconfig.GrpcAPIService, sourceLogName string) error {
 	if service.Http == nil {
 		// Nothing to do

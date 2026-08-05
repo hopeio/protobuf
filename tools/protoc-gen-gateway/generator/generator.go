@@ -53,6 +53,7 @@ type generator struct {
 	framework          Framework
 }
 
+// frameworkImports returns the import paths required for the selected HTTP framework.
 func frameworkImports(fw Framework) []string {
 	switch fw {
 	case FrameworkFiber:
@@ -106,6 +107,7 @@ func New(reg *descriptorx.Registry, useRequestContext bool, registerFuncSuffix s
 	}
 }
 
+// Generate produces gateway source files for each target proto file.
 func (g *generator) Generate(targets []*descriptorx.File) ([]*descriptorx.ResponseFile, error) {
 	var files []*descriptorx.ResponseFile
 	for _, file := range targets {
@@ -135,6 +137,7 @@ func (g *generator) Generate(targets []*descriptorx.File) ([]*descriptorx.Respon
 	return files, nil
 }
 
+// generate renders the gateway template for a single proto file and returns the Go source string.
 func (g *generator) generate(file *descriptorx.File) (string, error) {
 	pkgSeen := make(map[string]bool)
 	var imports []descriptorx.GoPackage
@@ -173,6 +176,7 @@ func (g *generator) generate(file *descriptorx.File) (string, error) {
 	return applyTemplate(params, g.reg)
 }
 
+// addEnumPathParamImports collects any additional Go packages needed for enum path parameters.
 func (g *generator) addEnumPathParamImports(file *descriptorx.File, m *descriptorx.Method, pkgSeen map[string]bool) []descriptorx.GoPackage {
 	var imports []descriptorx.GoPackage
 	for _, b := range m.Bindings {

@@ -145,10 +145,12 @@ func (r *Registry) Load(req *pluginpb.CodeGeneratorRequest) error {
 	return r.load(gen)
 }
 
+// LoadFromPlugin loads definitions from an already-constructed protogen.Plugin.
 func (r *Registry) LoadFromPlugin(gen *protogen.Plugin) error {
 	return r.load(gen)
 }
 
+// load iterates over all files in the plugin and registers their messages, enums, and services.
 func (r *Registry) load(gen *protogen.Plugin) error {
 	for filePath, f := range gen.FilesByPath {
 		r.loadFile(filePath, f)
@@ -199,6 +201,7 @@ func (r *Registry) loadFile(filePath string, file *protogen.File) {
 	r.registerEnum(f, nil, file.Proto.EnumType)
 }
 
+// registerMsg recursively registers all message descriptors (including nested types) into the registry.
 func (r *Registry) registerMsg(file *File, outerPath []string, msgs []*descriptorpb.DescriptorProto) {
 	for i, md := range msgs {
 		m := &Message{
@@ -227,6 +230,7 @@ func (r *Registry) registerMsg(file *File, outerPath []string, msgs []*descripto
 	}
 }
 
+// registerEnum registers all enum descriptors from the given list into the registry.
 func (r *Registry) registerEnum(file *File, outerPath []string, enums []*descriptorpb.EnumDescriptorProto) {
 	for i, ed := range enums {
 		e := &Enum{

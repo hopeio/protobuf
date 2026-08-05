@@ -112,6 +112,7 @@ func main() {
 	})
 }
 
+// parseFlags parses comma-separated key=value parameters and applies them to the flag set and registry.
 func parseFlags(reg *descriptor2.Registry, parameter string) {
 	if parameter == "" {
 		return
@@ -138,6 +139,7 @@ func parseFlags(reg *descriptor2.Registry, parameter string) {
 	}
 }
 
+// applyFlags applies the parsed CLI flags to the registry configuration.
 func applyFlags(reg *descriptor2.Registry) error {
 	if *grpcAPIConfiguration != "" {
 		if err := reg.LoadGrpcAPIServiceFromYAML(*grpcAPIConfiguration); err != nil {

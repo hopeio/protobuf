@@ -18,10 +18,12 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+// Time returns the deletion time as a time.Time value.
 func (x *DeletedAt) Time() time.Time {
 	return time.UnixMilli(x.Mills)
 }
 
+// IsValid reports whether the deletion timestamp is set (non-nil and non-zero).
 func (x *DeletedAt) IsValid() bool {
 	return x != nil && x.Mills > 0
 }
@@ -47,6 +49,7 @@ func (x *DeletedAt) Value() (driver.Value, error) {
 	return time.UnixMilli(x.Mills), nil
 }
 
+// GormDataType returns the GORM data type for the field.
 func (x *DeletedAt) GormDataType() string {
 	return "time"
 }
@@ -56,10 +59,12 @@ var (
 	FlagActived = 0
 )
 
+// QueryClauses returns the GORM soft-delete query clause for filtering non-deleted records.
 func (*DeletedAt) QueryClauses(f *schema.Field) []clause.Interface {
 	return []clause.Interface{gorm.SoftDeleteQueryClause{Field: f, ZeroValue: parseZeroValueTag(f)}}
 }
 
+// parseZeroValueTag reads the ZEROVALUE tag from the schema field and returns it as a NullString.
 func parseZeroValueTag(f *schema.Field) sql.NullString {
 	if v, ok := f.TagSettings["ZEROVALUE"]; ok {
 		if _, err := now.Parse(v); err == nil {
@@ -69,14 +74,17 @@ func parseZeroValueTag(f *schema.Field) sql.NullString {
 	return sql.NullString{Valid: false}
 }
 
+// DeleteClauses returns the GORM soft-delete delete clause that sets the deletion timestamp.
 func (*DeletedAt) DeleteClauses(f *schema.Field) []clause.Interface {
 	return []clause.Interface{gorm.SoftDeleteDeleteClause{Field: f, ZeroValue: parseZeroValueTag(f)}}
 }
 
+// UpdateClauses returns the GORM soft-delete update clause.
 func (*DeletedAt) UpdateClauses(f *schema.Field) []clause.Interface {
 	return []clause.Interface{gorm.SoftDeleteUpdateClause{Field: f}}
 }
 
+// getTimeType derives the GORM time precision type from tag settings.
 func getTimeType(settings map[string]string) schema.TimeType {
 	if settings["NANO"] != "" {
 		return schema.UnixNanosecond

@@ -30,6 +30,7 @@ type binding struct {
 	AllowPatchFeature bool
 }
 
+// GetBodyFieldPath returns the body field path, or "*" when the entire message is the body.
 func (b binding) GetBodyFieldPath() string {
 	if b.Body != nil && len(b.Body.FieldPath) != 0 {
 		return b.Body.FieldPath.String()
@@ -37,6 +38,7 @@ func (b binding) GetBodyFieldPath() string {
 	return "*"
 }
 
+// GetBodyFieldStructName returns the CamelCase Go struct field name for the body field path.
 func (b binding) GetBodyFieldStructName() (string, error) {
 	if b.Body != nil && len(b.Body.FieldPath) != 0 {
 		return stringsx.SnakeToCamel(b.Body.FieldPath.String()), nil
@@ -44,6 +46,7 @@ func (b binding) GetBodyFieldStructName() (string, error) {
 	return "", errors.New("no body field found")
 }
 
+// HasQueryParam reports whether the binding has any request fields that are passed as query parameters.
 func (b binding) HasQueryParam() bool {
 	if b.Body != nil && len(b.Body.FieldPath) == 0 {
 		return false
@@ -61,6 +64,7 @@ func (b binding) HasQueryParam() bool {
 	return len(fields) > 0
 }
 
+// QueryParamFilter builds a DoubleArray filter excluding body and path parameters from query parsing.
 func (b binding) QueryParamFilter() queryParamFilter {
 	var seqs [][]string
 	if b.Body != nil {
@@ -72,14 +76,17 @@ func (b binding) QueryParamFilter() queryParamFilter {
 	return queryParamFilter{utilities.NewDoubleArray(seqs)}
 }
 
+// HasEnumPathParam reports whether any non-repeated path parameter is an enum type.
 func (b binding) HasEnumPathParam() bool {
 	return b.hasEnumPathParam(false)
 }
 
+// HasRepeatedEnumPathParam reports whether any repeated path parameter is an enum type.
 func (b binding) HasRepeatedEnumPathParam() bool {
 	return b.hasEnumPathParam(true)
 }
 
+// hasEnumPathParam checks whether any path parameter matches the enum+repeated criteria.
 func (b binding) hasEnumPathParam(repeated bool) bool {
 	for _, p := range b.PathParams {
 		if p.IsEnum() && p.IsRepeated() == repeated {
@@ -89,6 +96,7 @@ func (b binding) hasEnumPathParam(repeated bool) bool {
 	return false
 }
 
+// LookupEnum looks up the Enum descriptor for the parameter's type name, returning nil on failure.
 func (b binding) LookupEnum(p descriptor2.Parameter) *descriptor2.Enum {
 	e, err := b.Registry.LookupEnum("", p.Target.GetTypeName())
 	if err != nil {
@@ -97,6 +105,7 @@ func (b binding) LookupEnum(p descriptor2.Parameter) *descriptor2.Enum {
 	return e
 }
 
+// FieldMaskField returns the CamelCase name of the single FieldMask field in the request type, or "" if ambiguous.
 func (b binding) FieldMaskField() string {
 	var fieldMaskField *descriptor2.Field
 	for _, f := range b.Method.RequestType.Fields {
@@ -117,6 +126,7 @@ type queryParamFilter struct {
 	*utilities.DoubleArray
 }
 
+// String serializes the DoubleArray filter as a Go literal suitable for code generation.
 func (f queryParamFilter) String() string {
 	encodings := make([]string, len(f.Encoding))
 	for str, enc := range f.Encoding {
@@ -140,10 +150,12 @@ func toColonParams(p string) string {
 	return p
 }
 
+// httpMethod converts an HTTP verb to title-case (e.g. "GET" → "Get") for use in template calls.
 func httpMethod(m string) string {
 	return stringsx.UpperCaseFirst(strings.ToLower(m))
 }
 
+// applyTemplate executes the header and trailer templates to produce complete gateway Go source.
 func applyTemplate(p param, reg *descriptor2.Registry) (string, error) {
 	w := bytes.NewBuffer(nil)
 	if err := headerTemplate.Execute(w, p); err != nil {

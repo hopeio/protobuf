@@ -29,6 +29,7 @@ type plugin struct {
 	validatorPkg protogen.GoImportPath
 }
 
+// New creates a new validator plugin wrapping the given protogen.Plugin.
 func New(p *protogen.Plugin) *plugin {
 	return &plugin{
 		Plugin:       p,
@@ -39,10 +40,12 @@ func New(p *protogen.Plugin) *plugin {
 	}
 }
 
+// Name returns the plugin identifier name.
 func (p *plugin) Name() string {
 	return "validator"
 }
 
+// Generate produces a ".validator.pb.go" file for each proto file that contains messages.
 func (p *plugin) Generate() error {
 	genFileMap := make(map[string]*protogen.GeneratedFile)
 
@@ -71,6 +74,7 @@ func (p *plugin) Generate() error {
 	return nil
 }
 
+// gen generates validation code for a single message, dispatching to the appropriate proto syntax handler.
 func (p *plugin) gen(file *protogen.File, message *protogen.Message, g *protogen.GeneratedFile) {
 	if message.Desc.Options().(*descriptor.MessageOptions).GetMapEntry() {
 		return
@@ -83,6 +87,7 @@ func (p *plugin) gen(file *protogen.File, message *protogen.Message, g *protogen
 	}
 }
 
+// getFieldValidatorIfAny returns the FieldValidator option for the field, or nil if absent.
 func getFieldValidatorIfAny(field *protogen.Field) *validator.FieldValidator {
 	if field.Desc.Options() != nil {
 		v := proto.GetExtension(field.Desc.Options(), validator.E_Field)
@@ -93,6 +98,7 @@ func getFieldValidatorIfAny(field *protogen.Field) *validator.FieldValidator {
 	return nil
 }
 
+// getOneofValidatorIfAny returns the OneofValidator option for the oneof field, or nil if absent.
 func getOneofValidatorIfAny(oneof *protogen.Oneof) *validator.OneofValidator {
 	if oneof.Desc.Options() != nil {
 		v := proto.GetExtension(oneof.Desc.Options(), validator.E_Oneof)
@@ -103,6 +109,7 @@ func getOneofValidatorIfAny(oneof *protogen.Oneof) *validator.OneofValidator {
 	return nil
 }
 
+// isSupportedInt reports whether the field kind is one of the integer types with range validation support.
 func (p *plugin) isSupportedInt(field *protogen.Field) bool {
 	switch field.Desc.Kind() {
 	case protoreflect.Int32Kind, protoreflect.Int64Kind:
@@ -115,6 +122,7 @@ func (p *plugin) isSupportedInt(field *protogen.Field) bool {
 	return false
 }
 
+// isSupportedFloat reports whether the field kind is one of the floating-point types with range validation support.
 func (p *plugin) isSupportedFloat(field *protogen.Field) bool {
 	switch field.Desc.Kind() {
 	case protoreflect.FloatKind, protoreflect.DoubleKind:
@@ -127,6 +135,7 @@ func (p *plugin) isSupportedFloat(field *protogen.Field) bool {
 	return false
 }
 
+// generateRegexVars emits package-level compiled regex variables for fields with regex or UUID validators.
 func (p *plugin) generateRegexVars(message *protogen.Message, g *protogen.GeneratedFile) {
 	ccTypeName := message.GoIdent
 	for _, field := range message.Fields {
@@ -150,6 +159,7 @@ func (p *plugin) generateRegexVars(message *protogen.Message, g *protogen.Genera
 	}
 }
 
+// generateProto2Message emits a Validate() method for a proto2 message, handling nullable pointer semantics.
 func (p *plugin) generateProto2Message(message *protogen.Message, g *protogen.GeneratedFile) {
 	ccTypeName := message.GoIdent
 
@@ -224,6 +234,7 @@ func (p *plugin) generateProto2Message(message *protogen.Message, g *protogen.Ge
 	g.P(`}`)
 }
 
+// generateProto3Message emits a Validate() method for a proto3 message, handling oneof and zero-value semantics.
 func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.GeneratedFile) {
 	ccTypeName := message.GoIdent
 	g.P(`func (x *`, ccTypeName, `) Validate() error {`)
@@ -322,6 +333,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 	g.P(`}`)
 }
 
+// generateIntValidator emits range check code for integer fields based on IntGt/IntLt constraints.
 func (p *plugin) generateIntValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.IntGt != nil {
 		g.P(`if !(`, variableName, ` > `, fv.GetIntGt(), `) {`)
@@ -337,6 +349,7 @@ func (p *plugin) generateIntValidator(variableName string, ccTypeName string, fi
 	}
 }
 
+// generateEnumValidator emits a membership check ensuring the value is a valid enum constant.
 func (p *plugin) generateEnumValidator(
 	field *protogen.Field,
 	variableName, ccTypeName, fieldName string,
@@ -349,6 +362,7 @@ func (p *plugin) generateEnumValidator(
 	}
 }
 
+// generateLengthValidator emits length range checks for bytes/string fields.
 func (p *plugin) generateLengthValidator(variableName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.LengthGt != nil {
 		g.P(`if !( len(`, variableName, `) > `, fv.GetLengthGt(), `) {`)
@@ -372,6 +386,7 @@ func (p *plugin) generateLengthValidator(variableName string, fieldName string, 
 	}
 }
 
+// generateFloatValidator emits float range checks, resolving conflicts between strict and non-strict bounds.
 func (p *plugin) generateFloatValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	upperIsStrict := true
 	lowerIsStrict := true
@@ -463,6 +478,7 @@ func getUUIDRegex(version *int32) (string, error) {
 	}
 }
 
+// generateStringValidator emits regex, non-empty, and length checks for string fields.
 func (p *plugin) generateStringValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.Regex != nil || fv.UuidVer != nil {
 		if fv.UuidVer != nil {
@@ -492,6 +508,7 @@ func (p *plugin) generateStringValidator(variableName string, ccTypeName string,
 	p.generateLengthValidator(variableName, fieldName, fv, g)
 }
 
+// generateRepeatedCountValidator emits min/max element count checks for repeated fields.
 func (p *plugin) generateRepeatedCountValidator(variableName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv == nil {
 		return
@@ -516,6 +533,7 @@ func (p *plugin) generateRepeatedCountValidator(variableName string, fieldName s
 	}
 }
 
+// generateErrorString emits the validation failure return statement, using a custom error message if configured.
 func (p *plugin) generateErrorString(variableName string, fieldName string, specificError string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.GetCustomError() == "" {
 		g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `",`, p.fmtPkg.Ident("Errorf"), "(`value '%v' must ", specificError, "`", `, `, variableName, `))`)
@@ -524,10 +542,12 @@ func (p *plugin) generateErrorString(variableName string, fieldName string, spec
 	}
 }
 
+// validatorWithMessageExists reports whether the field validator has the msg_exists constraint set.
 func (p *plugin) validatorWithMessageExists(fv *validator.FieldValidator) bool {
 	return fv != nil && fv.MsgExists != nil && *(fv.MsgExists)
 }
 
+// validatorWithNonRepeatedConstraint reports whether the validator has any constraint other than repeated-count bounds.
 func (p *plugin) validatorWithNonRepeatedConstraint(fv *validator.FieldValidator) bool {
 	if fv == nil {
 		return false
@@ -553,6 +573,7 @@ func (p *plugin) validatorWithNonRepeatedConstraint(fv *validator.FieldValidator
 	return false
 }
 
+// regexName constructs the package-level variable name for a compiled regex for the given type and field.
 func (p *plugin) regexName(ccTypeName string, fieldName string) string {
 	return "regex" + ccTypeName + fieldName
 }

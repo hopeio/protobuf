@@ -91,6 +91,7 @@ func main() {
 
 }
 
+// run recursively processes a directory, invoking protoc for each directory containing .proto files.
 func run(dir string) {
 	fileInfos, err := os.ReadDir(dir)
 	if err != nil {
@@ -111,6 +112,7 @@ func run(dir string) {
 		}
 	}
 }
+// getInclude resolves the hopeio/protobuf import path and builds the -I include flags for protoc.
 func getInclude() {
 	pwd, _ := os.Getwd()
 	config.proto, _ = filepath.Abs(config.proto)
@@ -154,6 +156,7 @@ func getInclude() {
 
 // 找出所以包含go文件的包
 
+// getPackages returns a list of all Go package paths under dir that contain at least one .go file.
 func getPackages(dir string) []string {
 	p := make(map[string]struct{})
 	getPackagesHelper(dir, "", p)
@@ -164,6 +167,7 @@ func getPackages(dir string) []string {
 	return packages
 }
 
+// getPackagesHelper recursively collects directories containing .go files into the p map.
 func getPackagesHelper(dir, pre string, p map[string]struct{}) {
 	fileInfos, err := os.ReadDir(dir)
 	if err != nil {
@@ -190,6 +194,7 @@ func getPackagesHelper(dir, pre string, p map[string]struct{}) {
 		}
 	}
 }
+// protocCmd assembles and executes a protoc invocation for the given proto file glob, module, and module directory.
 func protocCmd(file, mod, modDir string) {
 	cmd := "protoc " + config.include + " " + file
 	var args string

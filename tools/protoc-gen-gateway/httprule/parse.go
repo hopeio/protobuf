@@ -34,6 +34,7 @@ func Parse(tmpl string) (Compiler, error) {
 	}, nil
 }
 
+// tokenize splits a path template into lexical tokens, extracting any trailing verb suffix.
 func tokenize(path string) (tokens []string, verb string) {
 	if path == "" {
 		return []string{eof}, ""
@@ -96,6 +97,7 @@ type parser struct {
 }
 
 // topLevelSegments is the target of this parser.
+// topLevelSegments parses all path segments and asserts the token stream is fully consumed.
 func (p *parser) topLevelSegments() ([]segment, error) {
 	segs, err := p.segments()
 	if err != nil {
@@ -107,6 +109,7 @@ func (p *parser) topLevelSegments() ([]segment, error) {
 	return segs, nil
 }
 
+// segments parses a slash-separated sequence of path segments.
 func (p *parser) segments() ([]segment, error) {
 	s, err := p.segment()
 	if err != nil {
@@ -126,6 +129,7 @@ func (p *parser) segments() ([]segment, error) {
 	}
 }
 
+// segment parses one path segment: wildcard, deep-wildcard, literal, or variable.
 func (p *parser) segment() (segment, error) {
 	if _, err := p.accept("*"); err == nil {
 		return wildcard{}, nil
@@ -144,6 +148,7 @@ func (p *parser) segment() (segment, error) {
 	return v, err
 }
 
+// literal parses a literal path segment token.
 func (p *parser) literal() (segment, error) {
 	lit, err := p.accept(typeLiteral)
 	if err != nil {
@@ -152,6 +157,7 @@ func (p *parser) literal() (segment, error) {
 	return literal(lit), nil
 }
 
+// variable parses a "{field[=segments]}" capture group.
 func (p *parser) variable() (segment, error) {
 	if _, err := p.accept("{"); err != nil {
 		return nil, err
@@ -181,6 +187,7 @@ func (p *parser) variable() (segment, error) {
 	}, nil
 }
 
+// fieldPath parses a dot-separated proto field path inside a variable capture.
 func (p *parser) fieldPath() (string, error) {
 	c, err := p.accept(typeIdent)
 	if err != nil {
@@ -331,6 +338,7 @@ func expectIdent(ident string) error {
 	return nil
 }
 
+// isHexDigit reports whether r is a valid hexadecimal digit.
 func isHexDigit(r rune) bool {
 	switch {
 	case '0' <= r && r <= '9':

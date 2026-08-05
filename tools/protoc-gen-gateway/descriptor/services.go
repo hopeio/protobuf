@@ -67,6 +67,7 @@ func (r *Registry) loadServices(file *File) error {
 	return nil
 }
 
+// newMethod constructs a Method with resolved request/response types and bindings derived from the HttpRule list.
 func (r *Registry) newMethod(svc *Service, md *descriptorpb.MethodDescriptorProto, optsList []*options.HttpRule) (*Method, error) {
 	requestType, err := r.LookupMsg(svc.File.GetPackage(), md.GetInputType())
 	if err != nil {
@@ -197,6 +198,7 @@ func (r *Registry) newMethod(svc *Service, md *descriptorpb.MethodDescriptorProt
 	return meth, nil
 }
 
+// extractAPIOptions extracts the google.api.http HttpRule from a method's options, if present.
 func extractAPIOptions(meth *descriptorpb.MethodDescriptorProto) (*options.HttpRule, error) {
 	if meth.Options == nil {
 		return nil, nil
@@ -212,6 +214,7 @@ func extractAPIOptions(meth *descriptorpb.MethodDescriptorProto) (*options.HttpR
 	return opts, nil
 }
 
+// defaultAPIOptions generates a POST HttpRule mapping the method to "/<service>/<method>" with body "*".
 func defaultAPIOptions(svc *Service, md *descriptorpb.MethodDescriptorProto) (*options.HttpRule, error) {
 	// FQSN prefixes the service's full name with a '.', e.g.: '.example.ExampleService'
 	fqsn := strings.TrimPrefix(svc.FQSN(), ".")
@@ -231,6 +234,7 @@ func defaultAPIOptions(svc *Service, md *descriptorpb.MethodDescriptorProto) (*o
 	return rule, nil
 }
 
+// newParam resolves a path template field reference into a Parameter bound to the method's request type.
 func (r *Registry) newParam(meth *Method, path string) (Parameter, error) {
 	msg := meth.RequestType
 	fields, err := r.resolveFieldPath(msg, path, true)
@@ -258,6 +262,7 @@ func (r *Registry) newParam(meth *Method, path string) (Parameter, error) {
 	}, nil
 }
 
+// newBody resolves the body field path annotation into a Body descriptor for the binding.
 func (r *Registry) newBody(meth *Method, path string) (*Body, error) {
 	msg := meth.RequestType
 
@@ -274,6 +279,7 @@ func (r *Registry) newBody(meth *Method, path string) (*Body, error) {
 	return &Body{FieldPath: FieldPath(fields)}, nil
 }
 
+// newResponse resolves the response body field path annotation into a Body descriptor.
 func (r *Registry) newResponse(meth *Method, path string) (*Body, error) {
 	msg := meth.ResponseType
 	switch path {

@@ -42,18 +42,21 @@ type op struct {
 	num int
 }
 
+// compile emits an OpPush opcode for a single-segment wildcard "*".
 func (w wildcard) compile() []op {
 	return []op{
 		{code: utilities.OpPush},
 	}
 }
 
+// compile emits an OpPushM opcode for a multi-segment deep wildcard "**".
 func (w deepWildcard) compile() []op {
 	return []op{
 		{code: utilities.OpPushM},
 	}
 }
 
+// compile emits an OpLitPush opcode for a constant path segment.
 func (l literal) compile() []op {
 	return []op{
 		{
@@ -63,6 +66,7 @@ func (l literal) compile() []op {
 	}
 }
 
+// compile emits opcodes for capturing a variable field from the path.
 func (v variable) compile() []op {
 	var ops []op
 	for _, s := range v.segments {
