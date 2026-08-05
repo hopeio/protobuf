@@ -12,12 +12,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
-	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/generator"
-	"github.com/hopeio/gox/log"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"strings"
+
+	"github.com/hopeio/gox/log"
+	descriptor2 "github.com/hopeio/protobuf/tools/protoc-gen-gateway/descriptor"
+	"github.com/hopeio/protobuf/tools/protoc-gen-gateway/generator"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -49,7 +51,7 @@ var (
 
 func main() {
 	flag.Parse()
-	log.SetDefaultLogger((&log.Config{Development: true, Level: zapcore.Level(*logLevel)}).NewLogger())
+	log.SetDefaultLogger((&log.Config{Config: zap.Config{Development: true, Level: zap.NewAtomicLevelAt(zapcore.Level(*logLevel))}}).NewLogger())
 	defer log.Sync()
 
 	if *versionFlag {

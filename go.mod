@@ -23,7 +23,7 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-openapi/swag/yamlutils v0.25.4
 	github.com/gofiber/fiber/v3 v3.3.0
-	github.com/hopeio/gox v1.11.7
+	github.com/hopeio/gox v1.11.8
 	github.com/jinzhu/now v1.1.5
 	github.com/spf13/cobra v1.10.2
 	github.com/valyala/fasthttp v1.71.0
