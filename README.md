@@ -1,12 +1,13 @@
 # protobuf
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/hopeio/protobuf.svg)](https://pkg.go.dev/github.com/hopeio/protobuf)
-[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-jybl%2Fprotogen-blue?logo=docker)](https://hub.docker.com/r/jybl/protogen)
 
-**One `.proto`. gRPC · HTTP · OpenAPI · validation.**  
-hopeio 的 Protobuf 工具链：内置公共 `_proto`、`protogen` CLI，以及 gateway / validator / go-patch 等插件——把服务契约一次写清，多端代码一次生成。
+**One `.proto` → gRPC, HTTP gateway, OpenAPI, and validation.**
+
+**一份 `.proto` → gRPC、HTTP 网关、OpenAPI 与参数校验。**
 
 ![protobuf](_assets/protobuf.webp)
 
@@ -14,62 +15,61 @@ hopeio 的 Protobuf 工具链：内置公共 `_proto`、`protogen` CLI，以及 
 go get github.com/hopeio/protobuf@latest
 ```
 
-> 本仓库是 **Go module `github.com/hopeio/protobuf`**（proto 定义 + 插件 + 生成辅助包）。  
-> 各业务前端的 TS 生成包装（如 RFV 的 `@hopeio/pb`）是**消费方仓库**，不在这里写业务逻辑。
+---
 
-## 你能得到什么
+## English
 
-| 能力 | 说明 |
-|------|------|
-| **protogen** | 一键编排 `protoc` 插件（Go / 可选 Dart · TS） |
-| **HTTP Gateway** | `protoc-gen-gateway`：`framework=nethttp\|gin\|fiber` |
-| **Validator** | 从 proto 注解生成请求校验代码 |
-| **OpenAPI** | 集成 grpc-gateway `protoc-gen-openapiv2` |
-| **go-patch** | 结构体 tag、自定义方法等 AST 级增强 |
-| **公共消息** | `hopeio/request` · `response` · `model` · `validator` |
-| **Vendored includes** | `_proto` 内含 googleapis 子集、well-known types、OpenAPI options、protopatch |
+### What is this repo?
 
-与 [mix](https://github.com/hopeio/mix) 的 `gateway` / `ErrResp` 对齐，生成代码开箱可挂。
+**protobuf** is a Go module that packages:
 
-## 5 分钟上手
+1. **`protogen`** — a CLI that orchestrates `protoc` plugins in one command  
+2. **Custom plugins** — `protoc-gen-gateway` (net/http · Gin · Fiber) and `protoc-gen-validator`  
+3. **Shared `.proto` includes** under `_proto/` (Google APIs subset, well-known types, OpenAPI options, protopatch, common request/response/model messages)  
+4. **Generated Go helpers** — `model/`, `request/`, `response/`, `utils/` for those common messages  
 
-### 1. 安装插件
+Write service contracts once; generate server stubs, HTTP routes, docs, and validators together.
+
+### Install
+
+Requires [protoc](https://github.com/protocolbuffers/protobuf/releases) on your `PATH`.
 
 ```bash
 go get github.com/hopeio/protobuf@main
 go run "$(go list -m -f '{{.Dir}}' github.com/hopeio/protobuf)/tools/install_tools.go"
 ```
 
-将安装：`protogen`、`protoc-gen-go`、`protoc-gen-go-grpc`、`protoc-gen-go-patch`、`protoc-gen-openapiv2`、本仓 `protoc-gen-gateway` / `protoc-gen-validator`。  
-另需本机 [protoc](https://github.com/protocolbuffers/protobuf/releases)。
+This installs `protogen`, `protoc-gen-go`, `protoc-gen-go-grpc`, `protoc-gen-go-patch`, `protoc-gen-openapiv2`, plus this repo’s `protoc-gen-gateway` and `protoc-gen-validator`.
 
-### 2. 生成
+### Generate
 
 ```bash
 protogen go -d -w -v -i ./proto -o ./gen
 ```
 
-| 标志 | 含义 |
-|------|------|
-| `-i` / `--proto` | proto 输入目录 |
-| `-o` / `--output` | 生成输出目录 |
-| `-d` / `--openapi` | OpenAPI |
-| `-w` / `--gateway` | HTTP Gateway |
-| `-v` / `--validator` | 校验代码 |
-| `-I` / `--include` | 额外 include |
-| `-p` / `--protobuf` | hopeio `_proto` 路径 |
-| `--framework` | `nethttp`（默认）· `gin` · `fiber` |
+| Flag | Meaning |
+|------|---------|
+| `-i` / `--proto` | Input proto directory |
+| `-o` / `--output` | Output directory |
+| `-d` / `--openapi` | OpenAPI (openapiv2) |
+| `-w` / `--gateway` | HTTP gateway code |
+| `-v` / `--validator` | Validation code |
+| `-I` / `--include` | Extra include paths |
+| `-p` / `--protobuf` | Path to this module’s `_proto` |
+| `--framework` | `nethttp` (default), `gin`, or `fiber` |
 
-子命令：`protogen go` · `protogen dart` · `protogen ts`。
+Subcommands: `protogen go` · `protogen dart` · `protogen ts`.
 
-### 3. Docker（无需本地装插件）
+### Docker
+
+No local plugin install required:
 
 ```bash
 docker run --rm -v "$PWD:/work" jybl/protogen \
   protogen go -d -w -v -i /work/proto -o /work/gen
 ```
 
-## Proto 长什么样
+### Example contract
 
 ```protobuf
 syntax = "proto3";
@@ -86,7 +86,7 @@ service UserService {
   rpc Info (hopeio.request.Id) returns (User) {
     option (google.api.http) = { get: "/api/user/{id}" };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "获取用户信息"
+      summary: "Get user by id"
     };
   }
 }
@@ -97,59 +97,134 @@ message User {
 }
 ```
 
-生成物可直接对接 **mix**：gRPC 注册 + `mix/gateway.UnaryCall`（或 gin/fiber contrib）挂 HTTP。
-
-## 仓库结构
+### Layout
 
 ```
-_proto/           # 公共 / vendored proto（hopeio + google + patch + openapi）
-model/            # 生成后的 model（含 timestamp/duration 扩展）
-request/          # Id · Pagination · Cursor …
-response/         # CommonResp · ErrResp（桥接 mix）
-utils/            # validator / apiconfig / openapiconfig
-protogen/         # 插件侧 option helper
+_proto/                 # includes shipped with the module
+model/ request/ response/ utils/   # Go packages for common messages
+protogen/               # helpers used by plugins
 tools/
-  protogen/           # CLI
-  protoc-gen-gateway/ # 多框架 HTTP 代理生成
+  protogen/             # CLI
+  protoc-gen-gateway/
   protoc-gen-validator/
   install_tools.go
   docker/
-copyproto.sh      # 从 module cache 同步外部 proto → _proto（维护用）
+copyproto.sh            # refresh vendored protos from module cache (maintainers)
 ```
 
-## 维护本仓生成物
+Regenerate this module’s own packages:
 
 ```bash
 go run ./tools/generate.go
-# 同步上游 proto 定义
-./copyproto.sh
 ```
 
-构建镜像：
+### License
+
+[MIT](LICENSE)
+
+---
+
+## 中文
+
+### 这个仓库是什么？
+
+**protobuf** 是一个 Go module，打包了：
+
+1. **`protogen`** — 一条命令编排多个 `protoc` 插件  
+2. **自研插件** — `protoc-gen-gateway`（net/http · Gin · Fiber）与 `protoc-gen-validator`  
+3. **公共 `_proto/`** — Google APIs 子集、well-known types、OpenAPI options、protopatch，以及通用 request/response/model  
+4. **已生成的 Go 辅助包** — `model/`、`request/`、`response/`、`utils/`  
+
+服务契约写一次，同时生成 gRPC 桩、HTTP 路由、文档与校验代码。
+
+### 安装
+
+需本机安装 [protoc](https://github.com/protocolbuffers/protobuf/releases)。
 
 ```bash
-./tools/docker/docker_build_local.sh "$GOPATH" "$PROTOC" jybl/protogen
+go get github.com/hopeio/protobuf@main
+go run "$(go list -m -f '{{.Dir}}' github.com/hopeio/protobuf)/tools/install_tools.go"
 ```
 
-## hopeio 生态
+将安装 `protogen`、`protoc-gen-go`、`protoc-gen-go-grpc`、`protoc-gen-go-patch`、`protoc-gen-openapiv2`，以及本仓的 `protoc-gen-gateway`、`protoc-gen-validator`。
 
-```
-  .proto  ──protogen──►  *.pb.go + gateway + openapi + validator
-                              │
-                              ▼
-                         mix.Server   （同端口 HTTP + gRPC）
-                              │
-                         initialize   （配置 / DAO，可选）
-                              │
-                            gox       （日志、HTTP、工具）
+### 生成
+
+```bash
+protogen go -d -w -v -i ./proto -o ./gen
 ```
 
-| 仓库 | 关系 |
+| 标志 | 含义 |
 |------|------|
-| [gox](https://github.com/hopeio/gox) | 运行时依赖（log / validator / 时间等） |
-| [mix](https://github.com/hopeio/mix) | Gateway 生成 import；`ErrResp` 对齐 |
-| [initialize](https://github.com/hopeio/initialize) | **无直接依赖**；负责进程配置与 DAO |
+| `-i` / `--proto` | proto 输入目录 |
+| `-o` / `--output` | 输出目录 |
+| `-d` / `--openapi` | OpenAPI（openapiv2） |
+| `-w` / `--gateway` | HTTP 网关代码 |
+| `-v` / `--validator` | 校验代码 |
+| `-I` / `--include` | 额外 include |
+| `-p` / `--protobuf` | 本模块 `_proto` 路径 |
+| `--framework` | `nethttp`（默认）、`gin` 或 `fiber` |
 
-## License
+子命令：`protogen go` · `protogen dart` · `protogen ts`。
 
-[MIT](LICENSE) · Copyright © hopeio
+### Docker
+
+无需本机安装插件：
+
+```bash
+docker run --rm -v "$PWD:/work" jybl/protogen \
+  protogen go -d -w -v -i /work/proto -o /work/gen
+```
+
+### 契约示例
+
+```protobuf
+syntax = "proto3";
+package user;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "hopeio/request/param.proto";
+import "patch/go.proto";
+
+option go_package = "example/user";
+
+service UserService {
+  rpc Info (hopeio.request.Id) returns (User) {
+    option (google.api.http) = { get: "/api/user/{id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "按 id 获取用户"
+    };
+  }
+}
+
+message User {
+  uint64 id = 1 [(go.field) = {tags: 'gorm:"primaryKey;"'}];
+  string name = 2 [(go.field) = {tags: 'gorm:"size:64;not null"'}];
+}
+```
+
+### 目录
+
+```
+_proto/                 # 随模块分发的 include
+model/ request/ response/ utils/   # 公共消息的 Go 包
+protogen/               # 插件辅助
+tools/
+  protogen/             # CLI
+  protoc-gen-gateway/
+  protoc-gen-validator/
+  install_tools.go
+  docker/
+copyproto.sh            # 维护者：从 module cache 同步上游 proto
+```
+
+重新生成本模块自身包：
+
+```bash
+go run ./tools/generate.go
+```
+
+### 许可证
+
+[MIT](LICENSE)
