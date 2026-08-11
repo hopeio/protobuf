@@ -7,111 +7,98 @@
 
 [中文文档](README.zh-CN.md)
 
-**One `.proto` → gRPC, HTTP gateway, OpenAPI, and validation.**
-
-![protobuf](_assets/protobuf.webp)
-
 ```bash
 go get github.com/hopeio/protobuf@latest
 ```
 
-## What is this repo?
+Toolkit for Protocol Buffers in Go: a `protogen` CLI, gateway & validator plugins, shared `_proto` includes, and generated helper packages for common messages.
 
-**protobuf** is a Go module that packages:
+Describe services once. Generate gRPC stubs, HTTP routes, OpenAPI, and validation in one pass.
 
-1. **`protogen`** — a CLI that orchestrates `protoc` plugins in one command  
-2. **Custom plugins** — `protoc-gen-gateway` (net/http · Gin · Fiber) and `protoc-gen-validator`  
-3. **Shared `.proto` includes** under `_proto/` (Google APIs subset, well-known types, OpenAPI options, protopatch, common request/response/model messages)  
-4. **Generated Go helpers** — `model/`, `request/`, `response/`, `utils/` for those common messages  
+## Contents of this module
 
-Write service contracts once; generate server stubs, HTTP routes, docs, and validators together.
+| Piece | Location | Role |
+|-------|----------|------|
+| CLI | `tools/protogen` | Orchestrates `protoc` plugins (`go` / `dart` / `ts`) |
+| Gateway plugin | `tools/protoc-gen-gateway` | HTTP handlers for `net/http`, Gin, or Fiber |
+| Validator plugin | `tools/protoc-gen-validator` | Request validation from proto options |
+| Includes | `_proto/` | googleapis subset, well-known types, OpenAPI options, protopatch, hopeio request/response/model |
+| Go helpers | `model/`, `request/`, `response/`, `utils/` | Compiled packages for those shared messages |
+| Plugin helpers | `protogen/` | Option readers used by generators |
 
-## Install
+## Install plugins
 
-Requires [protoc](https://github.com/protocolbuffers/protobuf/releases) on your `PATH`.
+Requires [`protoc`](https://github.com/protocolbuffers/protobuf/releases) on `PATH`.
 
 ```bash
 go get github.com/hopeio/protobuf@main
 go run "$(go list -m -f '{{.Dir}}' github.com/hopeio/protobuf)/tools/install_tools.go"
 ```
 
-This installs `protogen`, `protoc-gen-go`, `protoc-gen-go-grpc`, `protoc-gen-go-patch`, `protoc-gen-openapiv2`, plus this repo’s `protoc-gen-gateway` and `protoc-gen-validator`.
+Installs: `protogen`, `protoc-gen-go`, `protoc-gen-go-grpc`, `protoc-gen-go-patch`, `protoc-gen-openapiv2`, `protoc-gen-gateway`, `protoc-gen-validator`.
 
 ## Generate
 
 ```bash
-protogen go -d -w -v -i ./proto -o ./gen
+protogen go -d -w -v -i ./api -o ./gen
 ```
 
-| Flag | Meaning |
+| Flag | Purpose |
 |------|---------|
-| `-i` / `--proto` | Input proto directory |
-| `-o` / `--output` | Output directory |
-| `-d` / `--openapi` | OpenAPI (openapiv2) |
-| `-w` / `--gateway` | HTTP gateway code |
-| `-v` / `--validator` | Validation code |
-| `-I` / `--include` | Extra include paths |
-| `-p` / `--protobuf` | Path to this module’s `_proto` |
-| `--framework` | `nethttp` (default), `gin`, or `fiber` |
+| `-i` | Proto input directory |
+| `-o` | Output directory |
+| `-d` | OpenAPI (openapiv2) |
+| `-w` | HTTP gateway |
+| `-v` | Validators |
+| `-I` | Extra includes |
+| `-p` | Path to this module’s `_proto` |
+| `--framework` | `nethttp` (default), `gin`, `fiber` |
 
-Subcommands: `protogen go` · `protogen dart` · `protogen ts`.
+Also: `protogen dart`, `protogen ts`.
 
-## Docker
-
-No local plugin install required:
+### Docker
 
 ```bash
 docker run --rm -v "$PWD:/work" jybl/protogen \
-  protogen go -d -w -v -i /work/proto -o /work/gen
+  protogen go -d -w -v -i /work/api -o /work/gen
 ```
 
-## Example contract
+## Contract sample
 
 ```protobuf
 syntax = "proto3";
-package user;
+package catalog;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "hopeio/request/param.proto";
 import "patch/go.proto";
 
-option go_package = "example/user";
+option go_package = "example.com/catalog";
 
-service UserService {
-  rpc Info (hopeio.request.Id) returns (User) {
-    option (google.api.http) = { get: "/api/user/{id}" };
+service ProductService {
+  rpc Get (hopeio.request.Id) returns (Product) {
+    option (google.api.http) = { get: "/api/products/{id}" };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Get user by id"
+      summary: "Fetch a product"
     };
   }
 }
 
-message User {
+message Product {
   uint64 id = 1 [(go.field) = {tags: 'gorm:"primaryKey;"'}];
-  string name = 2 [(go.field) = {tags: 'gorm:"size:64;not null"'}];
+  string sku = 2 [(go.field) = {tags: 'gorm:"size:64;uniqueIndex"'}];
 }
 ```
 
-## Layout
-
-```
-_proto/                 # includes shipped with the module
-model/ request/ response/ utils/   # Go packages for common messages
-protogen/               # helpers used by plugins
-tools/
-  protogen/             # CLI
-  protoc-gen-gateway/
-  protoc-gen-validator/
-  install_tools.go
-  docker/
-copyproto.sh            # refresh vendored protos from module cache (maintainers)
-```
-
-Regenerate this module’s own packages:
+## Maintainer commands
 
 ```bash
+# regenerate this module’s hopeio packages
 go run ./tools/generate.go
+
+# refresh vendored third-party protos into _proto/
+./copyproto.sh
 ```
 
 ## License
