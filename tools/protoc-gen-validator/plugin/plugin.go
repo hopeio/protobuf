@@ -554,7 +554,8 @@ func (p *plugin) validatorWithNonRepeatedConstraint(fv *validator.FieldValidator
 	}
 
 	// Need to use reflection in order to be future-proof for new types of constraints.
-	v := reflect.ValueOf(*fv)
+	// Elem 而非解引用拷贝：proto 消息内嵌 MessageState 含锁，按值拷贝会触发 vet copylocks
+	v := reflect.ValueOf(fv).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		fieldName := v.Type().Field(i).Name
 

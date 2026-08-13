@@ -58,5 +58,4 @@ func PrintComments(comments protogen.CommentSet, g *protogen.GeneratedFile) {
 		g.P(comment)
 	}
 	g.P(comments.Leading)
-	g.P(comments.LeadingDetached)
 }

@@ -10,9 +10,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 
 	execx "github.com/hopeio/gox/os/exec"
 
@@ -46,21 +48,24 @@ var pluginPaths = []string{}
 var rootCmd = &cobra.Command{
 	Use: "protogen",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		os.MkdirAll(config.genpath, os.ModePerm)
-		if config.useOpenapiPlugin {
-			plugins = append(plugins, openapiv2Out)
+		// 前置检查 protoc，缺失时给出可执行的安装指引，而不是每个目录报一遍晦涩错误
+		if _, err := exec.LookPath("protoc"); err != nil {
+			log.Fatal("protoc not found in PATH; install it first (https://protobuf.dev/installation/) " +
+				"and run `go run github.com/hopeio/protobuf/tools` to install code generators")
+		}
+		if err := os.MkdirAll(config.genpath, os.ModePerm); err != nil {
+			log.Fatal(err)
 		}
 		if config.useOpenapiPlugin {
+			plugins = append(plugins, openapiv2Out)
 			if config.apidocDir == "" {
 				var err error
 				config.apidocDir, err = filepath.Abs(config.genpath + "/../apidoc")
 				if err != nil {
 					config.apidocDir = config.genpath + "/apidoc"
 				}
-			} else {
-				if config.apidocDir[len(config.apidocDir)-1] != '/' {
-					config.apidocDir += "/"
-				}
+			} else if config.apidocDir[len(config.apidocDir)-1] != '/' {
+				config.apidocDir += "/"
 			}
 		}
 		getInclude()
@@ -77,6 +82,7 @@ func init() {
 	pflag.StringArrayVarP(&config.thirdIncludes, "include", "I", nil, "外部proto依赖")
 	pflag.BoolVarP(&config.useOpenapiPlugin, "openapi", "d", false, "是否使用openapi插件")
 	pflag.StringVar(&config.apidocDir, "apiDocDir", "", "api doc目录")
+	pflag.IntVarP(&config.jobs, "jobs", "j", runtime.NumCPU(), "并行执行的 protoc 进程数")
 
 	rootCmd.AddCommand(goCmd)
 	rootCmd.AddCommand(dartCmd)
@@ -85,53 +91,77 @@ func init() {
 }
 
 func main() {
-	//single("/content/moment.model.proto")
-	rootCmd.Execute()
-	//gengql()
-
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
 
-// run recursively processes a directory, invoking protoc for each directory containing .proto files.
+// run walks dir, collecting one protoc invocation per directory that contains
+// .proto files, then executes them in parallel. Any failure exits non-zero so
+// CI cannot go green on partially generated code.
 func run(dir string) {
+	var cmds []string
+	collectProtocCmds(dir, &cmds)
+	if len(cmds) == 0 {
+		return
+	}
+	jobs := config.jobs
+	if jobs < 1 {
+		jobs = 1
+	}
+	sem := make(chan struct{}, jobs)
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	var errs []error
+	for _, cmd := range cmds {
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(cmd string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+			if err := execx.RunWithLog(cmd); err != nil {
+				mu.Lock()
+				errs = append(errs, fmt.Errorf("%s: %w", cmd, err))
+				mu.Unlock()
+			}
+		}(cmd)
+	}
+	wg.Wait()
+	if len(errs) > 0 {
+		for _, err := range errs {
+			log.Println("protoc failed:", err)
+		}
+		os.Exit(1)
+	}
+}
+
+// collectProtocCmds recursively gathers protoc command lines for every directory containing .proto files.
+func collectProtocCmds(dir string, cmds *[]string) {
 	fileInfos, err := os.ReadDir(dir)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	var exec bool
+	var collected bool
 	for i := range fileInfos {
-		if !exec && strings.HasSuffix(fileInfos[i].Name(), ".proto") {
-			exec = true
+		if !collected && strings.HasSuffix(fileInfos[i].Name(), ".proto") {
+			collected = true
 			if dir == config.proto {
-				protocCmd(dir+"/*.proto", "root", "")
+				*cmds = append(*cmds, protocCmd(dir+"/*.proto", "root"))
 			} else {
-				protocCmd(dir+"/*.proto", filepath.Base(dir), dir[len(config.proto)+1:])
+				*cmds = append(*cmds, protocCmd(dir+"/*.proto", filepath.Base(dir)))
 			}
 		}
 		if fileInfos[i].IsDir() {
-			run(dir + "/" + fileInfos[i].Name())
+			collectProtocCmds(dir+"/"+fileInfos[i].Name(), cmds)
 		}
 	}
 }
 // getInclude resolves the hopeio/protobuf import path and builds the -I include flags for protoc.
 func getInclude() {
-	pwd, _ := os.Getwd()
 	config.proto, _ = filepath.Abs(config.proto)
 	config.genpath, _ = filepath.Abs(config.genpath)
 	log.Println("proto:", config.proto)
 	log.Println("genpath:", config.genpath)
-
-	/*	generatePath := "generate" + time.Now().Format("150405")
-		err = os.Mkdir(generatePath, os.ModePerm)
-		if err != nil {
-			log.Fatal(err)
-		}
-		generatePath = pwd + "/" + generatePath
-		defer os.RemoveAll(generatePath)
-		err = os.Chdir(generatePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		execx.RunGetOut("go mod init generate")*/
 
 	libDir, err := execx.RunGetOut(gox.GoListDir + DepProtobuf)
 	if err == nil {
@@ -141,61 +171,12 @@ func getInclude() {
 	for _, include := range config.thirdIncludes {
 		config.include += " -I" + include
 	}
-	/*	os.Chdir(libDir)
-		DepGrpcGateway, _ = execx.RunGetOut(goListDep + DepGrpcGateway)
-		DepProtopatch, _ = execx.RunGetOut(goListDep + DepProtopatch)
-		os.Chdir(generatePath)
-		libGoogleDir := gox.GetDepDir(DepGoogleapis)
-		libGatewayDir := gox.GetDepDir(DepGrpcGateway)*/
-
-	os.Chdir(pwd)
 
 	log.Println("include:", config.include)
-
 }
 
-// 找出所以包含go文件的包
-
-// getPackages returns a list of all Go package paths under dir that contain at least one .go file.
-func getPackages(dir string) []string {
-	p := make(map[string]struct{})
-	getPackagesHelper(dir, "", p)
-	var packages []string
-	for pkg, _ := range p {
-		packages = append(packages, pkg)
-	}
-	return packages
-}
-
-// getPackagesHelper recursively collects directories containing .go files into the p map.
-func getPackagesHelper(dir, pre string, p map[string]struct{}) {
-	fileInfos, err := os.ReadDir(dir)
-	if err != nil {
-		log.Panicln(err)
-	}
-	for i := range fileInfos {
-		if fileInfos[i].IsDir() {
-			files, err := os.ReadDir(dir + "/" + fileInfos[i].Name())
-			if err != nil {
-				log.Panicln(err)
-			}
-			for j := range files {
-				if strings.HasSuffix(files[j].Name(), ".go") {
-					if pre != "" {
-						p[pre+"/"+fileInfos[i].Name()] = struct{}{}
-					} else {
-						p[fileInfos[i].Name()] = struct{}{}
-					}
-
-					break
-				}
-			}
-			getPackagesHelper(dir+"/"+fileInfos[i].Name(), fileInfos[i].Name(), p)
-		}
-	}
-}
-// protocCmd assembles and executes a protoc invocation for the given proto file glob, module, and module directory.
-func protocCmd(file, mod, modDir string) {
+// protocCmd assembles the protoc command line for the given proto file glob and module name.
+func protocCmd(file, mod string) string {
 	cmd := "protoc " + config.include + " " + file
 	var args string
 
@@ -216,5 +197,5 @@ func protocCmd(file, mod, modDir string) {
 	if runtime.GOOS != "windows" {
 		cmd = fmt.Sprintf(`bash -c "%s"`, cmd)
 	}
-	execx.RunWithLog(cmd)
+	return cmd
 }

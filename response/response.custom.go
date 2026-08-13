@@ -23,7 +23,7 @@ func (x *HttpResponse) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	x.Respond(r.Context(), w)
 }
 
-// Respond writes the response headers and body to the provided ResponseWriter.
+// Respond writes the response headers, status code and body to the provided ResponseWriter.
 func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int, error) {
 	if wx, ok := w.(mix.ResponseWriter); ok {
 		header := wx.HeaderX()
@@ -35,6 +35,10 @@ func (x *HttpResponse) Respond(ctx context.Context, w http.ResponseWriter) (int,
 		for k, v := range x.Headers {
 			header.Add(k, v)
 		}
+	}
+	// Status 字段此前被忽略，响应恒为隐式 200
+	if x.Status != 0 {
+		w.WriteHeader(int(x.Status))
 	}
 	return w.Write(x.Body)
 }

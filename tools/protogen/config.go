@@ -13,6 +13,8 @@ type Config struct {
 	useOpenapiPlugin          bool
 	apidocDir                 string
 	args                      []string
+	// jobs 控制并行 protoc 进程数，默认 NumCPU
+	jobs int
 }
 
 type Goconfig struct {
