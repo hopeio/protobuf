@@ -156,6 +156,7 @@ func collectProtocCmds(dir string, cmds *[]string) {
 		}
 	}
 }
+
 // getInclude resolves the hopeio/protobuf import path and builds the -I include flags for protoc.
 func getInclude() {
 	config.proto, _ = filepath.Abs(config.proto)

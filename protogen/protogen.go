@@ -13,7 +13,6 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
-
 // GetOption retrieves a typed proto extension from the descriptor's options, returning false if absent.
 func GetOption[T any](desc protoreflect.Descriptor, xt protoreflect.ExtensionType) (T, bool) {
 	if desc == nil {

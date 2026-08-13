@@ -19,7 +19,7 @@ type Config struct {
 
 type Goconfig struct {
 	useGateWayPlugin, useValidatorOutPlugin bool
-	gatewayFramework string
+	gatewayFramework                        string
 }
 
 var config = Config{}
