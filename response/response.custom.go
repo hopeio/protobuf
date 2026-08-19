@@ -48,6 +48,7 @@ func (x *ErrResp) ErrResp() *mix.ErrResp {
 	return &mix.ErrResp{
 		Code: mix.ErrCode(x.Code),
 		Msg:  x.Msg,
+		Data: x.Data,
 	}
 }
 
