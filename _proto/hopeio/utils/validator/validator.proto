@@ -33,7 +33,8 @@ message FieldValidator {
   optional int64 int_lt = 3;
   // Used for nested message types, requires that the message type exists.
   optional bool msg_exists = 4;
-  // Human error specifies a user-customizable error that is visible to the user.
+  // i18n key 下发给客户端翻译；约束数值放进 *mix.ErrResp.Data（如 length_gt）。
+  // 客户端词条用 {length_gt} 等与本 message 字段同名的占位符。
   optional string custom_error = 5;
   // Field value of double strictly greater than this value.
   // Note that this value can only take on a valid floating point

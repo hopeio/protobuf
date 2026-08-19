@@ -9,7 +9,9 @@ import (
 
 	"os"
 	"reflect"
+	"sort"
 	"strconv"
+	"strings"
 
 	"google.golang.org/protobuf/proto"
 	descriptor "google.golang.org/protobuf/types/descriptorpb"
@@ -24,9 +26,8 @@ const uuidPattern = "^([a-fA-F0-9]{8}-" +
 type plugin struct {
 	*protogen.Plugin
 	regexPkg     protogen.GoImportPath
-	fmtPkg       protogen.GoImportPath
-	errorsPkg    protogen.GoImportPath
 	validatorPkg protogen.GoImportPath
+	mixPkg       protogen.GoImportPath
 }
 
 // New creates a new validator plugin wrapping the given protogen.Plugin.
@@ -34,9 +35,8 @@ func New(p *protogen.Plugin) *plugin {
 	return &plugin{
 		Plugin:       p,
 		regexPkg:     "regexp",
-		fmtPkg:       "fmt",
-		errorsPkg:    "errors",
 		validatorPkg: "github.com/hopeio/gox/validator",
+		mixPkg:       "github.com/hopeio/mix",
 	}
 }
 
@@ -217,7 +217,7 @@ func (p *plugin) generateProto2Message(message *protogen.Message, g *protogen.Ge
 				variableName = "*(item)"
 			}
 			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(&(`, variableName, `)); err != nil {`)
-			g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `", err)`)
+			g.P(`return err`)
 			g.P(`}`)
 		}
 		if repeated {
@@ -247,7 +247,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 		if oneofValidator.GetRequired() {
 			oneOfName := oneof.GoName
 			g.P(`if x.Get` + oneOfName + `() == nil {`)
-			g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, oneOfName, `",`, p.fmtPkg.Ident("Errorf"), `("one of the fields must be set"))`)
+			p.generateErrorString("validator.oneof_required", nil, map[string]string{"field": oneOfName}, g)
 			g.P(`}`)
 		}
 	}
@@ -299,7 +299,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 			if p.validatorWithMessageExists(fieldValidator) {
 				if nullable && !repeated {
 					g.P(`if nil == `, variableName, `{`)
-					g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `",`, p.fmtPkg.Ident("Errorf"), `("message must exist"))`)
+					p.generateErrorString("validator.msg_exists", fieldValidator, map[string]string{"field": fieldName}, g)
 					g.P(`}`)
 				} else if repeated {
 					fmt.Fprintf(os.Stderr, "WARNING: field %v.%v is repeated, validator.msg_exists has no effect\n", ccTypeName, fieldName)
@@ -314,7 +314,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 				variableName = "&(" + variableName + ")"
 			}
 			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(`, variableName, `); err != nil {`)
-			g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `", err)`)
+			g.P(`return err`)
 			g.P(`}`)
 			if nullable {
 				g.P(`}`)
@@ -337,14 +337,12 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 func (p *plugin) generateIntValidator(variableName string, ccTypeName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.IntGt != nil {
 		g.P(`if !(`, variableName, ` > `, fv.GetIntGt(), `) {`)
-		errorStr := fmt.Sprintf(`be greater than '%d'`, fv.GetIntGt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.int_gt", fv, map[string]string{"int_gt": strconv.FormatInt(fv.GetIntGt(), 10)}, g)
 		g.P(`}`)
 	}
 	if fv.IntLt != nil {
 		g.P(`if !(`, variableName, ` < `, fv.GetIntLt(), `) {`)
-		errorStr := fmt.Sprintf(`be less than '%d'`, fv.GetIntLt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.int_lt", fv, map[string]string{"int_lt": strconv.FormatInt(fv.GetIntLt(), 10)}, g)
 		g.P(`}`)
 	}
 }
@@ -357,7 +355,7 @@ func (p *plugin) generateEnumValidator(
 	if fv.GetIsInEnum() {
 		enum := field.Enum
 		g.P(`if _, ok := `, enum.GoIdent.GoName, "_name[int32(", variableName, ")]; !ok {")
-		p.generateErrorString(variableName, fieldName, fmt.Sprintf("be a valid %s field", enum.GoIdent.GoName), fv, g)
+		p.generateErrorString("validator.is_in_enum", fv, map[string]string{"enum": enum.GoIdent.GoName}, g)
 		g.P(`}`)
 	}
 }
@@ -366,22 +364,19 @@ func (p *plugin) generateEnumValidator(
 func (p *plugin) generateLengthValidator(variableName string, fieldName string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
 	if fv.LengthGt != nil {
 		g.P(`if !( len(`, variableName, `) > `, fv.GetLengthGt(), `) {`)
-		errorStr := fmt.Sprintf(`have a length greater than '%d'`, fv.GetLengthGt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.length_gt", fv, map[string]string{"length_gt": strconv.FormatInt(fv.GetLengthGt(), 10)}, g)
 		g.P(`}`)
 	}
 
 	if fv.LengthLt != nil {
 		g.P(`if !( len(`, variableName, `) < `, fv.GetLengthLt(), `) {`)
-		errorStr := fmt.Sprintf(`have a length smaller than '%d'`, fv.GetLengthLt())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.length_lt", fv, map[string]string{"length_lt": strconv.FormatInt(fv.GetLengthLt(), 10)}, g)
 		g.P(`}`)
 	}
 
 	if fv.LengthEq != nil {
 		g.P(`if !( len(`, variableName, `) == `, fv.GetLengthEq(), `) {`)
-		errorStr := fmt.Sprintf(`have a length equal to '%d'`, fv.GetLengthEq())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.length_eq", fv, map[string]string{"length_eq": strconv.FormatInt(fv.GetLengthEq(), 10)}, g)
 		g.P(`}`)
 	}
 }
@@ -423,42 +418,50 @@ func (p *plugin) generateFloatValidator(variableName string, ccTypeName string, 
 		lowerIsStrict = false
 	}
 
-	// Generate the constraint checking code.
-	errorStr := ""
 	compareStr := ""
 	if fv.FloatGt != nil || fv.FloatGte != nil {
 		compareStr = fmt.Sprint(`if !(`, variableName)
 		if lowerIsStrict {
-			errorStr = fmt.Sprintf(`be strictly greater than '%g'`, fv.GetFloatGt())
 			if fv.FloatEpsilon != nil {
-				errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
 				compareStr += fmt.Sprint(` + `, fv.GetFloatEpsilon())
 			}
 			compareStr += fmt.Sprint(` > `, fv.GetFloatGt(), `) {`)
 		} else {
-			errorStr = fmt.Sprintf(`be greater than or equal to '%g'`, fv.GetFloatGte())
 			compareStr += fmt.Sprint(` >= `, fv.GetFloatGte(), `) {`)
 		}
 		g.P(compareStr)
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		if lowerIsStrict {
+			params := map[string]string{"float_gt": strconv.FormatFloat(fv.GetFloatGt(), 'g', -1, 64)}
+			if fv.FloatEpsilon != nil {
+				params["float_epsilon"] = strconv.FormatFloat(fv.GetFloatEpsilon(), 'g', -1, 64)
+			}
+			p.generateErrorString("validator.float_gt", fv, params, g)
+		} else {
+			p.generateErrorString("validator.float_gte", fv, map[string]string{"float_gte": strconv.FormatFloat(fv.GetFloatGte(), 'g', -1, 64)}, g)
+		}
 		g.P(`}`)
 	}
 
 	if fv.FloatLt != nil || fv.FloatLte != nil {
 		compareStr = fmt.Sprint(`if !(`, variableName)
 		if upperIsStrict {
-			errorStr = fmt.Sprintf(`be strictly lower than '%g'`, fv.GetFloatLt())
 			if fv.FloatEpsilon != nil {
-				errorStr += fmt.Sprintf(` with a tolerance of '%g'`, fv.GetFloatEpsilon())
 				compareStr += fmt.Sprint(` - `, fv.GetFloatEpsilon())
 			}
 			compareStr += fmt.Sprint(` < `, fv.GetFloatLt(), `) {`)
 		} else {
-			errorStr = fmt.Sprintf(`be lower than or equal to '%g'`, fv.GetFloatLte())
 			compareStr += fmt.Sprint(` <= `, fv.GetFloatLte(), `) {`)
 		}
 		g.P(compareStr)
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		if upperIsStrict {
+			params := map[string]string{"float_lt": strconv.FormatFloat(fv.GetFloatLt(), 'g', -1, 64)}
+			if fv.FloatEpsilon != nil {
+				params["float_epsilon"] = strconv.FormatFloat(fv.GetFloatEpsilon(), 'g', -1, 64)
+			}
+			p.generateErrorString("validator.float_lt", fv, params, g)
+		} else {
+			p.generateErrorString("validator.float_lte", fv, map[string]string{"float_lte": strconv.FormatFloat(fv.GetFloatLte(), 'g', -1, 64)}, g)
+		}
 		g.P(`}`)
 	}
 }
@@ -492,16 +495,14 @@ func (p *plugin) generateStringValidator(variableName string, ccTypeName string,
 
 		g.P(`if !`, p.regexName(ccTypeName, fieldName), `.MatchString(`, variableName, `) {`)
 		g.P()
-		errorStr := "be a string conforming to regex " + strconv.Quote(fv.GetRegex())
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.regex", fv, map[string]string{"regex": fv.GetRegex()}, g)
 		g.P()
 		g.P(`}`)
 	}
 	if fv.StringNotEmpty != nil && fv.GetStringNotEmpty() {
 		g.P(`if `, variableName, ` == "" {`)
 		g.P()
-		errorStr := "not be an empty string"
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.string_not_empty", fv, nil, g)
 		g.P()
 		g.P(`}`)
 	}
@@ -517,8 +518,7 @@ func (p *plugin) generateRepeatedCountValidator(variableName string, fieldName s
 		compareStr := fmt.Sprint(`if len(`, variableName, `) < `, fv.GetRepeatedCountMin(), ` {`)
 		g.P(compareStr)
 		g.P()
-		errorStr := fmt.Sprint(`contain at least `, fv.GetRepeatedCountMin(), ` elements`)
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.repeated_count_min", fv, map[string]string{"repeated_count_min": strconv.FormatInt(fv.GetRepeatedCountMin(), 10)}, g)
 		g.P()
 		g.P(`}`)
 	}
@@ -526,20 +526,42 @@ func (p *plugin) generateRepeatedCountValidator(variableName string, fieldName s
 		compareStr := fmt.Sprint(`if len(`, variableName, `) > `, fv.GetRepeatedCountMax(), ` {`)
 		g.P(compareStr)
 		g.P()
-		errorStr := fmt.Sprint(`contain at most `, fv.GetRepeatedCountMax(), ` elements`)
-		p.generateErrorString(variableName, fieldName, errorStr, fv, g)
+		p.generateErrorString("validator.repeated_count_max", fv, map[string]string{"repeated_count_max": strconv.FormatInt(fv.GetRepeatedCountMax(), 10)}, g)
 		g.P()
 		g.P(`}`)
 	}
 }
 
-// generateErrorString emits the validation failure return statement, using a custom error message if configured.
-func (p *plugin) generateErrorString(variableName string, fieldName string, specificError string, fv *validator.FieldValidator, g *protogen.GeneratedFile) {
-	if fv.GetCustomError() == "" {
-		g.P(`return `, p.validatorPkg.Ident("FieldError"), `("`, fieldName, `",`, p.fmtPkg.Ident("Errorf"), "(`value '%v' must ", specificError, "`", `, `, variableName, `))`)
-	} else {
-		g.P(`return `, p.errorsPkg.Ident("New"), "(`", fv.GetCustomError(), "`)")
+// generateErrorString emits *mix.ErrResp: msg 为 i18n key（custom_error 优先），data 为约束占位符。
+func (p *plugin) generateErrorString(fallbackKey string, fv *validator.FieldValidator, params map[string]string, g *protogen.GeneratedFile) {
+	key := fallbackKey
+	if fv != nil && fv.GetCustomError() != "" {
+		key = fv.GetCustomError()
 	}
+	g.P(`return `, p.mixPkg.Ident("NewErrResp"), `(`, p.mixPkg.Ident("InvalidArgument"), `, `, strconv.Quote(key), `, `, p.emitStringMap(params), `)`)
+}
+
+func (p *plugin) emitStringMap(params map[string]string) string {
+	if len(params) == 0 {
+		return "nil"
+	}
+	keys := make([]string, 0, len(params))
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var b strings.Builder
+	b.WriteString(`map[string]string{`)
+	for i, k := range keys {
+		if i > 0 {
+			b.WriteString(`, `)
+		}
+		b.WriteString(strconv.Quote(k))
+		b.WriteString(`: `)
+		b.WriteString(strconv.Quote(params[k]))
+	}
+	b.WriteString(`}`)
+	return b.String()
 }
 
 // validatorWithMessageExists reports whether the field validator has the msg_exists constraint set.

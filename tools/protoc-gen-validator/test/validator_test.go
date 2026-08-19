@@ -5,9 +5,9 @@ package test
 
 import (
 	fmt "fmt"
-	"strings"
 	"testing"
 
+	"github.com/hopeio/mix"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -131,14 +131,14 @@ func buildProto2(someString string, someInt uint32, identifier string,
 		SomeFloatResp:         []float32{someFloat, 0.5, 0.55, 0.6},
 		SomeFloatRespNonNull:  []float32{someFloat, 0.5, 0.55, 0.6},
 
-		SomeNonEmptyString:   &nonEmptyString,
-		SomeStringEqReq:      &someStringLength,
-		SomeStringLtReq:      &someStringLength,
-		SomeStringGtReq:      &someStringLength,
-		SomeBytesLtReq:       someBytes,
-		SomeBytesGtReq:       someBytes,
-		SomeBytesEqReq:       someBytes,
-		RepeatedBaseType: []int32{},
+		SomeNonEmptyString: &nonEmptyString,
+		SomeStringEqReq:    &someStringLength,
+		SomeStringLtReq:    &someStringLength,
+		SomeStringGtReq:    &someStringLength,
+		SomeBytesLtReq:     someBytes,
+		SomeBytesGtReq:     someBytes,
+		SomeBytesEqReq:     someBytes,
+		RepeatedBaseType:   []int32{},
 
 		UUIDAny:       &optionalUUIDAny,
 		UUID4NotEmpty: &uuid5,
@@ -428,8 +428,11 @@ func TestMsgExist(t *testing.T) {
 	someProto3.SomeEmbeddedExists = nil
 	if err := someProto3.Validate(); err == nil {
 		t.Fatalf("expected fail due to lacking SomeEmbeddedExists")
-	} else if !strings.HasPrefix(err.Error(), "invalid field SomeEmbeddedExists:") {
-		t.Fatalf("expected fieldError, got '%v'", err)
+	} else {
+		er := mix.ErrRespFrom(err)
+		if er.Msg != "validator.msg_exists" || er.Data["field"] != "SomeEmbeddedExists" {
+			t.Fatalf("expected validator.msg_exists for SomeEmbeddedExists, got '%v'", err)
+		}
 	}
 }
 
@@ -480,8 +483,11 @@ func TestNestedError3(t *testing.T) {
 	someProto3.SomeEmbeddedExists.SomeValue = 101 // should be less than 101
 	if err := someProto3.Validate(); err == nil {
 		t.Fatalf("expected fail due to nested SomeEmbeddedNonNullable.SomeValue being wrong")
-	} else if !strings.HasPrefix(err.Error(), "invalid field SomeEmbeddedNonNullable.SomeValue:") {
-		t.Fatalf("expected fieldError, got '%v'", err)
+	} else {
+		er := mix.ErrRespFrom(err)
+		if er.Msg != "validator.int_lt" || er.Data["int_lt"] != "100" {
+			t.Fatalf("expected nested validator.int_lt, got '%v'", err)
+		}
 	}
 }
 
@@ -489,11 +495,13 @@ func TestCustomError_Proto3(t *testing.T) {
 	someProto3 := buildProto3("-%ab", 11, "abba", 99, 0.5, 0.5, 0.5, 0.5, "x", 4, "1234567890", stableBytes, uuid1, uuid4, 0, 0)
 
 	someProto3.CustomErrorInt = 30
-	expectedErr := "My Custom Error"
 	if err := someProto3.Validate(); err == nil {
 		t.Fatalf("validate should fail on missing CustomErrorInt")
-	} else if err.Error() != expectedErr {
-		t.Fatalf("validation error should be '%s' but was '%s'", expectedErr, err.Error())
+	} else {
+		er := mix.ErrRespFrom(err)
+		if er.Msg != "My Custom Error" || er.Data["int_lt"] != "10" {
+			t.Fatalf("expected custom_error key with int_lt, got '%v'", err)
+		}
 	}
 }
 
@@ -528,7 +536,8 @@ func TestOneOf_NestedMessage(t *testing.T) {
 	}
 	err := example.Validate()
 	assert.Error(t, err, "nested message in oneof should fail validation on ExternalMsg")
-	assert.Contains(t, err.Error(), "OneMsg.Identifier", "error must err on the ExternalMsg.Identifier")
+	er := mix.ErrRespFrom(err)
+	assert.Equal(t, "validator.regex", er.Msg)
 }
 
 func TestOneOf_NestedInt(t *testing.T) {
@@ -546,7 +555,9 @@ func TestOneOf_NestedInt(t *testing.T) {
 	}
 	err := example.Validate()
 	assert.Error(t, err, "nested message in oneof should fail validation on ThreeInt")
-	assert.Contains(t, err.Error(), "ThreeInt", "error must err on the ThreeInt.ThreeInt")
+	er := mix.ErrRespFrom(err)
+	assert.Equal(t, "validator.int_gt", er.Msg)
+	assert.Equal(t, "20", er.Data["int_gt"])
 }
 
 func TestOneOf_Passes(t *testing.T) {
@@ -575,7 +586,8 @@ func TestOneOf_Regex(t *testing.T) {
 	}
 	err := example.Validate()
 	assert.Error(t, err, "regex applied to oneof field should fail validation on FiveRegex")
-	assert.Contains(t, err.Error(), "FiveRegex", "error must err on the FiveRegex")
+	er := mix.ErrRespFrom(err)
+	assert.Equal(t, "validator.regex", er.Msg)
 
 	example = &OneOfMessage3{
 		SomeInt: 30,
