@@ -1,9 +1,10 @@
+//go:build ignore
+
 /*
  * Copyright 2024 hopeio. All rights reserved.
  * Licensed under the MIT License that can be found in the LICENSE file.
  * @Created by jyb
  */
-//go:build ignore
 package main
 
 import (
@@ -14,6 +15,7 @@ import (
 	"strings"
 
 	execx "github.com/hopeio/gox/os/exec"
+	"github.com/hopeio/gox/os/fs"
 	gox "github.com/hopeio/gox/sdk/go"
 )
 
@@ -70,6 +72,7 @@ func generate(dir string) {
 			protoc(dir)
 		}
 	}
+	fs.MoveDirByMode(libProtobufDir+"/hopeio", libProtobufDir, 0)
 }
 
 func protoc(dir string) {

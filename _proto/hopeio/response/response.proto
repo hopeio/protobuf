@@ -32,6 +32,7 @@ message RawResp {
 message ErrResp {
   int32 code = 1 [(go.field) = {tags:'json:"code"'}];
   string msg = 2;
+  map<string, string> data = 3 ;
 }
 
 message HttpResponse{
