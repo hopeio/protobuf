@@ -25,18 +25,16 @@ const uuidPattern = "^([a-fA-F0-9]{8}-" +
 
 type plugin struct {
 	*protogen.Plugin
-	regexPkg     protogen.GoImportPath
-	validatorPkg protogen.GoImportPath
-	mixPkg       protogen.GoImportPath
+	regexPkg protogen.GoImportPath
+	mixPkg   protogen.GoImportPath
 }
 
 // New creates a new validator plugin wrapping the given protogen.Plugin.
 func New(p *protogen.Plugin) *plugin {
 	return &plugin{
-		Plugin:       p,
-		regexPkg:     "regexp",
-		validatorPkg: "github.com/hopeio/gox/validator",
-		mixPkg:       "github.com/hopeio/mix",
+		Plugin:   p,
+		regexPkg: "regexp",
+		mixPkg:   "github.com/hopeio/mix",
 	}
 }
 
@@ -216,7 +214,7 @@ func (p *plugin) generateProto2Message(message *protogen.Message, g *protogen.Ge
 			if repeated && nullable {
 				variableName = "*(item)"
 			}
-			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(&(`, variableName, `)); err != nil {`)
+			g.P(`if err := `, p.mixPkg.Ident("ValidateStruct"), `(&(`, variableName, `)); err != nil {`)
 			g.P(`return err`)
 			g.P(`}`)
 		}
@@ -313,7 +311,7 @@ func (p *plugin) generateProto3Message(message *protogen.Message, g *protogen.Ge
 			} else {
 				variableName = "&(" + variableName + ")"
 			}
-			g.P(`if err := `, p.validatorPkg.Ident("ValidateStruct"), `(`, variableName, `); err != nil {`)
+			g.P(`if err := `, p.mixPkg.Ident("ValidateStruct"), `(`, variableName, `); err != nil {`)
 			g.P(`return err`)
 			g.P(`}`)
 			if nullable {
