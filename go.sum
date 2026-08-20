@@ -82,10 +82,9 @@ github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/googleapis/enterprise-certificate-proxy v0.3.20 h1:t/xL64VUoN69MuMRQuJETqYGOw4Z9mSRJK9epIEtwFk=
 github.com/googleapis/enterprise-certificate-proxy v0.3.20/go.mod h1:L3D/IQExI6LqEjBdXcZQ1WluSgigQmSwBboFstVPM4w=
 github.com/googleapis/gax-go/v2 v2.23.0 h1:Tchl7qkvE7Ip3y+ztvNufYFvkfqTe7NfLTYGIdJRLuE=
+github.com/googleapis/gax-go/v2 v2.23.0/go.mod h1:rBQKOVJCdb8IFEzg+FCwlt1LP/xMDGuqUXhUG+XMXEg=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0 h1:/Tnpcb2E0Pz/tN9s3bfEY2Q8ePCEX9iuS+cneUwncnw=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0/go.mod h1:zOBXOsUaBSjKgmH4OGzV1esUpR3oUSCPYVd2cUBjKYY=
-github.com/hopeio/gox v1.11.8 h1:d6fI17P/y8QWXZeXGsll2bh4Pft0/KGIjuWrYOueGhk=
-github.com/hopeio/gox v1.11.8/go.mod h1:k8Vf6eEwB/UuUfe4VbAk9jlI1SQ0NnOw7QRulainhnE=
 github.com/hopeio/gox v1.12.0 h1:bnUDfhZLBY2BGHjymcs1Y4lAuHZPAEYQX92h2KpODVo=
 github.com/hopeio/gox v1.12.0/go.mod h1:Z8zk/KyzfRgw9QskgelEs+dTg5nx8qa+vOK1oU28YEU=
 github.com/hopeio/mix v1.21.3 h1:1W0HupSpb7RNT9OmMAJBH9xoPB4OaOr5lhu2aGC/OWw=
